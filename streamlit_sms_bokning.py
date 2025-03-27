@@ -1,0 +1,1 @@
+# Hämtas direkt från den uppdaterade canvasen – redan aktuell version
