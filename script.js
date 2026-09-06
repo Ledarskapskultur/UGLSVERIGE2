@@ -1,0 +1,5 @@
+const colors=['#123d35','#9aaa96','#f4f0e7','#123d35','#b89a62','#9aaa96','#123d35','#f4f0e7','#b89a62','#123d35'];
+function peopleMarkup(){return colors.map((c,i)=>{const a=i*36-90,r=37,x=50+Math.cos(a*Math.PI/180)*r,y=50+Math.sin(a*Math.PI/180)*r;return `<g transform="translate(${x} ${y}) rotate(${a+90})"><circle cy="-3.4" r="3.6" fill="${c}"/><path d="M-6 2 Q0 9 6 2" fill="none" stroke="${c}" stroke-width="4.2" stroke-linecap="round"/></g>`}).join('')}
+document.querySelectorAll('#people,.footer-people').forEach(el=>el.innerHTML=peopleMarkup());
+const menu=document.querySelector('.menu-button'),nav=document.querySelector('.nav');menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.isIntersecting&&entry.target.classList.add('visible')),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
