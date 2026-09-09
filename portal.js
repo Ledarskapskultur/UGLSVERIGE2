@@ -1,4 +1,5 @@
 (function(){
+  var BYGGE='4';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -455,6 +456,7 @@
       spara();
     }
     S.medarbetare.concat(S.plan).forEach(function(x){if(x&&x.id>=nastaId)nastaId=x.id+1});
+    $('meny-version').textContent='Prototyp, bygge '+BYGGE;
     $('login').hidden=true;$('app').hidden=false;$('hjalp-knapp').hidden=false;
     $('kund-logga').textContent=S.org.kort;
     $('kund-namn').textContent=S.org.namn;
