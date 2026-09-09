@@ -45,8 +45,20 @@
   })();
 
   var S=null,nastaId=100;
+  function komplettera(s){
+    if(!s||typeof s!=='object')return null;
+    s.org=s.org||JSON.parse(JSON.stringify(DEMO.org));
+    s.anv=s.anv||JSON.parse(JSON.stringify(DEMO.anv));
+    s.medarbetare=Array.isArray(s.medarbetare)&&s.medarbetare.length?s.medarbetare:JSON.parse(JSON.stringify(DEMO.medarbetare));
+    s.plan=Array.isArray(s.plan)?s.plan:[];
+    s.arenden=Array.isArray(s.arenden)?s.arenden:[];
+    s.moten=Array.isArray(s.moten)?s.moten:[];
+    /* slang planrader som pekar pa kurser som inte langre finns */
+    s.plan=s.plan.filter(function(p){return p&&kurs(p.nyckel)&&s.medarbetare.some(function(m){return m.id===p.mid})});
+    return s;
+  }
   function las(){
-    try{var r=localStorage.getItem('ugl-portal-demo');if(r)return JSON.parse(r)}catch(e){}
+    try{var r=localStorage.getItem('ugl-portal-demo');if(r)return komplettera(JSON.parse(r))}catch(e){}
     return null;
   }
   function spara(){try{localStorage.setItem('ugl-portal-demo',JSON.stringify(S))}catch(e){}}
@@ -336,7 +348,12 @@
     if(!VYER[vy])vy='oversikt';
     location.hash=vy;
     document.querySelectorAll('.app-meny a[data-vy]').forEach(function(a){a.classList.toggle('ar-pa',a.getAttribute('data-vy')===vy)});
-    $('vy').innerHTML=VYER[vy]();
+    try{$('vy').innerHTML=VYER[vy]()}
+    catch(fel){
+      $('vy').innerHTML='<div class="panel"><h2>Något gick fel i den här vyn</h2>'+
+        '<p class="tom">Prototypen kunde inte visa vyn med den data som ligger sparad i din webbläsare. Återställ demodata så fungerar den igen.</p>'+
+        '<button class="button" id="nollstall">Återställ demodata</button></div>';
+    }
     $('vy').scrollTop=0;
     var n=notiser();
     $('notis-prick').hidden=!n.length;
@@ -437,6 +454,7 @@
       S.org.kort=dom.slice(0,2).toUpperCase();
       spara();
     }
+    S.medarbetare.concat(S.plan).forEach(function(x){if(x&&x.id>=nastaId)nastaId=x.id+1});
     $('login').hidden=true;$('app').hidden=false;$('hjalp-knapp').hidden=false;
     $('kund-logga').textContent=S.org.kort;
     $('kund-namn').textContent=S.org.namn;
