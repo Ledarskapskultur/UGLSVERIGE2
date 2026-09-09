@@ -150,3 +150,50 @@ body{position:relative}
 .facts-table dd{margin:0;color:var(--green);font-size:1rem;line-height:1.55;font-weight:500}
 @media(max-width:980px){.facts-layout{grid-template-columns:1fr;gap:3rem}}
 @media(max-width:620px){.facts-table>div{grid-template-columns:1fr;gap:.3rem}}
+
+/* Sektion: veckans bage */
+.week .section-head .lead{margin-top:1.5rem;max-width:62ch}
+.week-band{margin:clamp(2.5rem,4vw,3.5rem) 0 0;height:clamp(240px,26vw,380px);overflow:hidden}
+.week .days{margin-top:clamp(2.8rem,4.5vw,4rem)}
+.week .days li{padding-right:1.6rem}
+.week .days strong{font-size:1.08rem;line-height:1.3;letter-spacing:-.01em}
+.week .days span{margin-top:.15rem}
+.week-note{margin:clamp(2.6rem,4vw,3.4rem) 0 0;padding-left:1.3rem;border-left:2px solid var(--brass);font-size:1rem;line-height:1.75;color:#5a625e;max-width:60ch}
+@media(max-width:980px){.week .days{grid-template-columns:1fr;gap:0}.week .days:before{top:0;bottom:0;left:5px;right:auto;width:1px;height:auto}.week .days li{padding:0 0 2rem 2.4rem}.week .days li:before{top:14px;left:-1px}.week .days b{padding-top:0}}
+
+/* Sektion 03: utvecklingsmalen i tre kluster */
+.goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.2);margin-top:clamp(2.8rem,4.5vw,4rem)}
+.goal-grid article{background:var(--green);padding:clamp(2.2rem,3vw,3rem) clamp(1.8rem,2.4vw,2.4rem)}
+.goal-grid span{display:block;color:var(--brass);font-size:.8rem;letter-spacing:.16em;margin-bottom:1.4rem}
+.goal-grid h3{font-size:clamp(1.5rem,2vw,1.9rem);letter-spacing:-.02em;margin-bottom:1.6rem}
+.goal-grid ul{list-style:none;padding:0;margin:0}
+.goal-grid li{position:relative;padding:.85rem 0 .85rem 1.6rem;border-top:1px solid rgba(255,255,255,.16);font-size:1rem;line-height:1.6;color:#dbe4df}
+.goal-grid li:before{content:'';position:absolute;left:0;top:1.42rem;width:7px;height:1px;background:var(--brass)}
+.takeaway{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,4vw,4rem);max-width:calc(var(--max) - 2*var(--pad));margin:clamp(3rem,4.5vw,4.2rem) auto 0;padding-top:clamp(2.4rem,3.5vw,3rem);border-top:1px solid rgba(255,255,255,.2)}
+.takeaway h3{font-size:1.3rem;margin-bottom:.9rem}
+.takeaway p{font-size:1rem;line-height:1.75;color:#c6d3cd;margin:0}
+@media(max-width:980px){.goal-grid,.takeaway{grid-template-columns:1fr}.takeaway{gap:2rem}}
+
+/* IMGD-diagram i forskningssektionen */
+.imgd{margin:clamp(2.8rem,4.5vw,4rem) 0 0;padding:clamp(2rem,3vw,2.8rem);background:var(--ivory)}
+.imgd figcaption{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e;font-weight:600;margin-bottom:2.2rem}
+.imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2.2vw,2rem);align-items:end}
+.imgd li{padding:0;display:flex;flex-direction:column;position:relative}
+.imgd li:before{content:'';display:block;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-bottom:1px solid var(--green)}
+.imgd li:nth-child(1){--h:22px;--o:.2}
+.imgd li:nth-child(2){--h:52px;--o:.4}
+.imgd li:nth-child(3){--h:88px;--o:.65}
+.imgd li:nth-child(4){--h:128px;--o:1}
+.imgd b{color:var(--brass);font-size:.78rem;letter-spacing:.16em;margin-bottom:.5rem}
+.imgd strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:.5rem}
+.imgd li span{font-size:.93rem;line-height:1.6;color:#5f6763}
+.imgd>p{margin:2rem 0 0;font-size:.93rem;color:#5f6763;font-style:italic}
+@media(max-width:980px){.imgd ol{grid-template-columns:1fr;gap:0}.imgd li{padding:1.2rem 0;border-top:1px solid #d3d7d0}.imgd li:before{height:var(--h)!important;width:120px;margin-bottom:1rem}}
+
+/* Redaktionell ton: dampade lankar */
+.organisations .text-link,.facilitators .text-link{display:inline-block;margin-top:.5rem}
+
+.outcomes .lead{color:#c6d3cd}
+
+.final-cta .demo-note{color:#9fb3ab;flex-basis:100%;margin-top:1.4rem}
+.final-cta{flex-wrap:wrap}
