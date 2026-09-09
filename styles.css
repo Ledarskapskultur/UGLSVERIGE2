@@ -197,3 +197,80 @@ body{position:relative}
 
 .final-cta .demo-note{color:#9fb3ab;flex-basis:100%;margin-top:1.4rem}
 .final-cta{flex-wrap:wrap}
+
+/* ---- Bokningssidan ---- */
+.site-header.header-solid{position:static;background:#fff;border-bottom:1px solid var(--line)}
+.page-hero{max-width:var(--max);margin:auto;padding:clamp(3rem,6vw,5.5rem) var(--pad) clamp(2rem,3vw,3rem)}
+.page-hero h1{font-size:clamp(2.6rem,5vw,4.6rem);margin:.6rem 0 1.4rem}
+.page-hero .lead{max-width:60ch}
+.page-hero-link{margin:1.8rem 0 0;font-size:.95rem;color:#5a625e}
+
+.course-filters{display:flex;gap:clamp(1rem,2vw,2rem);align-items:end;flex-wrap:wrap;margin:clamp(2.2rem,3.5vw,3rem) 0 1.6rem;padding-bottom:1.6rem;border-bottom:1px solid var(--line)}
+.course-filters label{display:flex;flex-direction:column;gap:.5rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;color:#7a827e;font-weight:600}
+.course-filters select{font:inherit;font-size:.98rem;text-transform:none;letter-spacing:0;color:var(--green);background:#fff;border:1px solid var(--line);padding:.75rem 1rem;min-width:190px}
+.course-filters .filter-check{flex-direction:row;align-items:center;gap:.6rem;text-transform:none;letter-spacing:0;font-size:.98rem;font-weight:400;color:var(--charcoal,#333)}
+.kursraknare{margin-left:auto;font-size:.9rem;color:#7a827e}
+
+.course-list{list-style:none;padding:0;margin:0}
+.course-list li{display:grid;grid-template-columns:1.15fr 1.15fr 1.1fr 1fr auto;gap:clamp(1rem,2vw,2rem);align-items:center;padding:1.5rem 0;border-bottom:1px solid var(--line)}
+.course-list li.is-full{opacity:.62}
+.cl-date b{display:block;color:var(--green);font-weight:600;font-size:1.06rem;letter-spacing:-.01em}
+.cl-date span,.cl-place span,.cl-people span,.cl-price span{display:block;font-size:.88rem;color:#6b7370;margin-top:.2rem}
+.cl-place strong{color:var(--green);font-weight:600;font-size:1rem}
+.cl-price strong{color:var(--green);font-weight:600;font-size:1rem;display:block}
+.cl-people span{margin-top:0;line-height:1.5}
+.cl-status{display:flex;align-items:center;gap:.9rem;justify-content:flex-end}
+.badge{display:inline-block;font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;padding:.4rem .7rem;border:1px solid var(--line);color:#6b7370}
+.badge-full{border-color:#d8d2c4;background:#f3efe6;color:#8a7a55}
+.mini-link{font-size:.88rem;font-weight:600;color:var(--green);border-bottom:1px solid var(--brass)}
+#visa-fler{margin-top:2rem}
+.button-outline-dark{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--green);border:1px solid var(--green);padding:.9rem 1.5rem;font:inherit;font-weight:600;cursor:pointer;transition:.2s}
+.button-outline-dark:hover{background:var(--green);color:#fff}
+
+.steps{list-style:none;padding:0;margin:clamp(2.6rem,4vw,3.6rem) 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.steps li{background:#fff;padding:clamp(1.8rem,2.4vw,2.4rem) clamp(1.4rem,2vw,2rem);display:flex;flex-direction:column}
+.steps b{color:var(--brass);font-size:.8rem;letter-spacing:.16em;margin-bottom:1.2rem}
+.steps strong{color:var(--green);font-size:1.1rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:.6rem}
+.steps span{font-size:.95rem;line-height:1.65;color:#5f6763}
+
+.booking{background:var(--green);color:#e7ece8;max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(3rem,6vw,6rem);align-items:start}
+.booking h2,.booking .eyebrow{color:#fff}
+.booking .lead{color:#c6d3cd;margin-top:1.3rem}
+.booking-assure{margin-top:2.4rem;padding-top:1.8rem;border-top:1px solid rgba(255,255,255,.2)}
+.booking-assure p{font-size:.97rem;line-height:1.7;color:#c6d3cd;margin:0 0 1rem}
+.booking-assure strong{color:#fff;display:block}
+.booking-form{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.field{display:flex;flex-direction:column;gap:.5rem}
+.field-wide{grid-column:1/-1}
+.field label{font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;color:#a9bcb4;font-weight:600}
+.field label span{text-transform:none;letter-spacing:0;font-weight:400;color:#8fa49c}
+.field input,.field select,.field textarea{font:inherit;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.28);color:#fff;padding:.85rem 1rem}
+.field select option{color:#123d35}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
+.consent label{display:flex;align-items:flex-start;gap:.7rem;text-transform:none;letter-spacing:0;font-weight:400;font-size:.95rem;color:#c6d3cd}
+.consent input{width:18px;height:18px;margin-top:.15rem;flex:none}
+.submit-row{flex-direction:row;align-items:center;gap:1.4rem;flex-wrap:wrap;margin-top:.6rem}
+.form-note{font-size:.9rem;color:#a9bcb4;margin:0;max-width:34ch}
+.form-status{grid-column:1/-1;margin:0;font-size:.95rem;color:var(--lime)}
+
+.practical-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);margin-top:clamp(2.6rem,4vw,3.6rem)}
+.practical-grid article{background:#fff;padding:clamp(1.8rem,2.4vw,2.4rem)}
+.practical-grid h3{color:var(--green);font:600 1.15rem/1.3 "Libre Franklin",sans-serif;margin-bottom:.8rem}
+.practical-grid p{font-size:1rem;line-height:1.7;color:#555d5a;margin:0}
+
+@media(max-width:1100px){.course-list li{grid-template-columns:1fr 1fr;gap:1rem 1.6rem}.cl-status{grid-column:1/-1;justify-content:flex-start}.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.booking{grid-template-columns:1fr}.booking-form{grid-template-columns:1fr}.practical-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.course-list li{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.course-filters select{min-width:0;width:100%}.course-filters label{width:100%}.kursraknare{margin-left:0}}
+.site-header.header-solid .brand-type{color:var(--green)}
+.site-header.header-solid .brand-type small{color:#56605c}
+.site-header.header-solid .nav a:not(.button){color:var(--charcoal)}
+.site-header.header-solid .nav a:not(.button):hover{color:var(--brass)}
+.site-header.header-solid .nav a.button{background:var(--green);border-color:var(--green);color:#fff}
+.site-header.header-solid .nav a.button:hover{background:#1d5146;border-color:#1d5146}
+.site-header.header-solid .menu-button{color:inherit}
+.page-hero{padding-bottom:0}
+.course-list-section{padding-top:clamp(2.5rem,4vw,3.5rem)}
+.course-list-section .section-head .lead{margin-top:1.3rem;max-width:62ch}
+.cl-people{align-self:center}
+.button-row{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--green);border:1px solid var(--green);padding:.65rem 1.15rem;font-weight:600;font-size:.92rem;transition:.2s;white-space:nowrap}
+.button-row:hover{background:var(--green);color:#fff}
