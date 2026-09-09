@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Kursportal | UGL Sverige</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="portal.css?v=1">
+</head>
+<body class="portal-body">
+
+  <div class="demo-flagga">Demoläge, ingen riktig inloggning och ingen data sparas hos oss</div>
+
+  <!-- INLOGGNING -->
+  <main class="login" id="login">
+    <div class="login-kort">
+      <span class="brand-type login-brand"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span>
+      <h1>Kursportal för arbetsgivare</h1>
+      <p class="lead">Planera vilka medarbetare som ska gå UGL, när och var. Se status, kostnad och uppföljning på ett ställe.</p>
+      <form id="login-form">
+        <div class="field"><label for="log-epost">Jobbmejl</label><input id="log-epost" type="email" placeholder="fornamn.efternamn@foretaget.se" autocomplete="email"></div>
+        <button class="button" type="submit">Skicka inloggningslänk</button>
+      </form>
+      <p class="login-not">Vi använder inloggningslänk via mejl, inga lösenord att komma ihåg eller tappa bort.</p>
+      <p class="login-demo">I demon räcker det att trycka på knappen.</p>
+    </div>
+    <aside class="login-bild">
+      <ul class="login-punkter">
+        <li><b>Planera hela året</b><span>Lägg medarbetare på veckor och se planen i en kalender.</span></li>
+        <li><b>Undvik krockar</b><span>Portalen varnar om två kollegor hamnar på samma vecka, vilket UGL inte tillåter.</span></li>
+        <li><b>Full kostnadsbild</b><span>Se planerat och bokat belopp per avdelning, exklusive moms.</span></li>
+        <li><b>Uppföljning som blir av</b><span>Påminnelse om utvecklingssamtal några veckor efter kursen.</span></li>
+      </ul>
+    </aside>
+  </main>
+
+  <!-- PORTAL -->
+  <div class="app" id="app" hidden>
+    <header class="app-topp">
+      <div class="app-kund">
+        <span class="kund-logga" id="kund-logga"></span>
+        <span class="kund-namn"><b id="kund-namn"></b><small>Kursportal, UGL Sverige</small></span>
+      </div>
+      <div class="app-hoger">
+        <button class="notis-knapp" id="notis-knapp" aria-label="Notiser">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-2 8-2 8h16s-2-1-2-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="notis-prick" id="notis-prick" hidden></span>
+        </button>
+        <span class="app-anv"><b id="anv-namn"></b><small id="anv-roll"></small></span>
+        <span class="app-avatar" id="anv-init"></span>
+        <button class="app-ut" id="logga-ut">Logga ut</button>
+      </div>
+    </header>
+
+    <div class="app-kropp">
+      <nav class="app-meny" aria-label="Portalmeny">
+        <a href="#oversikt" data-vy="oversikt" class="ar-pa">Översikt</a>
+        <a href="#medarbetare" data-vy="medarbetare">Medarbetare</a>
+        <a href="#planering" data-vy="planering">Planera kurs</a>
+        <a href="#kalender" data-vy="kalender">Kalender</a>
+        <a href="#ekonomi" data-vy="ekonomi">Kostnader</a>
+        <span class="meny-avdelare"></span>
+        <a href="#installningar" data-vy="installningar">Inställningar</a>
+        <a href="/kurser" class="meny-extern">Alla kursdatum &#8599;</a>
+      </nav>
+      <main class="app-vy" id="vy"></main>
+    </div>
+  </div>
+
+  <div class="notis-panel" id="notis-panel" hidden>
+    <div class="np-head"><h3>Notiser</h3><button type="button" id="notis-stang" aria-label="Stäng">&#10005;</button></div>
+    <ul id="notis-lista"></ul>
+  </div>
+
+  <script src="kurser-data.js"></script>
+  <script src="portal.js?v=1"></script>
+</body>
+</html>
