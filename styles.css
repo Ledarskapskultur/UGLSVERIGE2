@@ -451,12 +451,12 @@ body{position:relative}
 .guide-steg b{width:26px;height:26px;border-radius:50%;background:#e4e1d6;color:#77807b;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:600}
 .guide-steg .is-pa{color:var(--green);font-weight:600}
 .guide-steg .is-pa b{background:var(--green);color:#fff}
-.guide-kort{background:#fff;border:1px solid #e3e0d7;padding:clamp(1.8rem,3.5vw,3rem);max-width:900px;margin:0 auto}
+.guide-kort{background:#fff;border:1px solid #e3e0d7;padding:clamp(1.8rem,3.5vw,3rem)}
 .guide-nr{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:#8a918d;font-weight:600;margin:0 0 .7rem}
 .guide-fraga h2{font-size:clamp(1.7rem,2.8vw,2.4rem);margin-bottom:.6rem}
 .guide-hjalp{font-size:.98rem;line-height:1.6;color:#6b7370;margin:0 0 1.8rem;max-width:56ch}
-.guide-val{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-.guide-val-tat{grid-template-columns:repeat(3,1fr)}
+.guide-val{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem}
+.guide-val-tat{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .guide-val button{text-align:left;background:#fff;border:1px solid var(--line);padding:1.05rem 1.2rem;font:inherit;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:.25rem}
 .guide-val button:hover{border-color:var(--green);background:#f7f9f5;transform:translateY(-1px)}
 .guide-val strong{color:var(--green);font-size:1rem;font-weight:600;line-height:1.3}
@@ -465,7 +465,7 @@ body{position:relative}
 .guide-bak,.guide-hoppa{background:none;border:0;font:inherit;font-size:.9rem;color:#7a827e;cursor:pointer;padding:0}
 .guide-bak:hover,.guide-hoppa:hover{color:var(--green)}
 .guide-hoppa{margin-left:auto;border-bottom:1px solid var(--line)}
-.guide-svar{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.guide-svar{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .gs-chips{display:flex;gap:.5rem;flex-wrap:wrap}
 .gs-chip{background:#fff;border:1px solid #e3e0d7;padding:.5rem .9rem;border-radius:99px;font-size:.88rem;color:var(--green);font-weight:500}
 .gs-andra{background:none;border:0;font:inherit;font-size:.88rem;color:#7a827e;cursor:pointer;border-bottom:1px solid var(--line);padding:0 0 .15rem}
