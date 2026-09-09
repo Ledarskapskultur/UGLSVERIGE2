@@ -23,6 +23,24 @@
       manad:start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')};
   }).sort(function(a,b){return a.start-b.start});
 
+  var UTGANG=[
+    ['Stockholm','Stockholmsområdet',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
+    ['Uppsala','Uppsala',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
+    ['Västerås','Västerås och Eskilstuna',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
+    ['Örebro','Örebro',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm','Jönköping']],
+    ['Linköping','Linköping och Norrköping',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm','Jönköping']],
+    ['Jönköping','Jönköping och Småland',['Jönköping','Göteborg','Mölnlycke','Halmstad']],
+    ['Göteborg','Göteborg',['Göteborg','Mölnlycke','Halmstad','Jönköping']],
+    ['Halmstad','Halmstad och Varberg',['Halmstad','Göteborg','Mölnlycke','Helsingborg','Kristianstad','Jönköping']],
+    ['Helsingborg','Helsingborg och nordvästra Skåne',['Helsingborg','Kristianstad','Halmstad','Göteborg','Mölnlycke']],
+    ['Malmö','Malmö, Lund och södra Skåne',['Helsingborg','Kristianstad','Halmstad']],
+    ['Växjö','Växjö och Kalmar',['Jönköping','Kristianstad','Helsingborg']],
+    ['Sundsvall','Sundsvall och Norrland',['Sundsvall/Timrå']],
+    ['Karlstad','Karlstad och Värmland',['Göteborg','Mölnlycke','Jönköping']],
+    ['Dalarna','Dalarna och Gävle',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']]
+  ];
+  var svar={period:null,ort:null,pris:null},guideKlar=false,steg=1;
+
   var $=function(id){return document.getElementById(id)};
   var lista=$('kurslista'),raknare=$('kursraknare'),fTid=$('filter-tid'),fRegion=$('filter-region'),
       fOrt=$('filter-ort'),fPris=$('filter-pris'),fLedig=$('filter-ledig'),fSort=$('filter-sort'),
@@ -36,8 +54,16 @@
   fyll(fRegion,[...new Set(kurser.map(function(k){return k.region}))].sort(function(a,b){return a.localeCompare(b,'sv')}).map(function(r){return [r,r]}));
   fyll(fOrt,[...new Set(kurser.map(function(k){return k.ort}))].sort(function(a,b){return a.localeCompare(b,'sv')}).map(function(o){return [o,o]}));
 
+  function manadFram(n){var d=new Date();d.setMonth(d.getMonth()+n);return d}
   function filtrerade(){
+    var idag=new Date(),spann=null;
+    if(svar.period==='0')spann=[idag,manadFram(3)];
+    else if(svar.period==='1')spann=[manadFram(3),manadFram(6)];
+    else if(svar.period==='2')spann=[manadFram(6),manadFram(12)];
+    var narhet=svar.ort&&svar.ort!=='x'?(UTGANG.filter(function(u){return u[0]===svar.ort})[0]||[])[2]:null;
     var f=kurser.filter(function(k){
+      if(spann&&(k.start<spann[0]||k.start>spann[1]))return false;
+      if(narhet&&narhet.indexOf(k.ort)<0)return false;
       if(fTid.value&&k.manad!==fTid.value)return false;
       if(fRegion.value&&k.region!==fRegion.value)return false;
       if(fOrt.value&&k.ort!==fOrt.value)return false;
@@ -45,7 +71,7 @@
       if(fLedig.checked&&!k.ledig)return false;
       return true;
     });
-    if(fSort.value==='pris')f.sort(function(a,b){return (a.total||1e9)-(b.total||1e9)});
+    if(svar.pris==='lag'||fSort.value==='pris')f.sort(function(a,b){return (a.total||1e9)-(b.total||1e9)});
     else if(fSort.value==='ort')f.sort(function(a,b){return a.ort.localeCompare(b.ort,'sv')||a.start-b.start});
     else f.sort(function(a,b){return a.start-b.start});
     return f;
@@ -60,8 +86,9 @@
     var billigast=null,narmast=f.length?f[0].id:null;
     f.forEach(function(k){if(k.total&&(!billigast||k.total<billigast.total))billigast=k});
     lista.innerHTML=f.slice(0,visade).map(function(k){
-      var mark = k.id===narmast ? '<figcaption class="mark">Närmast i tiden</figcaption>'
-               : (billigast&&k.id===billigast.id ? '<figcaption class="mark mark-pris">Lägst totalpris</figcaption>' : '');
+      var mark = (guideKlar&&k.id===f[0].id) ? '<figcaption class="mark">Bäst matchning</figcaption>'
+               : (k.id===narmast ? '<figcaption class="mark">Närmast i tiden</figcaption>'
+               : (billigast&&k.id===billigast.id ? '<figcaption class="mark mark-pris">Lägst totalpris</figcaption>' : ''));
       var pris=!k.total
         ? '<strong>Pris meddelas</strong><span>Kontakta oss för uppgift</span>'
         : (k.samlat
@@ -135,7 +162,7 @@
 
   [fTid,fRegion,fOrt,fPris,fSort].forEach(function(el){el.addEventListener('change',function(){visade=6;rita()})});
   fLedig.addEventListener('change',function(){visade=6;rita()});
-  merKnapp.addEventListener('click',function(){visade+=6;rita()});
+  merKnapp.addEventListener('click',function(){visade+=guideKlar?12:6;rita()});
   document.querySelectorAll('[data-quick]').forEach(function(b){
     b.addEventListener('click',function(){
       var q=b.getAttribute('data-quick'),pa=b.classList.contains('is-on');
@@ -146,6 +173,8 @@
       visade=6;rita();
     })});
   $('rensa-filter').addEventListener('click',function(){
+    svar={period:null,ort:null,pris:null};guideKlar=false;
+    $('guide-svar').hidden=true;$('matchrubrik').hidden=true;
     [fTid,fRegion,fOrt,fPris,fSort].forEach(function(el){el.selectedIndex=0});
     fLedig.checked=true;
     document.querySelectorAll('[data-quick]').forEach(function(x){x.classList.remove('is-on')});
@@ -157,6 +186,61 @@
   var q=new URLSearchParams(location.search).get('valj');
   if(q)valjKurs(q);
   rita();ritaBar();
+
+
+  // ---- Mini behovsanalys ----
+  var PERIODTEXT={'0':'Inom 3 månader','1':'Om 4 till 6 månader','2':'Om 7 till 12 månader','x':'Alla datum'};
+  var PRISTEXT={'lag':'Lägsta totalkostnad','balans':'Pris i balans','fri':'Priset inte avgörande'};
+  $('guide-orter').innerHTML=UTGANG.map(function(u){
+    return '<button type="button" data-svar="ort:'+u[0]+'"><strong>'+u[0]+'</strong><span>'+u[1]+'</span></button>'
+  }).join('')+'<button type="button" data-svar="ort:x"><strong>Spelar ingen roll</strong><span>Jag reser gärna längre</span></button>';
+
+  function visaSteg(n){
+    steg=n;
+    document.querySelectorAll('.guide-fraga').forEach(function(el){el.hidden=+el.getAttribute('data-steg')!==n});
+    document.querySelectorAll('#guide-steg li').forEach(function(li,i){li.classList.toggle('is-pa',i===0)});
+    $('guide-bak').hidden=n===1;
+  }
+  function avslutaGuide(){
+    guideKlar=true;
+    $('guide-kort').hidden=true;
+    $('guide-svar').hidden=false;
+    document.querySelectorAll('#guide-steg li').forEach(function(li,i){li.classList.toggle('is-pa',i===1)});
+    $('gs-chips').innerHTML=[
+      svar.period?PERIODTEXT[svar.period]:null,
+      svar.ort&&svar.ort!=='x'?'Från '+svar.ort:(svar.ort==='x'?'Hela landet':null),
+      svar.pris?PRISTEXT[svar.pris]:null
+    ].filter(Boolean).map(function(t){return '<span class="gs-chip">'+t+'</span>'}).join('');
+    var f=filtrerade();
+    var r=$('matchrubrik');
+    r.hidden=false;
+    r.textContent=f.length===0?'Inga veckor matchar riktigt dina svar'
+      :(f.length<=3?(f.length===1?'En vecka som passar dig':f.length+' kurser som passar dig'):'Tre kurser som passar dig');
+    visade=Math.min(3,Math.max(f.length,1));
+    if(f.length===0){visade=3;svar.ort=null;svar.period=null;r.textContent='Inga veckor matchade exakt, här är de närmaste alternativen'}
+    rita();
+    document.getElementById('datum').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-svar]');
+    if(!b)return;
+    var p=b.getAttribute('data-svar').split(':');
+    svar[p[0]]=p[1];
+    if(steg<3)visaSteg(steg+1); else avslutaGuide();
+  });
+  $('guide-bak').addEventListener('click',function(){if(steg>1)visaSteg(steg-1)});
+  $('guide-hoppa').addEventListener('click',function(){
+    guideKlar=false;svar={period:null,ort:null,pris:null};
+    $('guide-kort').hidden=true;$('guide-svar').hidden=true;
+    $('matchrubrik').hidden=true;visade=6;rita();
+    document.getElementById('datum').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  $('guide-andra').addEventListener('click',function(){
+    guideKlar=false;svar={period:null,ort:null,pris:null};
+    $('guide-svar').hidden=true;$('guide-kort').hidden=false;$('matchrubrik').hidden=true;
+    visaSteg(1);visade=6;rita();
+    document.getElementById('behov').scrollIntoView({behavior:'smooth',block:'start'});
+  });
 
   var ENDPOINT='';
   var MOTTAGARE='kontakt@uglsverige.se';

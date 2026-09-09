@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body class="sida-ton">
   <header class="site-header header-solid">
@@ -29,6 +29,54 @@
       <h1>Öppna UGL-kurser.</h1>
       <p class="lead">Fem sammanhängande dagar på internat, 8 till 12 deltagare och två handledare utbildade av Försvarshögskolan. Välj en vecka som passar och anmäl dig här nedanför.</p>
       <p class="page-hero-link">Vill du först veta vad veckan innebär? <a class="text-link" href="/">Läs om UGL</a></p>
+    </section>
+
+    <section id="behov" class="guide reveal">
+      <ol class="guide-steg" id="guide-steg">
+        <li class="is-pa"><b>1</b>Behov</li><li><b>2</b>Matchningar</li><li><b>3</b>Anmälan</li>
+      </ol>
+
+      <div class="guide-kort" id="guide-kort">
+        <div class="guide-fraga" data-steg="1">
+          <p class="guide-nr">Fråga 1 av 3</p>
+          <h2>När vill du gå?</h2>
+          <p class="guide-hjalp">De flesta bokar tre till sex månader i förväg. Populära veckor fylls tidigare.</p>
+          <div class="guide-val">
+            <button type="button" data-svar="period:0"><strong>Inom 3 månader</strong><span>Jag vill komma iväg snart</span></button>
+            <button type="button" data-svar="period:1"><strong>Om 4 till 6 månader</strong><span>Jag planerar in det i kalendern</span></button>
+            <button type="button" data-svar="period:2"><strong>Om 7 till 12 månader</strong><span>Jag är ute i god tid</span></button>
+            <button type="button" data-svar="period:x"><strong>Spelar ingen roll</strong><span>Visa alla datum</span></button>
+          </div>
+        </div>
+
+        <div class="guide-fraga" data-steg="2" hidden>
+          <p class="guide-nr">Fråga 2 av 3</p>
+          <h2>Var utgår du ifrån?</h2>
+          <p class="guide-hjalp">Vi visar kursgårdar inom ungefär två till två och en halv timmes bilresa från din utgångspunkt.</p>
+          <div class="guide-val guide-val-tat" id="guide-orter"></div>
+        </div>
+
+        <div class="guide-fraga" data-steg="3" hidden>
+          <p class="guide-nr">Fråga 3 av 3</p>
+          <h2>Hur ser din investeringsram ut?</h2>
+          <p class="guide-hjalp">Totalpriset omfattar kursavgift samt kost och logi. Det varierar mellan kursgårdarna.</p>
+          <div class="guide-val">
+            <button type="button" data-svar="pris:lag"><strong>Så låg totalkostnad som möjligt</strong><span>Vi sätter de billigaste veckorna först</span></button>
+            <button type="button" data-svar="pris:balans"><strong>Rimligt pris, men datum och läge väger tyngre</strong><span>Vi sorterar på datum</span></button>
+            <button type="button" data-svar="pris:fri"><strong>Priset är inte avgörande</strong><span>Vi sorterar på datum</span></button>
+          </div>
+        </div>
+
+        <div class="guide-fot">
+          <button type="button" class="guide-bak" id="guide-bak" hidden>&#8592; Tillbaka</button>
+          <button type="button" class="guide-hoppa" id="guide-hoppa">Hoppa över och visa alla kurser</button>
+        </div>
+      </div>
+
+      <div class="guide-svar" id="guide-svar" hidden>
+        <div class="gs-chips" id="gs-chips"></div>
+        <button type="button" class="gs-andra" id="guide-andra">&#9998; Ändra svar</button>
+      </div>
     </section>
 
     <section id="datum" class="browse reveal">
@@ -71,6 +119,7 @@
         </aside>
 
         <div class="browse-results">
+          <h2 class="matchrubrik" id="matchrubrik" hidden></h2>
           <div class="results-bar">
             <span id="kursraknare" class="kursraknare"></span>
             <label class="sortera" for="filter-sort">Sortera
