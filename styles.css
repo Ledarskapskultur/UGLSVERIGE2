@@ -547,3 +547,19 @@ body{position:relative}
 .dela-knapp:hover{background:var(--green);border-color:var(--green);color:#fff}
 .dela-knapp svg{width:19px;height:19px}
 .dela-kvitto{margin:.9rem 0 0;font-size:.86rem;color:var(--green)}
+
+/* Skicka till chefen */
+.vinst-val{display:grid;gap:.6rem;margin-top:.3rem}
+.vinst-val label{display:flex;gap:.75rem;align-items:flex-start;border:1px solid var(--line);padding:.85rem 1rem;cursor:pointer;transition:.15s;text-transform:none;letter-spacing:0;font-weight:400}
+.vinst-val label:hover{border-color:var(--sage)}
+.vinst-val input{width:17px;height:17px;flex:none;margin-top:.15rem;accent-color:#123d35}
+.vinst-val strong{display:block;color:var(--green);font-weight:600;font-size:.97rem;margin-bottom:.15rem}
+.vinst-val span{font-size:.89rem;line-height:1.55;color:#5f6763}
+.ip-form textarea{font:inherit;background:#fff;border:1px solid var(--line);color:var(--green);padding:.85rem 1rem;resize:vertical}
+.ip-form textarea:focus{outline:2px solid var(--brass);outline-offset:1px}
+.ch-forhand{margin:.3rem 0 0;background:var(--ivory);border:1px solid var(--line);padding:1.1rem 1.2rem;font:400 .86rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#4a514e;white-space:pre-wrap;max-height:280px;overflow:auto}
+.dela-urval{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:0 0 1.8rem;padding-bottom:1.4rem;border-bottom:1px solid var(--line)}
+.dela-urval>span:first-child{font-size:.9rem;color:#6b7370;margin-right:.3rem}
+.dela-urval .dela-knapp{width:38px;height:38px}
+.dela-urval .dela-kvitto{margin:0;font-size:.85rem}
+.cp-fot{margin-top:1.8rem;padding-top:1.4rem;border-top:1px solid var(--line);display:flex;justify-content:flex-end}

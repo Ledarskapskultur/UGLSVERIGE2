@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=28">
+  <link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body class="sida-ton">
   <header class="site-header header-solid">
@@ -150,8 +150,9 @@
       <div class="compare-bar" id="valbar" hidden>
         <span class="cb-count" id="cb-jamfor" hidden><b id="cb-antal">0</b> valda att jämföra</span>
         <button type="button" class="cb-knapp" id="cb-oppna" hidden>Jämför &#8594;</button>
-        <span class="cb-count" id="cb-intresse" hidden><b id="cb-iantal">0</b> i intresselistan</span>
-        <button type="button" class="button button-light" id="cb-iopna" hidden>Skicka intresseanmälan &#8594;</button>
+        <span class="cb-count" id="cb-intresse" hidden><b id="cb-iantal">0</b> valda kurser</span>
+        <button type="button" class="cb-knapp" id="cb-iopna" hidden>Intresselista &#8594;</button>
+        <button type="button" class="button button-light" id="cb-chef" hidden>Skicka till chefen &#8594;</button>
         <button type="button" class="cb-stang" id="cb-rensa" aria-label="Rensa valda">&#10005;</button>
       </div>
 
@@ -159,6 +160,7 @@
         <div class="cp-inner">
           <div class="cp-head"><h3>Jämför valda kurser</h3><button type="button" id="cp-stang" aria-label="Stäng">&#10005;</button></div>
           <div class="cp-table" id="cp-innehall"></div>
+          <div class="cp-fot"><button type="button" class="button button-light" id="cp-chef">Skicka de här till chefen &#8594;</button></div>
         </div>
       </div>
 
@@ -175,6 +177,56 @@
             <div class="field field-wide consent"><label><input type="checkbox" id="ip-samtycke" required> <span>Jag godkänner att mina uppgifter används för att kontakta mig om de valda kurserna.</span></label></div>
             <div class="field field-wide"><button class="button" type="submit">Skicka intresseanmälan</button></div>
             <p class="form-status" id="ip-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="compare-panel" id="chefpanel" hidden>
+        <div class="cp-inner">
+          <div class="cp-head"><h3>Skicka kursen till din chef</h3><button type="button" id="ch-stang" aria-label="Stäng">&#10005;</button></div>
+          <p class="ip-ingress">Vi sätter ihop ett mejl du kan skicka vidare, med kursen, vad du vill få ut av veckan och vad det kostar. Du ser hela texten innan den skickas.</p>
+
+          <p class="ip-rubrik">Kurser du vill föreslå</p>
+          <ul class="ip-lista" id="ch-lista"></ul>
+          <div class="dela-urval">
+            <span>Dela urvalet i stället</span>
+            <a class="dela-knapp" id="urval-linkedin" href="#" target="_blank" rel="noopener" title="LinkedIn" aria-label="Dela på LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C21.4 8.75 22 11 22 14.1V21h-4v-6.1c0-1.46-.03-3.34-2.03-3.34-2.03 0-2.34 1.58-2.34 3.23V21h-4z"/></svg></a>
+            <a class="dela-knapp" id="urval-facebook" href="#" target="_blank" rel="noopener" title="Facebook" aria-label="Dela på Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a>
+            <button type="button" class="dela-knapp" id="urval-kopiera" title="Kopiera länk" aria-label="Kopiera länk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3A4 4 0 0 0 13 5.34l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3A4 4 0 0 0 11 18.66l1.5-1.5"/></svg></button>
+            <button type="button" class="dela-knapp" id="urval-mer" hidden title="Dela" aria-label="Fler delningsalternativ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button>
+            <span class="dela-kvitto" id="urval-kvitto" hidden>Länken är kopierad.</span>
+          </div>
+
+          <form class="ip-form" id="ch-form" novalidate>
+            <div class="field"><label for="ch-namn">Ditt namn</label><input id="ch-namn" name="namn" autocomplete="name" required></div>
+            <div class="field"><label for="ch-roll">Din roll <span>Valfritt</span></label><input id="ch-roll" name="roll" autocomplete="organization-title"></div>
+            <div class="field"><label for="ch-epost">Din e-post</label><input id="ch-epost" name="epost" type="email" autocomplete="email" required></div>
+            <div class="field"><label for="ch-org">Organisation <span>Valfritt</span></label><input id="ch-org" name="organisation" autocomplete="organization"></div>
+            <div class="field"><label for="ch-chefnamn">Chefens namn <span>Valfritt</span></label><input id="ch-chefnamn" name="chefnamn"></div>
+            <div class="field"><label for="ch-chefmail">Chefens e-post</label><input id="ch-chefmail" name="chefmail" type="email" required></div>
+
+            <div class="field field-wide">
+              <label>Vad vill du att veckan ska ge? <span>Välj det som stämmer, det formar budskapet</span></label>
+              <div class="vinst-val">
+                <label><input type="checkbox" value="samarbete"> <span><strong>Bättre samarbete i min grupp</strong>Jag vill kunna läsa var gruppen står och vad den behöver av mig.</span></label>
+                <label><input type="checkbox" value="konflikt"> <span><strong>Färre och kortare konflikter</strong>Jag vill gå in tidigt, medan det fortfarande handlar om sak.</span></label>
+                <label><input type="checkbox" value="kommunikation"> <span><strong>Tydligare kommunikation och feedback</strong>Jag vill ge återkoppling som går att ta emot, och ta emot den utan att gå i försvar.</span></label>
+                <label><input type="checkbox" value="ledarskap"> <span><strong>Starkare ledarskap i vardagen</strong>Jag vill se vilka av mina beteenden som gör skillnad, särskilt när det blir pressat.</span></label>
+                <label><input type="checkbox" value="sjalvinsikt"> <span><strong>Självinsikt och stresshantering</strong>Jag vill förstå mina egna reaktioner så att jag håller huvudet kallt när tempot går upp.</span></label>
+              </div>
+            </div>
+
+            <div class="field field-wide"><label for="ch-eget">Egen motivering <span>Valfritt, läggs sist i mejlet</span></label><textarea id="ch-eget" rows="3" placeholder="Till exempel: vi har haft en tuff omorganisation och jag vill kunna hålla ihop teamet bättre."></textarea></div>
+
+            <div class="field field-wide consent"><label><input type="checkbox" id="ch-kopia" checked> <span>Skicka en kopia till UGL Sverige, så kan vi hålla platsen och svara på frågor från din chef.</span></label></div>
+
+            <div class="field field-wide">
+              <p class="ip-rubrik">Så här ser mejlet ut</p>
+              <pre class="ch-forhand" id="ch-forhand"></pre>
+            </div>
+
+            <div class="field field-wide"><button class="button" type="submit">Öppna mejlet till chefen</button></div>
+            <p class="form-status" id="ch-status" role="status" aria-live="polite"></p>
           </form>
         </div>
       </div>

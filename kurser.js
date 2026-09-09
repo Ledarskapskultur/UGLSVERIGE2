@@ -62,7 +62,7 @@
   var lista=$('kurslista'),raknare=$('kursraknare'),fTid=$('filter-tid'),fRegion=$('filter-region'),
       fOrt=$('filter-ort'),fPris=$('filter-pris'),fLedig=$('filter-ledig'),fSort=$('filter-sort'),
       merKnapp=$('visa-fler'),select=$('kurs'),bar=$('valbar'),panel=$('jamforpanel'),
-      ipanel=$('intressepanel'),visade=6,valda=[],bevakade=[];
+      ipanel=$('intressepanel'),chpanel=$('chefpanel'),visade=6,valda=[],bevakade=[];
 
   function fyll(el,varden,etikett){varden.forEach(function(v){
     el.insertAdjacentHTML('beforeend','<option value="'+v[0]+'">'+v[1]+'</option>')})}
@@ -127,7 +127,7 @@
         '<div class="kort-pris">'+pris+'</div>'+
         '<div class="kort-val">'+
           '<label class="jamfor"><input type="checkbox" data-jamfor="'+k.id+'"'+(vald?' checked':'')+'> Jämför</label>'+
-          '<label class="jamfor"><input type="checkbox" data-bevaka="'+k.id+'"'+(bevakade.indexOf(k.id)>-1?' checked':'')+'> Intresselista</label>'+
+          '<label class="jamfor"><input type="checkbox" data-bevaka="'+k.id+'"'+(bevakade.indexOf(k.id)>-1?' checked':'')+'> Välj</label>'+
           '<a class="button button-small" href="'+lank(k)+'">Se kursen &#8594;</a>'+
         '</div>'+
       '</li>';
@@ -155,7 +155,7 @@
     $('cb-antal').textContent=valda.length;
     $('cb-iantal').textContent=bevakade.length;
     $('cb-jamfor').hidden=$('cb-oppna').hidden=valda.length===0;
-    $('cb-intresse').hidden=$('cb-iopna').hidden=bevakade.length===0;
+    $('cb-intresse').hidden=$('cb-iopna').hidden=$('cb-chef').hidden=bevakade.length===0;
     bar.hidden=valda.length===0&&bevakade.length===0;
   }
   function kursMedId(id){return kurser.filter(function(k){return k.id===id})[0]}
@@ -227,7 +227,7 @@
   $('cp-stang').addEventListener('click',function(){panel.hidden=true});
   $('cb-iopna').addEventListener('click',ritaIntresse);
   $('ip-stang').addEventListener('click',function(){ipanel.hidden=true});
-  $('cb-rensa').addEventListener('click',function(){valda=[];bevakade=[];ritaBar();rita();panel.hidden=true;ipanel.hidden=true});
+  $('cb-rensa').addEventListener('click',function(){valda=[];bevakade=[];ritaBar();rita();panel.hidden=true;ipanel.hidden=true;chpanel.hidden=true});
   $('ip-form').addEventListener('submit',function(e){
     e.preventDefault();
     var f=$('ip-form');
@@ -317,6 +317,116 @@
     document.getElementById('behov').scrollIntoView({behavior:'smooth',block:'start'});
   });
 
+
+
+  // ---- Skicka till chefen ----
+  var VINSTER={
+    samarbete:['Bättre samarbete i gruppen','Jag vill kunna läsa var vår grupp faktiskt står och vad den behöver av mig, i stället för att gissa. UGL bygger på forskning om hur grupper utvecklas genom olika faser.'],
+    konflikt:['Konflikter som tas tidigt','Jag vill kunna gå in i en konflikt medan den fortfarande handlar om sak, i stället för att vänta tills den handlar om relationen. Veckan tränar just den skillnaden.'],
+    kommunikation:['Kommunikation och feedback som landar','Jag vill kunna ge återkoppling som går att ta emot, och ta emot den utan att gå i försvar. Det är en stor del av veckan.'],
+    ledarskap:['Ett tydligare ledarskap i vardagen','Jag vill se vilka av mina egna beteenden som gör skillnad för människorna omkring mig, särskilt när det blir pressat.'],
+    sjalvinsikt:['Självinsikt och stresshantering','Jag vill förstå mina egna reaktioner bättre, så att jag håller huvudet kallt när tempot går upp.']
+  };
+  function valdaVinster(){
+    return [].slice.call(document.querySelectorAll('.vinst-val input:checked')).map(function(c){return c.value});
+  }
+  function chefText(){
+    var namn=$('ch-namn').value.trim()||'[ditt namn]';
+    var roll=$('ch-roll').value.trim();
+    var org=$('ch-org').value.trim();
+    var chefnamn=$('ch-chefnamn').value.trim();
+    var eget=$('ch-eget').value.trim();
+    var kurser2=bevakade.map(kursMedId);
+    var flera=kurser2.length>1;
+    var t='Hej'+(chefnamn?' '+chefnamn:'')+',\n\n';
+    t+='Jag vill gå UGL, Utveckling av Grupp och Ledare, och har hittat '+(flera?kurser2.length+' veckor som skulle fungera för mig':'en vecka som skulle fungera för mig')+'.\n\n';
+    kurser2.forEach(function(k){
+      t+='• Vecka '+k.vecka+', '+k.period+'\n  '+k.anlaggning+', '+k.ort+'\n';
+      t+='  '+(k.total?(k.samlat?'Totalpris '+kr(k.total)+' exkl. moms, kurs, kost och logi ingår':'Totalpris '+kr(k.total)+' exkl. moms ('+kr(k.kurspris)+' i kursavgift plus '+kr(k.logi)+' för kost och logi)'):'Pris meddelas')+'\n';
+      t+='  '+location.origin+'/kurs?k='+k.datum+'-'+slug(k.anlaggning)+'\n\n';
+    });
+    var v=valdaVinster();
+    if(v.length){
+      t+='Det här är vad jag vill ta med mig tillbaka:\n\n';
+      v.forEach(function(x){t+='• '+VINSTER[x][0]+'\n  '+VINSTER[x][1]+'\n\n'});
+    }
+    if(eget)t+=eget+'\n\n';
+    t+='Kort om vad UGL är:\n';
+    t+='UGL är Försvarshögskolans ledarskapskoncept och har använts som grundläggande ledarskapsutbildning sedan 1981. Veckan genomförs på internat med 8 till 12 deltagare som inte känner varandra sedan tidigare, och leds av två handledare utbildade av Försvarshögskolan. Innehållet vilar på Försvarshögskolans ledarskapsmodell, forskning om gruppers utveckling och etablerade modeller för konflikthantering.\n\n';
+    t+='Insatsen är fem sammanhängande dagar och kostnaden ovan. Jag kommer hem med en personlig utvecklingsplan som jag gärna går igenom med dig efteråt, så att du ser vad veckan gav.\n\n';
+    t+='Vad säger du?\n\n';
+    t+=namn+(roll?'\n'+roll:'')+(org?'\n'+org:'');
+    return t;
+  }
+  function ritaChef(){
+    $('ch-lista').innerHTML=bevakade.map(function(id){
+      var k=kursMedId(id);
+      return '<li><strong>Vecka '+k.vecka+'</strong><span>'+k.period+'</span><span>'+k.anlaggning+', '+k.ort+'</span></li>';
+    }).join('');
+    $('ch-forhand').textContent=chefText();
+    ritaUrvalDelning();
+    chpanel.hidden=false;
+  }
+  ['ch-namn','ch-roll','ch-org','ch-chefnamn','ch-eget'].forEach(function(id){
+    $(id).addEventListener('input',function(){$('ch-forhand').textContent=chefText()})});
+  document.querySelectorAll('.vinst-val input').forEach(function(c){
+    c.addEventListener('change',function(){$('ch-forhand').textContent=chefText()})});
+  $('cb-chef').addEventListener('click',ritaChef);
+  $('ch-stang').addEventListener('click',function(){chpanel.hidden=true});
+  $('ch-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=$('ch-form');
+    if(!f.checkValidity()){f.reportValidity();return}
+    var amne='UGL-kurs jag vill gå'+(bevakade.length>1?', '+bevakade.length+' alternativ':'');
+    var lank='mailto:'+encodeURIComponent($('ch-chefmail').value)+
+      ($('ch-kopia').checked?'?cc='+encodeURIComponent(MOTTAGARE)+'&':'?')+
+      'subject='+encodeURIComponent(amne)+'&body='+encodeURIComponent(chefText());
+    if(ENDPOINT){
+      var d=new FormData(f);
+      d.append('typ','chefsutskick');
+      d.append('kurser',bevakade.map(function(id){var k=kursMedId(id);return 'Vecka '+k.vecka+' '+k.period+' '+k.anlaggning}).join(' | '));
+      d.append('vinster',valdaVinster().join(', '));
+      fetch(ENDPOINT,{method:'POST',body:d,headers:{Accept:'application/json'}}).catch(function(){});
+    }
+    window.location.href=lank;
+    $('ch-status').textContent='Ditt e-postprogram öppnas med mejlet ifyllt. Läs igenom och skicka.';
+  });
+
+
+  function urvalNyckel(k){return k.datum+'-'+slug(k.anlaggning)}
+  function urvalLank(){
+    return location.origin+location.pathname+'?valda='+bevakade.map(function(id){return urvalNyckel(kursMedId(id))}).join(',');
+  }
+  function ritaUrvalDelning(){
+    var u=urvalLank();
+    $('urval-linkedin').href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(u);
+    $('urval-facebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u);
+  }
+  $('urval-kopiera').addEventListener('click',function(){
+    var u=urvalLank(),kv=$('urval-kvitto');
+    var klart=function(){kv.hidden=false;setTimeout(function(){kv.hidden=true},2500)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(klart,klart)}
+    else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();
+         try{document.execCommand('copy')}catch(e){}document.body.removeChild(t);klart()}
+  });
+  if(navigator.share){
+    $('urval-mer').hidden=false;
+    $('urval-mer').addEventListener('click',function(){
+      navigator.share({title:'UGL-kurser',text:'Kolla de här UGL-veckorna',url:urvalLank()}).catch(function(){})});
+  }
+  $('cp-chef').addEventListener('click',function(){
+    valda.forEach(function(id){if(bevakade.indexOf(id)<0)bevakade.push(id)});
+    panel.hidden=true;ritaBar();rita();ritaChef();
+  });
+  (function(){
+    var q=new URLSearchParams(location.search).get('valda');
+    if(!q)return;
+    q.split(',').forEach(function(n){
+      var k=kurser.filter(function(x){return urvalNyckel(x)===n})[0];
+      if(k&&bevakade.indexOf(k.id)<0)bevakade.push(k.id);
+    });
+    if(bevakade.length){fLedig.checked=false;ritaBar();rita()}
+  })();
 
   var form=document.querySelector('.booking-form'),status=document.querySelector('.form-status');
   form.addEventListener('submit',function(e){
