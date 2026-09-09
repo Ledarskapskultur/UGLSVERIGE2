@@ -98,3 +98,10 @@ body{position:relative}
 @media(max-width:980px){.safety h2{white-space:normal}}
 .safety .check-list li{grid-template-columns:230px 1fr}
 @media(max-width:980px){.safety .check-list li{grid-template-columns:1fr;gap:.35rem}}
+
+/* Deltagarcitat i sektion 03 */
+.pull-quote{margin:2.8rem 0 0;padding-left:clamp(1.2rem,2vw,1.8rem);border-left:2px solid var(--brass);max-width:52ch}
+.pull-quote blockquote{margin:0;font:500 clamp(1.25rem,1.7vw,1.55rem)/1.45 "Playfair Display",Georgia,serif;color:var(--green);letter-spacing:-.01em}
+.pull-quote figcaption{margin-top:1rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e}
+.safety .demo-note{margin-top:1.1rem}
+.safety .pull-quote{height:auto}
