@@ -131,3 +131,22 @@ body{position:relative}
 .research-grid .research-take{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--green);font-weight:500}
 .research-note{margin:clamp(2.8rem,4.5vw,4rem) 0 0;font-size:1rem;line-height:1.75;color:#5a625e;max-width:64ch}
 @media(max-width:980px){.research-grid{grid-template-columns:1fr;gap:2.6rem}}
+
+/* Sektion: fakta och bakgrund */
+.facts{background:var(--ivory);max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)))}
+.facts .section-head .lead{margin-top:1.5rem;max-width:60ch}
+.facts-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,6rem);margin-top:clamp(2.8rem,4.5vw,4rem);align-items:start}
+.facts-body h3{color:var(--green);font:600 clamp(1.05rem,1.3vw,1.2rem)/1.25 "Libre Franklin",sans-serif;letter-spacing:.02em;margin:0 0 1rem}
+.facts-body h3+p{margin-bottom:1.1rem}
+.facts-body>p{font-size:1rem;line-height:1.75;color:#555d5a}
+.facts-body>h3:nth-of-type(2){margin-top:2.6rem}
+.facts-why{list-style:none;padding:0;margin:0}
+.facts-why li{padding:1.1rem 0;border-top:1px solid #d3d7d0;font-size:1rem;line-height:1.7;color:#555d5a}
+.facts-why strong{display:block;color:var(--green);font-weight:600;margin-bottom:.3rem}
+.facts-note{margin:2.2rem 0 0;padding-left:1.2rem;border-left:2px solid var(--brass);font-size:.95rem;line-height:1.7;color:#5a625e}
+.facts-table{margin:0;border-top:1px solid #cdd2ca}
+.facts-table>div{display:grid;grid-template-columns:minmax(140px,.8fr) 1.2fr;gap:1.5rem;padding:1.05rem 0;border-bottom:1px solid #dfe3dc}
+.facts-table dt{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:#7a827e;font-weight:600;padding-top:.15rem}
+.facts-table dd{margin:0;color:var(--green);font-size:1rem;line-height:1.55;font-weight:500}
+@media(max-width:980px){.facts-layout{grid-template-columns:1fr;gap:3rem}}
+@media(max-width:620px){.facts-table>div{grid-template-columns:1fr;gap:.3rem}}
