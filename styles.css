@@ -536,3 +536,14 @@ body{position:relative}
 .ip-form .consent input{accent-color:#123d35}
 .ip-form .form-status{color:var(--green);font-weight:500}
 @media(max-width:620px){.ip-form{grid-template-columns:1fr}.ip-lista li{gap:.3rem 1rem}}
+
+/* Dela kursen */
+.kp-dela{border:1px solid var(--line);background:#fff;padding:1.4rem 1.6rem}
+.kp-dela-rubrik{font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;color:#7a827e;font-weight:600;margin:0 0 .9rem}
+.kp-chef{display:block;font-weight:600;color:var(--green);font-size:1rem;padding-bottom:1.1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--line)}
+.kp-chef:hover{color:var(--brass)}
+.dela-rad{display:flex;gap:.6rem;flex-wrap:wrap}
+.dela-knapp{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:#fff;color:var(--green);cursor:pointer;transition:.15s;padding:0}
+.dela-knapp:hover{background:var(--green);border-color:var(--green);color:#fff}
+.dela-knapp svg{width:19px;height:19px}
+.dela-kvitto{margin:.9rem 0 0;font-size:.86rem;color:var(--green)}

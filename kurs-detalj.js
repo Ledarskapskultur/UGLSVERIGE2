@@ -74,4 +74,33 @@
   var cta=document.getElementById('kp-cta');
   cta.href='/kurser?valj='+encodeURIComponent(k.ledig?etikett:'Intresselista')+'#anmalan';
   if(!k.ledig){cta.textContent='Bevaka veckan →';document.querySelector('.kp-ingar').textContent='Veckan är fullbokad. Vi hör av oss om en plats blir ledig.'}
+
+  // ---- Dela kursen ----
+  (function(){
+    var url=location.href;
+    var rubrik='UGL vecka '+k.vecka+' på '+k.anlaggning+', '+k.ort;
+    var sammanfattning=rubrik+', '+k.period+'. Fem sammanhängande dagar på internat med två handledare utbildade av Försvarshögskolan.';
+    document.getElementById('dela-linkedin').href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url);
+    document.getElementById('dela-facebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);
+    document.getElementById('dela-mail').href='mailto:?subject='+encodeURIComponent(rubrik)+'&body='+encodeURIComponent(sammanfattning+'\n\n'+url);
+    document.getElementById('dela-chef').href='mailto:?subject='+encodeURIComponent('UGL-kurs jag vill gå: vecka '+k.vecka+', '+k.period)+
+      '&body='+encodeURIComponent(
+        'Hej,\n\nJag har hittat en UGL-kurs som jag skulle vilja gå.\n\n'+
+        rubrik+'\nDatum: '+k.period+'\n'+
+        (k.total?'Totalpris: '+kr(k.total)+' exkl. moms\n':'')+
+        '\nUGL är Försvarshögskolans ledarskapskoncept: fem sammanhängande dagar på internat i en grupp där ingen känner varandra sedan tidigare. Fokus ligger på självinsikt, kommunikation, feedback, konflikthantering och hur grupper utvecklas.\n\n'+
+        'All information om veckan finns här:\n'+url+'\n\nVad säger du?\n');
+    var kvitto=document.getElementById('dela-kvitto');
+    document.getElementById('dela-kopiera').addEventListener('click',function(){
+      var klart=function(){kvitto.hidden=false;setTimeout(function(){kvitto.hidden=true},2500)};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(klart,klart)}
+      else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();
+           try{document.execCommand('copy')}catch(e){}document.body.removeChild(t);klart()}
+    });
+    if(navigator.share){
+      var mer=document.getElementById('dela-mer');
+      mer.hidden=false;
+      mer.addEventListener('click',function(){navigator.share({title:rubrik,text:sammanfattning,url:url}).catch(function(){})});
+    }
+  })();
 })();
