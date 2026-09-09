@@ -45,11 +45,25 @@
     ['Intyg efter kursen',SVG('<circle cx="12" cy="9" r="5"/><path d="M9 14l-1 7 4-2 4 2-1-7"/>')]
   ].map(function(i){return '<li>'+i[1]+'<span>'+i[0]+'</span></li>'}).join('');
 
+  var REG=window.UGL_HANDLEDARE||{};
+  var harProfil=false;
   document.getElementById('k-handledare').innerHTML=k.handledare.length
     ? k.handledare.map(function(n){
-        var init=n.split(' ').map(function(w){return w[0]}).slice(0,2).join('');
-        return '<article><span class="hl-init">'+init+'</span><div><strong>'+n+'</strong><span>UGL-handledare, utbildad av Försvarshögskolan</span></div></article>'}).join('')
+        var p=REG[n],init=n.split(' ').map(function(w){return w[0]}).slice(0,2).join('');
+        var bild=p&&p.bild?'<img src="assets/'+p.bild+'" alt="Porträtt av '+n+'">':'<span class="hl-init">'+init+'</span>';
+        var roll=p&&p.roll?p.roll:'UGL-handledare, utbildad av Försvarshögskolan';
+        if(p&&p.text)harProfil=true;
+        return '<article class="'+(p&&p.text?'hl-full':'')+'">'+
+          '<figure class="hl-bild">'+bild+'</figure>'+
+          '<div><strong>'+n+'</strong><span class="hl-roll">'+roll+'</span>'+
+          (p&&p.text?'<p class="hl-text">'+p.text+'</p>':'')+'</div></article>'}).join('')
     : '<p class="handledare-tom">Handledarna för den här veckan meddelas senare. Hör av dig om du vill veta så snart de är satta.</p>';
+  if(harProfil){
+    var not=document.createElement('p');
+    not.className='demo-note';
+    not.textContent='Presentationerna är utkast sammanställda av oss och publiceras i sin slutliga form när handledaren godkänt texten och lämnat porträtt.';
+    document.querySelector('.handledare-not').after(not);
+  }
 
   document.getElementById('kp-vecka').textContent='UGL vecka '+k.vecka;
   document.getElementById('kp-pris').textContent=k.total?kr(k.total):'Pris meddelas';

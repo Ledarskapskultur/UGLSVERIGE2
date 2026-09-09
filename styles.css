@@ -494,3 +494,10 @@ body{position:relative}
 .kort-resa{color:var(--green)!important;font-weight:500}
 .kort-resa svg{color:var(--brass)!important}
 .kort-hl{line-height:1.5}
+.handledare-lista article{align-items:flex-start}
+.handledare-lista article.hl-full{flex-direction:column;gap:1.1rem;padding:1.3rem}
+.hl-bild{margin:0;width:52px;height:52px;flex:none;border-radius:50%;overflow:hidden;background:var(--ivory)}
+.handledare-lista article.hl-full .hl-bild{width:104px;height:104px;border-radius:0}
+.hl-bild img{width:100%;height:100%;object-fit:cover}
+.hl-roll{display:block;font-size:.86rem;color:#6b7370;line-height:1.4;margin-top:.15rem}
+.hl-text{margin:.9rem 0 0;font-size:.95rem;line-height:1.65;color:#555d5a}
