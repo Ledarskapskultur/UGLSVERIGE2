@@ -76,7 +76,7 @@
           '<p class="kort-rad">'+IKON.plats+k.anlaggning+', '+k.ort+'</p>'+
           '<p class="kort-rad kort-hl">'+IKON.person+hl+'</p>'+
         '</div>'+
-        '<div class="kort-pris">'+pris+'<span class="kort-ingar">Fem dagar, internat och kursmaterial</span></div>'+
+        '<div class="kort-pris">'+pris+'</div>'+
         '<div class="kort-val">'+
           '<label class="jamfor"><input type="checkbox" data-jamfor="'+k.id+'"'+(vald?' checked':'')+'> Jämför</label>'+
           (k.ledig

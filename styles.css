@@ -417,3 +417,24 @@ body{position:relative}
 .bf-noavg{margin-top:.8rem!important;font-size:.84rem!important;color:#7a827e!important}
 .kort figcaption.mark{background:var(--green);color:#fff;letter-spacing:.1em}
 .kort figcaption.mark-pris{background:var(--brass);color:#fff}
+
+/* ---- Sidton: varm off-white i stallet for kritvitt ---- */
+.sida-ton{background:#f4f2ec}
+.sida-ton .site-header{background:#f4f2ec;border-bottom-color:#e3e0d7}
+.sida-ton .kort,.sida-ton .browse-filters,.sida-ton .kp-box,.sida-ton .handledare-lista article,
+.sida-ton .browse-filters select,.sida-ton .sortera select,.sida-ton .chip,.sida-ton .field input,
+.sida-ton footer{background:#fff}
+.sida-ton .kort,.sida-ton .browse-filters,.sida-ton .handledare-lista article{border-color:#e3e0d7}
+.sida-ton .bf-varfor dl{background:#f4f2ec}
+.sida-ton .kp-hjalp{background:#eceadf}
+.sida-ton .hl-init{background:#eceadf}
+.sida-ton .kurs-flikar,.sida-ton .kurs-block,.sida-ton .fragor details,
+.sida-ton .kp-split,.sida-ton .kp-lank,.sida-ton .kp-split .kp-tot,.sida-ton .bf-quick,
+.sida-ton .bf-varfor,.sida-ton .results-bar{border-color:#e3e0d7}
+.sida-ton footer{border-top:1px solid #e3e0d7}
+.sida-ton .page-hero{padding-bottom:.5rem}
+
+/* Filtermenyn ligger fast */
+.browse-filters{position:sticky;top:1.25rem;max-height:calc(100vh - 2.5rem);overflow-y:auto}
+.browse{padding-top:1.5rem}
+.browse-layout{margin-top:0}
