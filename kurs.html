@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Detaljer om en enskild UGL-vecka: datum, kursgård, handledare, totalpris och vad som ingår.">
+  <title>UGL-kurs | UGL Sverige</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=14">
+</head>
+<body>
+  <header class="site-header header-solid">
+    <a class="brand" href="/" aria-label="UGL Sverige, startsida">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><g id="people"></g></svg>
+      <span class="brand-type"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span>
+    </a>
+    <button class="menu-button" aria-label="Öppna meny" aria-expanded="false">Meny</button>
+    <nav class="nav" aria-label="Huvudmeny">
+      <a href="/#om">Om UGL</a><a href="/#veckan">Veckan</a><a href="/#utbyte">Vad du får</a><a href="/#fakta">Fakta</a>
+      <a class="button button-small" href="/kurser">Alla kursdatum</a>
+    </nav>
+  </header>
+
+  <main id="top" class="kurssida">
+    <p class="brodsmula"><a href="/kurser">Kurser</a> <span>/</span> <span id="bs-region"></span> <span>/</span> <span id="bs-vecka"></span></p>
+
+    <div class="kurs-layout">
+      <div class="kurs-huvud">
+        <h1 id="k-rubrik">UGL</h1>
+        <div class="kurs-meta" id="k-meta"></div>
+        <figure class="kurs-bild"><img id="k-bild" src="assets/ugl-grupp.webp" alt="Deltagare under en UGL-vecka"><figcaption id="k-bildtext"></figcaption></figure>
+
+        <nav class="kurs-flikar" aria-label="Innehåll på sidan">
+          <a href="#oversikt">Översikt</a><a href="#ingar">Det här ingår</a><a href="#handledare">Handledare</a><a href="#veckan">Veckan</a><a href="#fragor">Vanliga frågor</a>
+        </nav>
+
+        <section id="oversikt" class="kurs-block">
+          <h2>En trygg ram för fem intensiva dagar.</h2>
+          <p class="lead">Du lär genom upplevelser, reflektion, teori och återkoppling, i en grupp där ingen känner varandra sedan tidigare.</p>
+          <p>UGL är Försvarshögskolans ledarskapskoncept och genomförs likadant oavsett var i landet du går det: fem sammanhängande dagar på internat, 8 till 12 deltagare och två handledare utbildade av Försvarshögskolan. Det som skiljer veckorna åt är datum, kursgård och vad kost och logi kostar där.</p>
+        </section>
+
+        <section id="ingar" class="kurs-block">
+          <h2>Det här ingår.</h2>
+          <ul class="ingar-grid" id="k-ingar"></ul>
+          <p class="demo-note">Boendeform och måltidsupplägg varierar mellan kursgårdarna. Exakta villkor står i bekräftelsen.</p>
+        </section>
+
+        <section id="handledare" class="kurs-block">
+          <h2>Dina handledare.</h2>
+          <div class="handledare-lista" id="k-handledare"></div>
+          <p class="handledare-not">Samtliga handledare är utbildade och certifierade av Försvarshögskolan och arbetar alltid i par.</p>
+        </section>
+
+        <section id="veckan" class="kurs-block">
+          <h2>Så ser veckan ut.</h2>
+          <ol class="days days-kompakt">
+            <li><b>Dag 1</b><strong>Ni möts som främlingar</strong><span>Gruppen sätter sina egna spelregler för veckan.</span></li>
+            <li><b>Dag 2</b><strong>Gruppen tar form</strong><span>Olikheter börjar märkas och påverka arbetet.</span></li>
+            <li><b>Dag 3</b><strong>Det skaver</strong><span>Oenighet och feedback på riktigt. Den dag de flesta minns.</span></li>
+            <li><b>Dag 4</b><strong>Tilliten bär</strong><span>När det svåra är sagt går arbetet lättare.</span></li>
+            <li><b>Dag 5</b><strong>Du formulerar din plan</strong><span>Du sätter ord på vad du tar med dig hem.</span></li>
+          </ol>
+          <p><a class="text-link" href="/#veckan">Läs mer om vad veckan innehåller</a></p>
+        </section>
+
+        <section id="fragor" class="kurs-block">
+          <h2>Vanliga frågor.</h2>
+          <div class="fragor">
+            <details><summary>Binder jag mig när jag anmäler mig?</summary><p>Nej. Anmälan blir bindande först när du har fått en bekräftelse från oss, och innan dess stämmer vi av att veckan passar dig.</p></details>
+            <details><summary>Kan jag gå tillsammans med en kollega?</summary><p>Inte på samma vecka. Gruppen ska vara en främlingsgrupp, det är en förutsättning för öppenheten. Vill ni gå tillsammans passar en egen kurs för organisationen bättre.</p></details>
+            <details><summary>Varför skiljer sig priset mellan veckorna?</summary><p>Kurspriset är detsamma överallt. Det som varierar är kostnaden för kost och logi på respektive kursgård.</p></details>
+            <details><summary>Krävs förkunskaper?</summary><p>Nej. UGL vänder sig till medarbetare, ledare och chefer och kräver ingen tidigare utbildning.</p></details>
+            <details><summary>Hur krävande är veckan?</summary><p>Den är känslomässigt krävande och förutsätter att du är i psykisk och fysisk balans när du går den. Undrar du över något inför kursen hör du av dig till handledarna i förväg.</p></details>
+          </div>
+        </section>
+      </div>
+
+      <aside class="kurs-panel">
+        <div class="kp-box">
+          <p class="kp-eyebrow" id="kp-vecka"></p>
+          <p class="kp-label">Totalpris</p>
+          <p class="kp-pris" id="kp-pris"></p>
+          <p class="kp-ingar">Kurs, kost och logi ingår</p>
+          <dl class="kp-split" id="kp-split"></dl>
+          <a class="button button-light kp-cta" id="kp-cta" href="/kurser#anmalan">Anmäl dig &#8594;</a>
+          <p class="kp-liten">Ingen betalning i dag. Anmälan är inte bindande förrän du fått bekräftelse.</p>
+          <a class="kp-lank" href="mailto:kontakt@uglsverige.se?subject=Fr%C3%A5ga%20om%20UGL">Frågor? Prata med oss &#8250;</a>
+        </div>
+        <div class="kp-hjalp">
+          <p><strong>Osäker på om UGL passar dig just nu?</strong></p>
+          <p>Skriv det i meddelandefältet i anmälan, så ringer vi upp innan du bestämmer dig.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><g class="footer-people"></g></svg><span class="brand-type"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span></div>
+    <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/#organisationer">För organisationer</a><a href="/kurser#anmalan">Anmälan</a></div>
+    <p>© 2026 UGL Sverige</p>
+  </footer>
+  <script src="script.js"></script>
+  <script src="kurser-data.js"></script>
+  <script src="kurs-detalj.js"></script>
+</body>
+</html>

@@ -274,3 +274,146 @@ body{position:relative}
 .cl-people{align-self:center}
 .button-row{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--green);border:1px solid var(--green);padding:.65rem 1.15rem;font-weight:600;font-size:.92rem;transition:.2s;white-space:nowrap}
 .button-row:hover{background:var(--green);color:#fff}
+
+/* ---- Bokningssidan: bladdra kurser ---- */
+.browse{max-width:var(--max);margin:auto;padding:clamp(2rem,3.5vw,3rem) var(--pad) clamp(3.5rem,6vw,6rem)}
+.browse-top{display:grid;grid-template-columns:1fr auto;gap:clamp(2rem,4vw,4rem);align-items:start;padding-bottom:clamp(2rem,3vw,2.6rem);border-bottom:1px solid var(--line)}
+.browse-intro h2{font-size:clamp(2.1rem,3.6vw,3.4rem);margin-bottom:.9rem}
+.browse-intro p{font-size:1.06rem;line-height:1.6;color:#5a625e;margin:0;max-width:56ch}
+.browse-assure{margin-top:1.1rem!important;display:flex;align-items:center;gap:.6rem;font-size:.95rem;color:var(--green)!important;font-weight:500}
+.browse-assure span{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:.7rem;flex:none}
+.browse-quote{margin:0;font:500 clamp(1.05rem,1.5vw,1.3rem)/1.45 "Playfair Display",Georgia,serif;font-style:italic;color:var(--green);text-align:right;padding-left:2rem;border-left:2px solid var(--brass)}
+
+.browse-layout{display:grid;grid-template-columns:270px 1fr;gap:clamp(1.8rem,3vw,3rem);margin-top:clamp(1.8rem,3vw,2.6rem);align-items:start}
+.browse-filters{border:1px solid var(--line);padding:1.5rem;position:sticky;top:1.5rem}
+.bf-group{margin-bottom:1.35rem}
+.bf-group:last-child{margin-bottom:0}
+.bf-group>label,.bf-label{display:block;font-size:.86rem;font-weight:600;color:var(--green);margin-bottom:.55rem}
+.browse-filters select{width:100%;font:inherit;font-size:.95rem;color:var(--charcoal);background:#fff;border:1px solid var(--line);padding:.7rem .85rem}
+.bf-check{display:flex!important;align-items:center;gap:.6rem;font-weight:400!important;color:var(--charcoal)!important;font-size:.95rem;margin:0!important}
+.bf-check input{width:17px;height:17px;flex:none}
+.bf-quick{padding-top:1.35rem;border-top:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font:inherit;font-size:.86rem;background:#fff;border:1px solid var(--line);color:#4a514e;padding:.45rem .85rem;border-radius:99px;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--sage)}
+.chip.is-on{background:#eef3ea;border-color:var(--green);color:var(--green);font-weight:600}
+.rensa{display:block;margin-top:1.1rem;background:none;border:0;font:inherit;font-size:.86rem;color:#7a827e;cursor:pointer;padding:0}
+.rensa:hover{color:var(--green)}
+
+.results-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.kursraknare{font-size:1.05rem;color:#5a625e}
+.kursraknare b{color:var(--green);font-size:1.5rem;font-family:"Libre Franklin",sans-serif;letter-spacing:-.02em;margin-right:.3rem}
+.sortera{display:flex;align-items:center;gap:.6rem;font-size:.86rem;color:#7a827e}
+.sortera select{font:inherit;font-size:.92rem;color:var(--green);background:#fff;border:1px solid var(--line);padding:.55rem .8rem}
+
+.kurskort{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1rem}
+.kort{display:grid;grid-template-columns:230px 1.25fr .95fr auto;gap:clamp(1.2rem,2vw,2rem);align-items:center;border:1px solid var(--line);background:#fff;padding:1rem;transition:.18s}
+.kort:hover{border-color:var(--sage);box-shadow:0 6px 22px rgba(18,61,53,.07)}
+.kort.is-full{opacity:.72}
+.kort figure{margin:0;height:150px;position:relative;overflow:hidden}
+.kort figcaption{position:absolute;top:.7rem;left:.7rem;background:#fff;color:var(--green);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;padding:.35rem .65rem}
+.kort-mitt h3{font:500 clamp(1.55rem,2.2vw,2rem)/1.1 "Playfair Display",Georgia,serif;color:var(--green);letter-spacing:-.01em;margin:0 0 .85rem}
+.kort-rad{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .4rem;font-size:.95rem;line-height:1.45;color:#4a514e}
+.kort-rad span{opacity:.55;font-size:.85rem;flex:none;line-height:1.6}
+.kort-hl{color:#6b7370;font-size:.9rem}
+.kort-pris strong{display:block;color:var(--green);font-size:1.12rem;font-weight:600;letter-spacing:-.01em}
+.kort-pris span{display:block;font-size:.85rem;line-height:1.5;color:#6b7370;margin-top:.25rem}
+.kort-ingar{margin-top:.6rem!important;padding-top:.6rem;border-top:1px solid var(--line)}
+.kort-val{display:flex;flex-direction:column;align-items:stretch;gap:.75rem;min-width:150px}
+.jamfor{display:flex;align-items:center;gap:.55rem;font-size:.9rem;color:#5a625e;cursor:pointer}
+.jamfor input{width:17px;height:17px;flex:none;accent-color:#123d35}
+.kort .button{width:100%}
+
+.compare-bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--green);color:#e7ece8;display:flex;align-items:center;gap:clamp(1rem,2.5vw,2.5rem);padding:1rem clamp(1.2rem,4vw,3rem)}
+.cb-count b{color:#fff;font-size:1.1rem}
+.cb-text{font-size:.92rem;color:#a9bcb4}
+.compare-bar .button{margin-left:auto}
+.cb-stang{background:none;border:0;color:#c6d3cd;font-size:1rem;cursor:pointer;padding:.3rem .5rem}
+.compare-panel{position:fixed;inset:0;z-index:50;background:rgba(10,32,28,.55);display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem)}
+.cp-inner{background:#fff;max-width:900px;width:100%;max-height:86vh;overflow:auto;padding:clamp(1.6rem,3vw,2.6rem)}
+.cp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.cp-head h3{color:var(--green);font:600 1.5rem/1.2 "Libre Franklin",sans-serif;margin:0}
+.cp-head button{background:none;border:0;font-size:1.1rem;cursor:pointer;color:#5a625e}
+.cp-table table{width:100%;border-collapse:collapse}
+.cp-table th{text-align:left;font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;color:#7a827e;font-weight:600;padding:.9rem 1rem .9rem 0;width:150px;vertical-align:top}
+.cp-table td{padding:.9rem 1rem .9rem 0;font-size:.97rem;line-height:1.5;color:var(--green);vertical-align:top;border-bottom:1px solid var(--line)}
+.cp-table tr th{border-bottom:1px solid var(--line)}
+
+@media(max-width:1100px){.browse-layout{grid-template-columns:1fr}.browse-filters{position:static}.bf-quick{padding-top:1.2rem}
+.kort{grid-template-columns:180px 1fr;gap:1.2rem}.kort-pris,.kort-val{grid-column:2}.kort figure{height:180px;grid-row:span 3}}
+@media(max-width:760px){.browse-top{grid-template-columns:1fr}.browse-quote{text-align:left;border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:1.2rem}
+.kort{grid-template-columns:1fr}.kort figure{grid-row:auto;height:190px}.kort-pris,.kort-val{grid-column:1}
+.compare-bar{flex-wrap:wrap;gap:.8rem}.cb-text{display:none}.compare-bar .button{margin-left:0;flex:1}}
+.compare-bar[hidden],.compare-panel[hidden]{display:none!important}
+.kort-rad svg{width:16px;height:16px;flex:none;color:var(--sage);margin-top:.18rem;opacity:1}
+
+/* ---- Kursdetaljsida ---- */
+.kurssida{max-width:var(--max);margin:auto;padding:1.6rem var(--pad) clamp(3.5rem,6vw,6rem)}
+.brodsmula{font-size:.85rem;color:#7a827e;margin:0 0 1.6rem}
+.brodsmula a{color:var(--green);font-weight:500}
+.brodsmula span+span{margin-left:.1rem}
+.kurs-layout{display:grid;grid-template-columns:1fr 340px;gap:clamp(2rem,4vw,4rem);align-items:start}
+.kurs-huvud h1{font:500 clamp(2.2rem,4vw,3.6rem)/1.08 "Playfair Display",Georgia,serif;color:var(--green);letter-spacing:-.02em;margin:0 0 1.1rem;max-width:20ch}
+.kurs-meta{display:flex;flex-wrap:wrap;gap:.8rem 1.8rem;align-items:center;font-size:.95rem;color:#4a514e;margin-bottom:1.8rem}
+.kurs-meta span{display:inline-flex;align-items:center;gap:.5rem}
+.kurs-meta svg{width:17px;height:17px;color:var(--sage)}
+.meta-ledig{color:var(--green);font-weight:600}
+.meta-ledig:before{content:'';width:9px;height:9px;border-radius:50%;background:#4b8b60;display:inline-block}
+.meta-full{color:#8a7a55;font-weight:600}
+.kurs-bild{margin:0;position:relative;height:clamp(240px,30vw,400px);overflow:hidden}
+.kurs-bild figcaption{position:absolute;right:0;bottom:0;background:rgba(18,61,53,.86);color:#e7ece8;font-size:.78rem;padding:.55rem .9rem}
+.kurs-flikar{display:flex;gap:clamp(1.2rem,2.5vw,2.4rem);margin:2rem 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.kurs-flikar a{padding:.9rem 0;font-size:.95rem;color:#5a625e;border-bottom:2px solid transparent;white-space:nowrap}
+.kurs-flikar a:hover{color:var(--green);border-bottom-color:var(--brass)}
+.kurs-block{padding:clamp(2.4rem,4vw,3.4rem) 0;border-bottom:1px solid var(--line)}
+.kurs-block:last-child{border-bottom:0}
+.kurs-block h2{font-size:clamp(1.7rem,2.6vw,2.3rem);margin-bottom:1rem}
+.kurs-block .lead{margin-bottom:1.2rem;max-width:58ch}
+.kurs-block p{font-size:1rem;line-height:1.75;color:#555d5a;max-width:62ch}
+.ingar-grid{list-style:none;padding:0;margin:1.8rem 0 0;display:grid;grid-template-columns:repeat(6,1fr);gap:1.2rem}
+.ingar-grid li{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.7rem;font-size:.86rem;line-height:1.35;color:#4a514e}
+.ingar-grid svg{width:26px;height:26px;color:var(--green);stroke-width:1.3}
+.handledare-lista{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.6rem}
+.handledare-lista article{display:flex;align-items:center;gap:1rem;border:1px solid var(--line);padding:1.1rem}
+.hl-init{width:52px;height:52px;flex:none;border-radius:50%;background:var(--ivory);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:600;letter-spacing:.02em}
+.handledare-lista strong{display:block;color:var(--green);font-size:1.02rem}
+.handledare-lista div span{font-size:.86rem;color:#6b7370;line-height:1.4}
+.handledare-not,.handledare-tom{margin-top:1.2rem!important;font-size:.93rem!important;color:#6b7370!important}
+.days-kompakt{margin-top:2rem!important}
+.days-kompakt strong{font-size:1.02rem}
+.fragor{margin-top:1.6rem;max-width:62ch}
+.fragor details{border-top:1px solid var(--line)}
+.fragor summary{padding:1.05rem 0;cursor:pointer;color:var(--green);font-weight:600;font-size:1rem;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+.fragor summary::-webkit-details-marker{display:none}
+.fragor summary:after{content:'+';color:var(--brass);font-weight:400}
+.fragor details[open] summary:after{content:'\2212'}
+.fragor p{padding:0 0 1.1rem;margin:0;font-size:.98rem}
+
+.kurs-panel{position:sticky;top:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.kp-box{border:1px solid var(--line);padding:1.6rem;background:#fff}
+.kp-eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:#7a827e;font-weight:600;margin:0 0 1rem}
+.kp-label{margin:0;font-size:.95rem;color:#5a625e}
+.kp-pris{margin:.15rem 0 .35rem;font:500 clamp(2rem,2.6vw,2.6rem)/1 "Playfair Display",Georgia,serif;color:var(--green);letter-spacing:-.02em}
+.kp-ingar{margin:0 0 1.2rem;font-size:.9rem;color:#6b7370}
+.kp-split{margin:0 0 1.4rem;padding-top:1.1rem;border-top:1px solid var(--line)}
+.kp-split>div{display:flex;justify-content:space-between;gap:1rem;padding:.42rem 0;font-size:.93rem;color:#5a625e}
+.kp-split dt,.kp-split dd{margin:0}
+.kp-split .kp-tot{border-top:1px solid var(--line);margin-top:.5rem;padding-top:.7rem;color:var(--green);font-weight:600;font-size:1rem}
+.kp-cta{width:100%}
+.kp-liten{margin:.9rem 0 0;font-size:.83rem;line-height:1.5;color:#7a827e}
+.kp-lank{display:block;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.93rem;font-weight:600;color:var(--green)}
+.kp-hjalp{background:var(--ivory);padding:1.3rem}
+.kp-hjalp p{margin:0;font-size:.93rem;line-height:1.6;color:#5a625e}
+.kp-hjalp p+p{margin-top:.5rem}
+.kp-hjalp strong{color:var(--green)}
+@media(max-width:1000px){.kurs-layout{grid-template-columns:1fr}.kurs-panel{position:static;order:-1}.ingar-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.ingar-grid{grid-template-columns:repeat(2,1fr)}.handledare-lista{grid-template-columns:1fr}}
+.bf-varfor{margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+.bf-varfor h3{font:600 1.02rem/1.3 "Libre Franklin",sans-serif;color:var(--green);margin:0 0 .6rem}
+.bf-varfor p{font-size:.89rem;line-height:1.6;color:#5a625e;margin:0}
+.bf-varfor dl{margin:1rem 0 0;background:var(--ivory);padding:.9rem 1rem}
+.bf-varfor dl>div{display:flex;justify-content:space-between;gap:.8rem;font-size:.87rem;color:#5a625e;padding:.22rem 0}
+.bf-varfor dt,.bf-varfor dd{margin:0}
+.bf-noavg{margin-top:.8rem!important;font-size:.84rem!important;color:#7a827e!important}
+.kort figcaption.mark{background:var(--green);color:#fff;letter-spacing:.1em}
+.kort figcaption.mark-pris{background:var(--brass);color:#fff}

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
   <header class="site-header header-solid">
@@ -31,21 +31,90 @@
       <p class="page-hero-link">Vill du först veta vad veckan innebär? <a class="text-link" href="/">Läs om UGL</a></p>
     </section>
 
-    <section id="datum" class="section course-list-section reveal">
-      <div class="section-head">
-        <p class="eyebrow">01. Kommande kurser</p>
-        <h2>Välj din vecka.</h2>
-        <p class="lead">Kurspriset är 23 900 kr för samtliga veckor. Kost och logi på kursgården tillkommer och varierar med anläggning.</p>
+    <section id="datum" class="browse reveal">
+      <div class="browse-top">
+        <div class="browse-intro">
+          <h2>Hitta veckan som passar dig.</h2>
+          <p>Samtliga kurser leds av två handledare utbildade av Försvarshögskolan. Kurspriset är detsamma överallt, kost och logi varierar med anläggning.</p>
+          <p class="browse-assure"><span aria-hidden="true">&#10003;</span> Fem sammanhängande dagar, 8 till 12 deltagare, alltid främlingsgrupp</p>
+        </div>
+        <p class="browse-quote">Ett starkare<br>ledarskap börjar<br>med dig.</p>
       </div>
-      <div class="course-filters">
-        <label>Ort<select id="filter-ort"><option value="">Alla orter</option></select></label>
-        <label>Månad<select id="filter-tid"><option value="">Alla månader</option></select></label>
-        <label class="filter-check"><input type="checkbox" id="filter-ledig" checked> Visa bara lediga</label>
-        <span id="kursraknare" class="kursraknare"></span>
+
+      <div class="browse-layout">
+        <aside class="browse-filters" aria-label="Filtrera kurser">
+          <div class="bf-group">
+            <label for="filter-tid">När vill du gå?</label>
+            <select id="filter-tid"><option value="">Alla perioder</option></select>
+          </div>
+          <div class="bf-group">
+            <label for="filter-region">Var vill du gå?</label>
+            <select id="filter-region"><option value="">Alla regioner</option></select>
+          </div>
+          <div class="bf-group">
+            <label for="filter-ort">Ort</label>
+            <select id="filter-ort"><option value="">Alla orter</option></select>
+          </div>
+          <div class="bf-group">
+            <label for="filter-pris">Totalpris</label>
+            <select id="filter-pris">
+              <option value="">Alla priser</option>
+              <option value="33000">Under 33 000 kr</option>
+              <option value="34000">Under 34 000 kr</option>
+            </select>
+          </div>
+          <div class="bf-group">
+            <label class="bf-check"><input type="checkbox" id="filter-ledig" checked> Visa bara lediga</label>
+          </div>
+          <div class="bf-group bf-quick">
+            <span class="bf-label">Snabbfilter</span>
+            <div class="chips">
+              <button type="button" class="chip" data-quick="snart">Närmast i tiden</button>
+              <button type="button" class="chip" data-quick="Stockholm">Stockholm</button>
+              <button type="button" class="chip" data-quick="Skåne">Skåne</button>
+              <button type="button" class="chip" data-quick="Västra Götaland">Västra Götaland</button>
+              <button type="button" class="chip" data-quick="Halland">Halland</button>
+            </div>
+            <button type="button" class="rensa" id="rensa-filter">&#10005; Rensa filter</button>
+          </div>
+          <div class="bf-varfor">
+            <h3>Varför skiljer sig priserna?</h3>
+            <p>Alla veckor följer samma kvalitetssäkrade upplägg. Kursavgiften är densamma överallt. Det som varierar är vad kost och logi kostar på respektive kursgård.</p>
+            <dl><div><dt>Kursavgift</dt><dd>23 900 kr</dd></div><div><dt>Kost och logi</dt><dd>8 900 till 10 500 kr</dd></div></dl>
+            <p class="bf-noavg">Inga dolda avgifter.</p>
+          </div>
+        </aside>
+
+        <div class="browse-results">
+          <div class="results-bar">
+            <span id="kursraknare" class="kursraknare"></span>
+            <label class="sortera" for="filter-sort">Sortera
+              <select id="filter-sort">
+                <option value="datum">Datum, närmast först</option>
+                <option value="pris">Pris, lägst först</option>
+                <option value="ort">Ort, A till Ö</option>
+              </select>
+            </label>
+          </div>
+          <ul class="kurskort" id="kurslista"></ul>
+          <button class="button-outline-dark" id="visa-fler" type="button" hidden>Visa fler</button>
+          <p class="demo-note">Bilderna är från UGL-veckor och visar inte den enskilda anläggningen. Kurserna i Jönköping saknar prisuppgift tills den är bekräftad.</p>
+        </div>
       </div>
-      <ul class="course-list" id="kurslista"></ul>
-      <button class="button button-outline-dark" id="visa-fler" type="button" hidden>Visa fler</button>
-      <p class="demo-note">Handledare som ännu inte är satta visas som meddelas senare. Kurserna i Jönköping saknar prisuppgift tills den är bekräftad.</p>
+
+      <div class="compare-bar" id="jamforbar" hidden>
+        <span class="cb-count"><b id="cb-antal">0</b> kurser valda</span>
+        <span class="cb-text">Jämför datum, plats, pris och handledare sida vid sida.</span>
+        <button type="button" class="button button-light" id="cb-oppna">Jämför kurser &#8594;</button>
+        <button type="button" class="cb-stang" id="cb-rensa" aria-label="Rensa valda">&#10005;</button>
+      </div>
+
+      <div class="compare-panel" id="jamforpanel" hidden>
+        <div class="cp-inner">
+          <div class="cp-head"><h3>Jämför valda kurser</h3><button type="button" id="cp-stang" aria-label="Stäng">&#10005;</button></div>
+          <div class="cp-table" id="cp-innehall"></div>
+        </div>
+      </div>
     </section>
 
     <section class="section steps-section reveal">
