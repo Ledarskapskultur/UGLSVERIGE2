@@ -69,3 +69,14 @@ body{position:relative}
 .reason-title h3{white-space:normal;font-size:clamp(1.4rem,4.6vw,1.9rem)}
 }
 .hero .button{gap:.55rem}
+
+/* Hero: uttryck enligt referens (serif-rubrik, limegron accent) */
+:root{--lime:#d6f24d}
+.hero-copy h1{font-family:"Playfair Display",Georgia,serif;font-weight:500;letter-spacing:-.02em;line-height:1.06;max-width:16ch}
+.hero-copy .eyebrow{letter-spacing:.24em}
+.hero .button{background:var(--lime);border-color:var(--lime);color:var(--green);font-weight:600}
+.hero .button:hover{background:#e2f76f;border-color:#e2f76f}
+.site-header .nav a.button{background:var(--lime);border-color:var(--lime);color:var(--green)}
+.site-header .nav a.button:hover{background:#e2f76f;border-color:#e2f76f}
+.hero-stat b{font-family:"Playfair Display",Georgia,serif;font-weight:500;letter-spacing:-.02em}
+.hero-stat span{display:block;margin-top:.4rem}
