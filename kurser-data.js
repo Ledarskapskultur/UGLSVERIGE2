@@ -1,6 +1,8 @@
 /* UGL Sverige, kursdata. Format per rad:
-   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)|kurspris (valfritt)
-   Lamnas kurspris tomt anvands standardpriset nedan. Slutdatum = start + 4 dagar. */
+   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)|pris (valfritt)
+   Lamnas prisfaltet tomt anvands standardpriset nedan som kursavgift.
+   Ar logipriset 0 och prisfaltet ifyllt tolkas det som ett samlat totalpris dar allt ingar.
+   Slutdatum = start + 4 dagar. */
 window.UGL_KURSPRIS = 23900;
 window.UGL_RADER = `
 2026-09-14|38|Bykrogen|Kristianstad|Nurgül Iljas Eminovska;Susann Swahn|8900|L
@@ -126,13 +128,13 @@ window.UGL_RADER = `
 2027-12-06|49|Hagastrand|Stockholm||10500|L
 2027-12-13|50|Skogshem & Wijk|Lidingö||10500|L
 2027-12-13|50|Ringenäs|Halmstad||9900|L
-2026-09-14|38|Mullsjö|Jönköping||0|L
-2026-10-19|43|Mullsjö|Jönköping||0|L
-2026-11-23|48|Mullsjö|Jönköping||0|L
-2027-03-15|11|Mullsjö|Jönköping||0|L
-2027-04-26|17|Mullsjö|Jönköping||0|L
-2027-05-31|22|Mullsjö|Jönköping||0|L
-2027-09-13|38|Mullsjö|Jönköping||0|L
-2027-10-18|43|Mullsjö|Jönköping||0|L
-2027-11-22|48|Mullsjö|Jönköping||0|L
+2026-09-14|38|Mullsjö|Jönköping||0|L|28750
+2026-10-19|43|Mullsjö|Jönköping||0|L|28750
+2026-11-23|48|Mullsjö|Jönköping||0|L|28750
+2027-03-15|11|Mullsjö|Jönköping||0|L|28750
+2027-04-26|17|Mullsjö|Jönköping||0|L|28750
+2027-05-31|22|Mullsjö|Jönköping||0|L|28750
+2027-09-13|38|Mullsjö|Jönköping||0|L|28750
+2027-10-18|43|Mullsjö|Jönköping||0|L|28750
+2027-11-22|48|Mullsjö|Jönköping||0|L|28750
 `.trim();

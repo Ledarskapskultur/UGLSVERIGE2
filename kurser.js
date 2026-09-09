@@ -13,10 +13,10 @@
   function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
 
   var kurser=window.UGL_RADER.split('\n').map(function(rad,i){
-    var d=rad.split('|'),start=new Date(d[0]+'T00:00:00'),slut=new Date(start.getTime()+4*864e5),logi=+d[5],kurspris=d[7]?+d[7]:window.UGL_KURSPRIS;
+    var d=rad.split('|'),start=new Date(d[0]+'T00:00:00'),slut=new Date(start.getTime()+4*864e5),logi=+d[5],kurspris=d[7]?+d[7]:window.UGL_KURSPRIS,samlat=!logi&&!!d[7];
     return {id:i,start:start,slut:slut,vecka:+d[1],anlaggning:d[2],ort:d[3],
       region:REGIONER[d[3]]||d[3],
-      handledare:d[4]?d[4].split(';'):[],kurspris:kurspris,logi:logi,total:logi?kurspris+logi:0,
+      handledare:d[4]?d[4].split(';'):[],kurspris:kurspris,logi:logi,samlat:samlat,total:logi?kurspris+logi:(samlat?kurspris:0),
       ledig:d[6]==='L',
       bild:'assets/'+BILDER[hash(d[2]+d[3])%BILDER.length],
       period:fmt(start)+' till '+fmt(slut)+' '+slut.getFullYear(),
@@ -62,9 +62,11 @@
     lista.innerHTML=f.slice(0,visade).map(function(k){
       var mark = k.id===narmast ? '<figcaption class="mark">Närmast i tiden</figcaption>'
                : (billigast&&k.id===billigast.id ? '<figcaption class="mark mark-pris">Lägst totalpris</figcaption>' : '');
-      var pris=k.total
-        ? '<strong>'+kr(k.total)+'</strong><span>Kurs '+kr(k.kurspris)+' och kost och logi '+kr(k.logi)+'</span>'
-        : '<strong>Pris meddelas</strong><span>Kontakta oss för uppgift</span>';
+      var pris=!k.total
+        ? '<strong>Pris meddelas</strong><span>Kontakta oss för uppgift</span>'
+        : (k.samlat
+          ? '<strong>'+kr(k.total)+'</strong><span>Kurs, kost och logi ingår</span>'
+          : '<strong>'+kr(k.total)+'</strong><span>Kurs '+kr(k.kurspris)+' och kost och logi '+kr(k.logi)+'</span>');
       var hl=k.handledare.length?k.handledare.join(' och '):'Handledare meddelas senare';
       var vald=valda.indexOf(k.id)>-1;
       return '<li class="kort'+(k.ledig?'':' is-full')+'">'+
@@ -111,8 +113,8 @@
       ['Anläggning',function(k){return k.anlaggning}],
       ['Ort',function(k){return k.ort+' ('+k.region+')'}],
       ['Handledare',function(k){return k.handledare.length?k.handledare.join(', '):'Meddelas senare'}],
-      ['Kursavgift',function(k){return kr(k.kurspris)}],
-      ['Kost och logi',function(k){return k.logi?kr(k.logi):'Meddelas'}],
+      ['Kursavgift',function(k){return k.samlat?'Ingår i totalpriset':kr(k.kurspris)}],
+      ['Kost och logi',function(k){return k.samlat?'Ingår i totalpriset':(k.logi?kr(k.logi):'Meddelas')}],
       ['Totalt',function(k){return k.total?'<b>'+kr(k.total)+'</b>':'Meddelas'}],
       ['Status',function(k){return k.ledig?'Lediga platser':'Fullbokad'}]
     ];
