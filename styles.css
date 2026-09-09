@@ -117,3 +117,7 @@ body{position:relative}
 /* Primar CTA i limegront overallt */
 .button-light{background:var(--lime);border-color:var(--lime);color:var(--green)}
 .button-light:hover{background:#e2f76f;border-color:#e2f76f}
+
+/* Sektion 01: enspaltig rubrik */
+.intro .section-head{margin-bottom:clamp(2.6rem,4.5vw,4rem)}
+.intro .section-head h2{max-width:18ch}
