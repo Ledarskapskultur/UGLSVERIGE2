@@ -438,3 +438,7 @@ body{position:relative}
 .browse-filters{position:sticky;top:1.25rem;max-height:calc(100vh - 2.5rem);overflow-y:auto}
 .browse{padding-top:1.5rem}
 .browse-layout{margin-top:0}
+.pris-info{position:relative;margin:0 0 1rem;padding:.9rem 1.1rem .9rem 2.9rem;background:#eceadf;font-size:.92rem;line-height:1.6;color:#4a514e}
+.pris-info b{color:var(--green);font-weight:600}
+.pris-info:before{content:'i';position:absolute;left:1.1rem;top:1rem;width:19px;height:19px;border-radius:50%;background:var(--green);color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sida-ton .pris-info{background:#fff;border:1px solid #e3e0d7}
