@@ -54,9 +54,9 @@
   document.getElementById('kp-vecka').textContent='UGL vecka '+k.vecka;
   document.getElementById('kp-pris').textContent=k.total?kr(k.total):'Pris meddelas';
   document.getElementById('kp-split').innerHTML=
-    k.samlat ? '<div><dt>Kursavgift</dt><dd>Ingår</dd></div><div><dt>Kost och logi</dt><dd>Ingår</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
-    : k.total ? '<div><dt>Kursavgift</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
-    : '<div><dt>Kursavgift</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>Meddelas</dd></div>';
+    k.samlat ? '<div><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
+    : k.total ? '<div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
+    : '<div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>Meddelas</dd></div>';
   var cta=document.getElementById('kp-cta');
   cta.href='/kurser?valj='+encodeURIComponent(k.ledig?etikett:'Intresselista')+'#anmalan';
   if(!k.ledig){cta.textContent='Bevaka veckan →';document.querySelector('.kp-ingar').textContent='Veckan är fullbokad. Vi hör av oss om en plats blir ledig.'}

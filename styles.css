@@ -474,3 +474,12 @@ body{position:relative}
 .guide-kort[hidden],.guide-svar[hidden],.matchrubrik[hidden]{display:none!important}
 @media(max-width:760px){.guide-val,.guide-val-tat{grid-template-columns:1fr}.guide-steg{font-size:.82rem}}
 [hidden]{display:none!important}
+.kort-moms{font-size:.8rem!important;color:#8a918d!important;margin-top:.1rem!important}
+.kort-split{margin:.75rem 0 0;padding-top:.7rem;border-top:1px solid var(--line)}
+.kort-split>div{display:flex;justify-content:space-between;gap:1rem;padding:.18rem 0;font-size:.87rem;color:#5f6763}
+.kort-split dt,.kort-split dd{margin:0}
+.kort-split dd{color:var(--green);font-weight:500;white-space:nowrap}
+.kp-moms{margin:0 0 .8rem;font-size:.85rem;color:#8a918d}
+.browse .results-bar{margin:0 0 1rem;padding-bottom:0}
+.browse-layout{margin-top:0}
+.browse-filters{padding:1.4rem 1.5rem}

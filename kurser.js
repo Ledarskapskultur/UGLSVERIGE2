@@ -19,6 +19,7 @@
       handledare:d[4]?d[4].split(';'):[],kurspris:kurspris,logi:logi,samlat:samlat,total:logi?kurspris+logi:(samlat?kurspris:0),
       ledig:d[6]==='L',
       bild:'assets/'+BILDER[hash(d[2]+d[3])%BILDER.length],
+      datum:d[0],
       period:fmt(start)+' till '+fmt(slut)+' '+slut.getFullYear(),
       manad:start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')};
   }).sort(function(a,b){return a.start-b.start});
@@ -77,7 +78,7 @@
     return f;
   }
   function slug(s){return s.toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-  function lank(k){return 'kurs?k='+k.start.toISOString().slice(0,10)+'-'+slug(k.anlaggning)}
+  function lank(k){return 'kurs?k='+k.datum+'-'+slug(k.anlaggning)}
   function etikett(k){return 'Vecka '+k.vecka+', '+k.period+', '+k.anlaggning+', '+k.ort}
 
   function rita(){
@@ -90,10 +91,11 @@
                : (k.id===narmast ? '<figcaption class="mark">Närmast i tiden</figcaption>'
                : (billigast&&k.id===billigast.id ? '<figcaption class="mark mark-pris">Lägst totalpris</figcaption>' : ''));
       var pris=!k.total
-        ? '<strong>Pris meddelas</strong><span>Kontakta oss för uppgift</span>'
-        : (k.samlat
-          ? '<strong>'+kr(k.total)+'</strong><span>Kurs, kost och logi ingår</span>'
-          : '<strong>'+kr(k.total)+'</strong><span>Kurs '+kr(k.kurspris)+' och kost och logi '+kr(k.logi)+'</span>');
+        ? '<strong>Pris meddelas</strong><span class="kort-moms">Kontakta oss för uppgift</span>'
+        : '<strong>'+kr(k.total)+'</strong><span class="kort-moms">exkl. moms</span>'+
+          (k.samlat
+            ? '<dl class="kort-split"><div><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div></dl>'
+            : '<dl class="kort-split"><div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div></dl>');
       var hl=k.handledare.length?k.handledare.join(' och '):'Handledare meddelas senare';
       var vald=valda.indexOf(k.id)>-1;
       return '<li class="kort'+(k.ledig?'':' is-full')+'">'+
@@ -140,9 +142,9 @@
       ['Anläggning',function(k){return k.anlaggning}],
       ['Ort',function(k){return k.ort+' ('+k.region+')'}],
       ['Handledare',function(k){return k.handledare.length?k.handledare.join(', '):'Meddelas senare'}],
-      ['Kursavgift',function(k){return k.samlat?'Ingår i totalpriset':kr(k.kurspris)}],
-      ['Kost och logi',function(k){return k.samlat?'Ingår i totalpriset':(k.logi?kr(k.logi):'Meddelas')}],
-      ['Totalt',function(k){return k.total?'<b>'+kr(k.total)+'</b>':'Meddelas'}],
+      ['Kursavgift, exkl. moms',function(k){return k.samlat?'Ingår i totalpriset':kr(k.kurspris)}],
+      ['Kost och logi, exkl. moms',function(k){return k.samlat?'Ingår i totalpriset':(k.logi?kr(k.logi):'Meddelas')}],
+      ['Totalpris, exkl. moms',function(k){return k.total?'<b>'+kr(k.total)+'</b>':'Meddelas'}],
       ['Status',function(k){return k.ledig?'Lediga platser':'Fullbokad'}]
     ];
     $('cp-innehall').innerHTML='<table><tbody>'+rader.map(function(r){

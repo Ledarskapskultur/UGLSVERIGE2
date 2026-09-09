@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body class="sida-ton">
   <header class="site-header header-solid">
@@ -59,7 +59,7 @@
         <div class="guide-fraga" data-steg="3" hidden>
           <p class="guide-nr">Fråga 3 av 3</p>
           <h2>Hur ser din investeringsram ut?</h2>
-          <p class="guide-hjalp">Totalpriset omfattar kursavgift samt kost och logi. Det varierar mellan kursgårdarna.</p>
+          <p class="guide-hjalp">Totalpriset omfattar kursavgift samt kost och logi och varierar mellan kursgårdarna. Alla priser anges exklusive moms.</p>
           <div class="guide-val">
             <button type="button" data-svar="pris:lag"><strong>Så låg totalkostnad som möjligt</strong><span>Vi sätter de billigaste veckorna först</span></button>
             <button type="button" data-svar="pris:balans"><strong>Rimligt pris, men datum och läge väger tyngre</strong><span>Vi sorterar på datum</span></button>
@@ -80,6 +80,18 @@
     </section>
 
     <section id="datum" class="browse reveal">
+      <h2 class="matchrubrik" id="matchrubrik" hidden></h2>
+      <div class="results-bar">
+        <span id="kursraknare" class="kursraknare"></span>
+        <label class="sortera" for="filter-sort">Sortera
+          <select id="filter-sort">
+            <option value="datum">Datum, närmast först</option>
+            <option value="pris">Pris, lägst först</option>
+            <option value="ort">Ort, A till Ö</option>
+          </select>
+        </label>
+      </div>
+
       <div class="browse-layout">
         <aside class="browse-filters" aria-label="Filtrera kurser">
           <div class="bf-group">
@@ -119,20 +131,9 @@
         </aside>
 
         <div class="browse-results">
-          <h2 class="matchrubrik" id="matchrubrik" hidden></h2>
-          <div class="results-bar">
-            <span id="kursraknare" class="kursraknare"></span>
-            <label class="sortera" for="filter-sort">Sortera
-              <select id="filter-sort">
-                <option value="datum">Datum, närmast först</option>
-                <option value="pris">Pris, lägst först</option>
-                <option value="ort">Ort, A till Ö</option>
-              </select>
-            </label>
-          </div>
           <ul class="kurskort" id="kurslista"></ul>
           <button class="button-outline-dark" id="visa-fler" type="button" hidden>Visa fler</button>
-          <p class="demo-note">Bilderna är från UGL-veckor och visar inte den enskilda anläggningen. Kurserna i Jönköping saknar prisuppgift tills den är bekräftad.</p>
+          <p class="demo-note">Alla priser anges exklusive moms. Bilderna är från UGL-veckor och visar inte den enskilda anläggningen. Kurserna i Jönköping saknar prisuppgift tills den är bekräftad.</p>
         </div>
       </div>
 
