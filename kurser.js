@@ -9,7 +9,8 @@
   var SVG=function(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>'};
   var IKON={kalender:SVG('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
             plats:SVG('<path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>'),
-            person:SVG('<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/>')};
+            person:SVG('<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/>'),
+            bil:SVG('<path d="M4 16h16v-3l-2-5H6l-2 5z"/><circle cx="7.5" cy="17.5" r="1.6"/><circle cx="16.5" cy="17.5" r="1.6"/>')};
   function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
 
   var kurser=window.UGL_RADER.split('\n').map(function(rad,i){
@@ -24,23 +25,38 @@
       manad:start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')};
   }).sort(function(a,b){return a.start-b.start});
 
-  var UTGANG=[
-    ['Stockholm','Stockholmsområdet',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
-    ['Uppsala','Uppsala',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
-    ['Västerås','Västerås och Eskilstuna',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']],
-    ['Örebro','Örebro',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm','Jönköping']],
-    ['Linköping','Linköping och Norrköping',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm','Jönköping']],
-    ['Jönköping','Jönköping och Småland',['Jönköping','Göteborg','Mölnlycke','Halmstad']],
-    ['Göteborg','Göteborg',['Göteborg','Mölnlycke','Halmstad','Jönköping']],
-    ['Halmstad','Halmstad och Varberg',['Halmstad','Göteborg','Mölnlycke','Helsingborg','Kristianstad','Jönköping']],
-    ['Helsingborg','Helsingborg och nordvästra Skåne',['Helsingborg','Kristianstad','Halmstad','Göteborg','Mölnlycke']],
-    ['Malmö','Malmö, Lund och södra Skåne',['Helsingborg','Kristianstad','Halmstad']],
-    ['Växjö','Växjö och Kalmar',['Jönköping','Kristianstad','Helsingborg']],
-    ['Sundsvall','Sundsvall och Norrland',['Sundsvall/Timrå']],
-    ['Karlstad','Karlstad och Värmland',['Göteborg','Mölnlycke','Jönköping']],
-    ['Dalarna','Dalarna och Gävle',['Stockholm','Lidingö','Täby','Värmdö','Nacka Strand, Stockholm']]
-  ];
-  var svar={period:null,ort:null,pris:null},guideKlar=false,steg=1;
+  var ORTER=window.UGL_ORTER.split('\n').map(function(r){var d=r.split('|');return {namn:d[0],lat:+d[1],lon:+d[2]}});
+  var KURSORT=window.UGL_KURSORT;
+  function rad(g){return g*Math.PI/180}
+  function avstand(a,b){
+    var R=6371,dLat=rad(b[0]-a[0]),dLon=rad(b[1]-a[1]);
+    var x=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLon/2)*Math.sin(dLon/2);
+    return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+  }
+  function restidTimmar(fran,ort){
+    var till=KURSORT[ort]; if(!fran||!till)return null;
+    var km=avstand([fran.lat,fran.lon],till)*1.3;
+    return km/78;
+  }
+  function restidText(t){
+    if(t===null)return '';
+    if(t<0.35)return 'på orten';
+    var m=Math.round(t*60),h=Math.floor(m/60);m=m-h*60;m=Math.round(m/5)*5;
+    if(m===60){h++;m=0}
+    return 'ca '+(h?h+' tim'+(m?' '+m+' min':''):m+' min')+' bilresa';
+  }
+  function hittaOrt(text){
+    var t=(text||'').trim().toLowerCase();
+    if(!t)return null;
+    var exakt=ORTER.filter(function(o){return o.namn.toLowerCase()===t})[0];
+    if(exakt)return exakt;
+    var borjar=ORTER.filter(function(o){return o.namn.toLowerCase().indexOf(t)===0});
+    if(borjar.length===1)return borjar[0];
+    var inne=ORTER.filter(function(o){return o.namn.toLowerCase().indexOf(t)>-1});
+    if(inne.length===1)return inne[0];
+    return borjar.length?borjar[0]:null;
+  }
+  var svar={period:null,ort:null,restid:null},guideKlar=false,steg=1;
 
   var $=function(id){return document.getElementById(id)};
   var lista=$('kurslista'),raknare=$('kursraknare'),fTid=$('filter-tid'),fRegion=$('filter-region'),
@@ -61,10 +77,10 @@
     if(svar.period==='0')spann=[idag,manadFram(3)];
     else if(svar.period==='1')spann=[manadFram(3),manadFram(6)];
     else if(svar.period==='2')spann=[manadFram(6),manadFram(12)];
-    var narhet=svar.ort&&svar.ort!=='x'?(UTGANG.filter(function(u){return u[0]===svar.ort})[0]||[])[2]:null;
+    var max=svar.restid&&svar.restid!=='x'?+svar.restid:null;
     var f=kurser.filter(function(k){
       if(spann&&(k.start<spann[0]||k.start>spann[1]))return false;
-      if(narhet&&narhet.indexOf(k.ort)<0)return false;
+      if(max&&svar.ort){var t=restidTimmar(svar.ort,k.ort);if(t===null||t>max)return false}
       if(fTid.value&&k.manad!==fTid.value)return false;
       if(fRegion.value&&k.region!==fRegion.value)return false;
       if(fOrt.value&&k.ort!==fOrt.value)return false;
@@ -72,7 +88,7 @@
       if(fLedig.checked&&!k.ledig)return false;
       return true;
     });
-    if(svar.pris==='lag'||fSort.value==='pris')f.sort(function(a,b){return (a.total||1e9)-(b.total||1e9)});
+    if(fSort.value==='pris')f.sort(function(a,b){return (a.total||1e9)-(b.total||1e9)});
     else if(fSort.value==='ort')f.sort(function(a,b){return a.ort.localeCompare(b.ort,'sv')||a.start-b.start});
     else f.sort(function(a,b){return a.start-b.start});
     return f;
@@ -106,6 +122,7 @@
           '<p class="kort-rad">'+IKON.kalender+k.period+'</p>'+
           '<p class="kort-rad">'+IKON.plats+k.anlaggning+', '+k.ort+'</p>'+
           '<p class="kort-rad kort-hl">'+IKON.person+hl+'</p>'+
+          (svar.ort?'<p class="kort-rad kort-resa">'+IKON.bil+restidText(restidTimmar(svar.ort,k.ort))+' från '+svar.ort.namn+'</p>':'')+
         '</div>'+
         '<div class="kort-pris">'+pris+'</div>'+
         '<div class="kort-val">'+
@@ -175,7 +192,7 @@
       visade=6;rita();
     })});
   $('rensa-filter').addEventListener('click',function(){
-    svar={period:null,ort:null,pris:null};guideKlar=false;
+    svar={period:null,ort:null,restid:null};guideKlar=false;
     $('guide-svar').hidden=true;$('matchrubrik').hidden=true;
     [fTid,fRegion,fOrt,fPris,fSort].forEach(function(el){el.selectedIndex=0});
     fLedig.checked=true;
@@ -192,10 +209,16 @@
 
   // ---- Mini behovsanalys ----
   var PERIODTEXT={'0':'Inom 3 månader','1':'Om 4 till 6 månader','2':'Om 7 till 12 månader','x':'Alla datum'};
-  var PRISTEXT={'lag':'Lägsta totalkostnad','balans':'Pris i balans','fri':'Priset inte avgörande'};
-  $('guide-orter').innerHTML=UTGANG.map(function(u){
-    return '<button type="button" data-svar="ort:'+u[0]+'"><strong>'+u[0]+'</strong><span>'+u[1]+'</span></button>'
-  }).join('')+'<button type="button" data-svar="ort:x"><strong>Spelar ingen roll</strong><span>Jag reser gärna längre</span></button>';
+  var RESTEXT={'1':'Upp till 1 tim resa','2':'Upp till 2 tim resa','3':'Upp till 3 tim resa','x':'Hela landet'};
+  $('ortlista').innerHTML=ORTER.map(function(o){return '<option value="'+o.namn+'">'}).join('');
+  $('ort-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var trff=hittaOrt($('ort-input').value);
+    if(!trff){$('ort-fel').hidden=false;$('ort-fel').textContent='Vi hittade inte den orten. Prova närmaste större ort, till exempel Växjö, Örebro eller Umeå.';return}
+    $('ort-fel').hidden=true;
+    svar.ort=trff;$('ort-input').value=trff.namn;
+    visaSteg(3);
+  });
 
   function visaSteg(n){
     steg=n;
@@ -210,8 +233,8 @@
     document.querySelectorAll('#guide-steg li').forEach(function(li,i){li.classList.toggle('is-pa',i===1)});
     $('gs-chips').innerHTML=[
       svar.period?PERIODTEXT[svar.period]:null,
-      svar.ort&&svar.ort!=='x'?'Från '+svar.ort:(svar.ort==='x'?'Hela landet':null),
-      svar.pris?PRISTEXT[svar.pris]:null
+      svar.ort?'Från '+svar.ort.namn:'Hela landet',
+      svar.restid?RESTEXT[svar.restid]:null
     ].filter(Boolean).map(function(t){return '<span class="gs-chip">'+t+'</span>'}).join('');
     var f=filtrerade();
     var r=$('matchrubrik');
@@ -219,7 +242,7 @@
     r.textContent=f.length===0?'Inga veckor matchar riktigt dina svar'
       :(f.length<=3?(f.length===1?'En vecka som passar dig':f.length+' kurser som passar dig'):'Tre kurser som passar dig');
     visade=Math.min(3,Math.max(f.length,1));
-    if(f.length===0){visade=3;svar.ort=null;svar.period=null;r.textContent='Inga veckor matchade exakt, här är de närmaste alternativen'}
+    if(f.length===0){visade=3;svar.restid=null;svar.period=null;r.textContent='Inga veckor matchade exakt, här är de närmaste alternativen'}
     rita();
     document.getElementById('datum').scrollIntoView({behavior:'smooth',block:'start'});
   }
@@ -227,18 +250,19 @@
     var b=e.target.closest('[data-svar]');
     if(!b)return;
     var p=b.getAttribute('data-svar').split(':');
+    if(p[0]==='ort'&&p[1]==='x'){svar.ort=null;visaSteg(3);return}
     svar[p[0]]=p[1];
     if(steg<3)visaSteg(steg+1); else avslutaGuide();
   });
   $('guide-bak').addEventListener('click',function(){if(steg>1)visaSteg(steg-1)});
   $('guide-hoppa').addEventListener('click',function(){
-    guideKlar=false;svar={period:null,ort:null,pris:null};
+    guideKlar=false;svar={period:null,ort:null,restid:null};
     $('guide-kort').hidden=true;$('guide-svar').hidden=true;
     $('matchrubrik').hidden=true;visade=6;rita();
     document.getElementById('datum').scrollIntoView({behavior:'smooth',block:'start'});
   });
   $('guide-andra').addEventListener('click',function(){
-    guideKlar=false;svar={period:null,ort:null,pris:null};
+    guideKlar=false;svar={period:null,ort:null,restid:null};
     $('guide-svar').hidden=true;$('guide-kort').hidden=false;$('matchrubrik').hidden=true;
     visaSteg(1);visade=6;rita();
     document.getElementById('behov').scrollIntoView({behavior:'smooth',block:'start'});

@@ -483,3 +483,13 @@ body{position:relative}
 .browse .results-bar{margin:0 0 1rem;padding-bottom:0}
 .browse-layout{margin-top:0}
 .browse-filters{padding:1.4rem 1.5rem}
+.ort-form{display:flex;gap:.8rem;align-items:flex-end;flex-wrap:wrap;max-width:520px}
+.ort-falt{display:flex;flex-direction:column;gap:.5rem;flex:1;min-width:240px}
+.ort-falt span{font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;color:#7a827e;font-weight:600}
+.ort-falt input{font:inherit;font-size:1.05rem;color:var(--green);background:#fff;border:1px solid var(--line);padding:.9rem 1rem}
+.ort-falt input:focus{outline:2px solid var(--brass);outline-offset:1px}
+.ort-fel{margin:.9rem 0 0;font-size:.92rem;color:#a4562f}
+.ort-skip{margin-top:1.4rem;background:none;border:0;font:inherit;font-size:.92rem;color:#7a827e;cursor:pointer;padding:0;border-bottom:1px solid var(--line)}
+.ort-skip:hover{color:var(--green)}
+.kort-resa{color:var(--green)!important;font-weight:500}
+.kort-resa svg{color:var(--brass)!important}

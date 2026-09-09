@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=21">
 </head>
 <body class="sida-ton">
   <header class="site-header header-solid">
@@ -52,18 +52,28 @@
         <div class="guide-fraga" data-steg="2" hidden>
           <p class="guide-nr">Fråga 2 av 3</p>
           <h2>Var utgår du ifrån?</h2>
-          <p class="guide-hjalp">Vi visar kursgårdar inom ungefär två till två och en halv timmes bilresa från din utgångspunkt.</p>
-          <div class="guide-val guide-val-tat" id="guide-orter"></div>
+          <p class="guide-hjalp">Skriv din ort, så räknar vi ut ungefär hur långt du har till varje kursgård.</p>
+          <form class="ort-form" id="ort-form" autocomplete="off">
+            <label class="ort-falt">
+              <span>Din ort</span>
+              <input type="text" id="ort-input" list="ortlista" placeholder="Till exempel Växjö" enterkeyhint="go">
+            </label>
+            <datalist id="ortlista"></datalist>
+            <button type="submit" class="button">Fortsätt</button>
+          </form>
+          <p class="ort-fel" id="ort-fel" hidden></p>
+          <button type="button" class="ort-skip" data-svar="ort:x">Jag reser gärna längre, visa hela landet</button>
         </div>
 
         <div class="guide-fraga" data-steg="3" hidden>
           <p class="guide-nr">Fråga 3 av 3</p>
-          <h2>Hur ser din investeringsram ut?</h2>
-          <p class="guide-hjalp">Totalpriset omfattar kursavgift samt kost och logi och varierar mellan kursgårdarna. Alla priser anges exklusive moms.</p>
+          <h2>Hur långt vill du resa?</h2>
+          <p class="guide-hjalp">Ungefärlig restid med bil enkel väg från din ort. Restiden är en uppskattning ur avståndet, inte en ruttberäkning.</p>
           <div class="guide-val">
-            <button type="button" data-svar="pris:lag"><strong>Så låg totalkostnad som möjligt</strong><span>Vi sätter de billigaste veckorna först</span></button>
-            <button type="button" data-svar="pris:balans"><strong>Rimligt pris, men datum och läge väger tyngre</strong><span>Vi sorterar på datum</span></button>
-            <button type="button" data-svar="pris:fri"><strong>Priset är inte avgörande</strong><span>Vi sorterar på datum</span></button>
+            <button type="button" data-svar="restid:1"><strong>Upp till 1 timme</strong><span>Jag vill ha nära hem</span></button>
+            <button type="button" data-svar="restid:2"><strong>Upp till 2 timmar</strong><span>Rimligt att köra på morgonen</span></button>
+            <button type="button" data-svar="restid:3"><strong>Upp till 3 timmar</strong><span>Jag kan ta en längre bilresa</span></button>
+            <button type="button" data-svar="restid:x"><strong>Spelar ingen roll</strong><span>Visa hela landet</span></button>
           </div>
         </div>
 
@@ -217,6 +227,7 @@
   </footer>
   <script src="script.js"></script>
   <script src="kurser-data.js"></script>
+  <script src="orter.js"></script>
   <script src="kurser.js"></script>
 </body>
 </html>
