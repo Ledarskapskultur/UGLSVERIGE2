@@ -495,9 +495,17 @@ body{position:relative}
 .kort-resa svg{color:var(--brass)!important}
 .kort-hl{line-height:1.5}
 .handledare-lista article{align-items:flex-start}
-.handledare-lista article.hl-full{flex-direction:column;gap:1.1rem;padding:1.3rem}
 .hl-bild{margin:0;width:52px;height:52px;flex:none;border-radius:50%;overflow:hidden;background:var(--ivory)}
-.handledare-lista article.hl-full .hl-bild{width:104px;height:104px;border-radius:0}
 .hl-bild img{width:100%;height:100%;object-fit:cover}
+.handledare-lista article.hl-full{display:grid;grid-template-columns:1fr minmax(140px,180px);gap:clamp(1.2rem,2vw,1.8rem);align-items:center;padding:1.4rem}
+.handledare-lista article.hl-full>div{order:1;min-width:0}
+.handledare-lista article.hl-full .hl-bild{order:2;width:100%;height:auto;aspect-ratio:3/4;border-radius:14px}
 .hl-roll{display:block;font-size:.86rem;color:#6b7370;line-height:1.4;margin-top:.15rem}
 .hl-text{margin:.9rem 0 0;font-size:.95rem;line-height:1.65;color:#555d5a}
+
+@media(max-width:620px){.handledare-lista article.hl-full{grid-template-columns:1fr}.handledare-lista article.hl-full .hl-bild{order:0;max-width:200px}}
+
+.handledare-lista:has(.hl-full){grid-template-columns:1fr;gap:1rem}
+.handledare-lista:has(.hl-full) article.hl-full{grid-template-columns:1fr minmax(170px,210px);gap:clamp(1.6rem,3vw,2.6rem);padding:clamp(1.4rem,2.2vw,1.9rem)}
+.handledare-lista article.hl-full strong{font-size:1.15rem}
+.handledare-lista article.hl-full .hl-text{max-width:60ch}
