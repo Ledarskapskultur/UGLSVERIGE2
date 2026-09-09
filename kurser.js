@@ -112,7 +112,7 @@
           (k.samlat
             ? '<dl class="kort-split"><div><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div></dl>'
             : '<dl class="kort-split"><div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div></dl>');
-      var hl=k.handledare.length?k.handledare.join(' och '):'Handledare meddelas senare';
+      var hl=k.handledare.length?k.handledare.join('<br>'):'Handledare meddelas senare';
       var vald=valda.indexOf(k.id)>-1;
       return '<li class="kort'+(k.ledig?'':' is-full')+'">'+
         '<figure><img src="'+k.bild+'" alt="Deltagare under en UGL-vecka" loading="lazy">'+

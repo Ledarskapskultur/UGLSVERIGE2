@@ -493,3 +493,4 @@ body{position:relative}
 .ort-skip:hover{color:var(--green)}
 .kort-resa{color:var(--green)!important;font-weight:500}
 .kort-resa svg{color:var(--brass)!important}
+.kort-hl{line-height:1.5}
