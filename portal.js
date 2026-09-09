@@ -32,7 +32,7 @@
       {id:7,namn:'Tobias Ek',roll:'Skiftledare',avd:'Produktion'},
       {id:8,namn:'Lena Forsberg',roll:'Ekonomichef',avd:'Stab'}
     ],
-    plan:[]
+    plan:[],arenden:[],moten:[]
   };
   /* tre forbokade rader for att visa lagen */
   (function(){
@@ -135,6 +135,7 @@
           '<td>'+statusChip(p.status)+'</td>'+
           '<td class="tab-atg">'+
             (p.status==='utkast'?'<button class="mini" data-skicka="'+p.id+'">Skicka förfrågan</button>':'')+
+            '<button class="mini" data-fraga="'+p.id+'">Fråga</button>'+
             '<button class="mini mini-bort" data-ta="'+p.id+'">Ta bort</button></td></tr>';
       }).join('')+'</tbody></table>';
   }
@@ -261,8 +262,75 @@
   }
   function falt(e,v){return '<label class="ro"><span>'+e+'</span><input value="'+v+'" readonly></label>'}
 
+
+  /* ---------- Hjälp och kontakt ---------- */
+  var MOTESTYPER=[
+    ['avstamning','Kort avstämning','15 minuter','Snabba frågor om en bokning, ett datum eller en faktura.'],
+    ['radgivning','Rådgivning om upplägg','30 minuter','Vilka i er organisation som bör gå, i vilken ordning och när.'],
+    ['ledning','Genomgång för ledningsgrupp','45 minuter','Vi går igenom vad UGL ger och hur ni följer upp det internt.'],
+    ['webinar','Webinar om UGL','40 minuter','Öppet pass där era medarbetare får ställa frågor innan de bokar.']
+  ];
+  var AMNEN=['Bokning och platser','Fakturering och betalning','Vilken vecka passar en viss person','Egen kurs för vår grupp','Avbokning eller ombokning','Något annat'];
+  var FRAGOR=[
+    ['Hur snabbt får vi svar?','Vi svarar på frågor i portalen inom fyra arbetstimmar. Bokade möten bekräftas direkt.'],
+    ['Kan två kollegor gå samma vecka?','Nej. UGL genomförs i främlingsgrupp, ingen i gruppen ska känna varandra sedan tidigare. Portalen varnar automatiskt om två av era hamnar på samma vecka.'],
+    ['Vad händer efter att vi skickat en förfrågan?','Vi kontrollerar att platsen finns kvar och att gruppsammansättningen fungerar, och återkommer med bekräftelse och faktura. Först då är platsen bindande.'],
+    ['Hur långt i förväg bör vi boka?','De flesta bokar tre till sex månader i förväg. Populära veckor och orter fylls tidigare, särskilt runt Stockholm och Göteborg.'],
+    ['Kan vi köra en egen kurs för vår grupp?','En UGL-vecka kan inte köras för en befintlig arbetsgrupp, eftersom främlingsgruppen är en förutsättning. Däremot finns andra upplägg för hela grupper. Boka rådgivning så går vi igenom vad som passar er.'],
+    ['Vad ingår i priset?','Kursavgift samt kost och logi på kursgården. Beloppen står specificerade på varje rad i er plan. Resa tillkommer.']
+  ];
+  function tider(){
+    var out=[],d=new Date();d.setHours(0,0,0,0);
+    while(out.length<8){
+      d=new Date(d.getTime()+864e5);
+      if(d.getDay()===0||d.getDay()===6)continue;
+      out.push(d);
+    }
+    return out;
+  }
+  function vySupport(){
+    var h='<div class="vy-head"><div><h1>Hjälp och kontakt</h1><p class="lead">Boka ett möte eller ställ en fråga. Vi svarar inom fyra arbetstimmar.</p></div></div>';
+    h+='<div class="kontakt-kort"><span class="n-init stor">CZ</span>'+
+       '<div><strong>Carl-Fredrik Zettermark</strong><span>Er kontaktperson, certifierad UGL-handledare</span>'+
+       '<div class="kk-lankar"><a href="mailto:kontakt@uglsverige.se">kontakt@uglsverige.se</a><span>Vardagar 08 till 17</span></div></div>'+
+       '<a class="button" href="#" id="oppna-mote">Boka ett möte &#8594;</a></div>';
+
+    h+='<div class="plan-layout">';
+    h+='<div class="panel" id="motespanel"><h2>Boka ett möte</h2>'+
+      '<div class="mote-typer">'+MOTESTYPER.map(function(t){
+        return '<label class="mote-typ"><input type="radio" name="motestyp" value="'+t[0]+'"'+(t[0]==='avstamning'?' checked':'')+'>'+
+        '<span><b>'+t[1]+'</b><i>'+t[2]+'</i><small>'+t[3]+'</small></span></label>'}).join('')+'</div>'+
+      '<p class="ip-rubrik" style="margin-top:1.4rem">Välj tid</p>'+
+      '<div class="tid-rutnat">'+tider().map(function(d){
+        return '<div class="tid-dag"><b>'+['sön','mån','tis','ons','tor','fre','lör'][d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1)+'</b>'+
+        ['09:00','11:00','14:00','15:30'].map(function(t){
+          return '<button type="button" class="tid" data-tid="'+d.getDate()+'/'+(d.getMonth()+1)+' kl '+t+'">'+t+'</button>'}).join('')+'</div>'}).join('')+'</div>'+
+      '<div class="field field-wide" style="margin-top:1.2rem"><label for="mote-not">Vad vill du prata om? <span>Valfritt</span></label><textarea id="mote-not" rows="2"></textarea></div>'+
+      '<p class="tom" id="mote-vald">Ingen tid vald än.</p>'+
+      '<button class="button" id="boka-mote">Boka mötet</button></div>';
+
+    h+='<div><div class="panel"><h2>Ställ en fråga</h2>'+
+      '<div class="form-grid"><label class="ro"><span>Ämne</span><select id="fraga-amne">'+
+      AMNEN.map(function(a){return '<option>'+a+'</option>'}).join('')+'</select></label>'+
+      '<label class="ro"><span>Gäller medarbetare</span><select id="fraga-mid"><option value="">Ingen särskild</option>'+
+      S.medarbetare.map(function(m){return '<option value="'+m.id+'">'+m.namn+'</option>'}).join('')+'</select></label></div>'+
+      '<div class="field field-wide" style="margin-top:1rem"><label for="fraga-text">Din fråga</label><textarea id="fraga-text" rows="4" placeholder="Skriv så konkret du kan, så slipper vi mejla fram och tillbaka."></textarea></div>'+
+      '<button class="button" id="skicka-fraga">Skicka frågan</button>'+
+      '<p class="tom">Svar kommer till '+S.anv.epost+' och syns här i portalen.</p></div>';
+
+    h+='<div class="panel"><h2>Vanliga frågor</h2><div class="fragor">'+
+      FRAGOR.map(function(f){return '<details><summary>'+f[0]+'</summary><p>'+f[1]+'</p></details>'}).join('')+'</div></div></div></div>';
+
+    h+='<div class="panel"><h2>Dina ärenden</h2>'+
+      ((S.arenden.length||S.moten.length)?'<table class="tab"><thead><tr><th>Typ</th><th>Ärende</th><th>Skapat</th><th>Status</th></tr></thead><tbody>'+
+        S.moten.map(function(m){return '<tr><td><b>Möte</b></td><td>'+m.typ+'<small>'+m.tid+'</small></td><td>'+m.skapat+'</td><td><span class="chip-status st-bekraftad">Bekräftat</span></td></tr>'}).join('')+
+        S.arenden.map(function(a){return '<tr><td><b>Fråga</b></td><td>'+a.amne+'<small>'+a.text.slice(0,70)+(a.text.length>70?'…':'')+'</small></td><td>'+a.skapat+'</td><td><span class="chip-status st-forfragan">Skickad</span></td></tr>'}).join('')+
+        '</tbody></table>':'<p class="tom">Inga ärenden än. Boka ett möte eller ställ en fråga så dyker de upp här.</p>')+'</div>';
+    return h;
+  }
+
   /* ---------- Ram ---------- */
-  var VYER={oversikt:vyOversikt,medarbetare:vyMedarbetare,planering:vyPlanering,kalender:vyKalender,ekonomi:vyEkonomi,installningar:vyInstallningar};
+  var VYER={oversikt:vyOversikt,medarbetare:vyMedarbetare,planering:vyPlanering,kalender:vyKalender,ekonomi:vyEkonomi,support:vySupport,installningar:vyInstallningar};
   function rita(vy){
     vy=vy||(location.hash||'#oversikt').slice(1);
     if(!VYER[vy])vy='oversikt';
@@ -316,7 +384,40 @@
       toast('CSV-filen är hämtad.');
     });
     if($('nollstall'))$('nollstall').addEventListener('click',function(){nollstall();toast('Demodata återställd.');rita('oversikt')});
+    var valdTid=null;
+    document.querySelectorAll('.tid').forEach(function(b){b.addEventListener('click',function(){
+      document.querySelectorAll('.tid').forEach(function(x){x.classList.remove('ar-vald')});
+      b.classList.add('ar-vald');valdTid=b.getAttribute('data-tid');
+      $('mote-vald').textContent='Vald tid: '+valdTid;
+    })});
+    if($('boka-mote'))$('boka-mote').addEventListener('click',function(){
+      if(!valdTid){toast('Välj en tid först.');return}
+      var t=document.querySelector('input[name=motestyp]:checked').value;
+      var namn=MOTESTYPER.filter(function(x){return x[0]===t})[0][1];
+      S.moten.push({typ:namn,tid:valdTid,not:$('mote-not').value,skapat:idag()});
+      spara();toast('Mötet är bokat. Kallelse kommer till din mejl.');rita('support');
+    });
+    if($('skicka-fraga'))$('skicka-fraga').addEventListener('click',function(){
+      var txt=$('fraga-text').value.trim();
+      if(!txt){toast('Skriv din fråga först.');return}
+      var mid=$('fraga-mid').value;
+      S.arenden.push({amne:$('fraga-amne').value+(mid?', '+medarb(+mid).namn:''),text:txt,skapat:idag()});
+      spara();toast('Frågan är skickad. Vi svarar inom fyra arbetstimmar.');rita('support');
+    });
+    if($('oppna-mote'))$('oppna-mote').addEventListener('click',function(e){
+      e.preventDefault();$('motespanel').scrollIntoView({behavior:'smooth',block:'start'})});
+    document.querySelectorAll('[data-fraga]').forEach(function(b){b.addEventListener('click',function(){
+      var p=S.plan.filter(function(x){return x.id==b.getAttribute('data-fraga')})[0];
+      var k=kurs(p.nyckel),m=medarb(p.mid);
+      rita('support');
+      $('fraga-amne').value='Bokning och platser';
+      $('fraga-mid').value=m.id;
+      $('fraga-text').value='Gäller '+m.namn+', vecka '+k.vecka+' i '+k.ort+' ('+k.period+'). ';
+      $('fraga-text').focus();
+      $('fraga-text').scrollIntoView({behavior:'smooth',block:'center'});
+    })});
   }
+  function idag(){var d=new Date();return d.getDate()+' '+MANADER[d.getMonth()]}
   function toast(t){
     var e=document.createElement('div');e.className='toast';e.textContent=t;
     document.body.appendChild(e);setTimeout(function(){e.classList.add('ut')},2200);
@@ -336,7 +437,7 @@
       S.org.kort=dom.slice(0,2).toUpperCase();
       spara();
     }
-    $('login').hidden=true;$('app').hidden=false;
+    $('login').hidden=true;$('app').hidden=false;$('hjalp-knapp').hidden=false;
     $('kund-logga').textContent=S.org.kort;
     $('kund-namn').textContent=S.org.namn;
     $('anv-namn').textContent=S.anv.namn;
@@ -344,7 +445,8 @@
     $('anv-init').textContent=init(S.anv.namn);
     rita('oversikt');
   });
-  $('logga-ut').addEventListener('click',function(){$('app').hidden=true;$('login').hidden=false});
+  $('logga-ut').addEventListener('click',function(){$('app').hidden=true;$('login').hidden=false;$('hjalp-knapp').hidden=true});
+  $('hjalp-knapp').addEventListener('click',function(){rita('support')});
   $('notis-knapp').addEventListener('click',function(){$('notis-panel').hidden=!$('notis-panel').hidden});
   $('notis-stang').addEventListener('click',function(){$('notis-panel').hidden=true});
   window.addEventListener('hashchange',function(){if(!$('app').hidden)rita()});

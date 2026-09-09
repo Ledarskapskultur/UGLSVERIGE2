@@ -154,3 +154,37 @@
 
 .toast{position:fixed;left:50%;bottom:2rem;transform:translateX(-50%);background:var(--green);color:#fff;padding:.85rem 1.4rem;font-size:.94rem;z-index:70;transition:opacity .5s,transform .5s}
 .toast.ut{opacity:0;transform:translateX(-50%) translateY(10px)}
+
+/* Hjälp och kontakt */
+.hjalp-knapp{position:fixed;right:clamp(1rem,3vw,2rem);bottom:clamp(1rem,3vw,2rem);z-index:45;display:inline-flex;align-items:center;gap:.6rem;background:var(--green);color:#fff;border:0;font:inherit;font-weight:600;font-size:.94rem;padding:.9rem 1.3rem;border-radius:99px;cursor:pointer;box-shadow:0 10px 30px rgba(18,61,53,.22);transition:.2s}
+.hjalp-knapp:hover{background:#1d5146;transform:translateY(-2px)}
+.hjalp-knapp svg{width:19px;height:19px}
+.kontakt-kort{display:flex;align-items:center;gap:1.3rem;background:#fff;border:1px solid #e3e0d7;padding:1.4rem 1.6rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.kontakt-kort strong{display:block;color:var(--green);font-size:1.1rem}
+.kontakt-kort>div>span{font-size:.92rem;color:#6b7370}
+.kk-lankar{display:flex;gap:1.2rem;margin-top:.5rem;font-size:.9rem;flex-wrap:wrap}
+.kk-lankar a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
+.kk-lankar span{color:#9aa39e}
+.kontakt-kort .button{margin-left:auto}
+.n-init.stor{width:62px;height:62px;font-size:1.1rem}
+.mote-typer{display:grid;gap:.6rem}
+.mote-typ{display:flex;gap:.75rem;align-items:flex-start;border:1px solid var(--line);padding:.85rem 1rem;cursor:pointer;transition:.15s}
+.mote-typ:hover{border-color:var(--sage)}
+.mote-typ input{accent-color:#123d35;width:17px;height:17px;flex:none;margin-top:.2rem}
+.mote-typ b{color:var(--green);font-size:.97rem}
+.mote-typ i{font-style:normal;color:#8a918d;font-size:.85rem;margin-left:.5rem}
+.mote-typ small{display:block;font-size:.87rem;line-height:1.5;color:#6b7370;margin-top:.2rem}
+.tid-rutnat{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.6rem}
+.tid-dag b{display:block;font-size:.78rem;color:#8a918d;text-transform:capitalize;margin-bottom:.4rem;text-align:center}
+.tid{display:block;width:100%;background:#fff;border:1px solid var(--line);font:inherit;font-size:.86rem;color:var(--green);padding:.42rem 0;margin-bottom:.35rem;cursor:pointer;transition:.15s}
+.tid:hover{border-color:var(--green)}
+.tid.ar-vald{background:var(--green);color:#fff;border-color:var(--green)}
+.panel .field{display:flex;flex-direction:column;gap:.5rem}
+.panel .field label{font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;color:#8a918d;font-weight:600}
+.panel .field label span{text-transform:none;letter-spacing:0;font-weight:400;color:#9aa39e}
+.panel textarea,.panel select{font:inherit;background:#fff;border:1px solid var(--line);color:var(--green);padding:.75rem .9rem;resize:vertical}
+.panel textarea:focus,.panel select:focus{outline:2px solid var(--brass);outline-offset:1px}
+.panel .fragor details{border-top:1px solid var(--line)}
+.panel .fragor summary{padding:.9rem 0;font-size:.96rem}
+.panel .fragor p{font-size:.93rem;padding-bottom:1rem}
+.panel .button{margin-top:1.1rem}

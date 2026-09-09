@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=29">
-  <link rel="stylesheet" href="portal.css?v=1">
+  <link rel="stylesheet" href="portal.css?v=2">
 </head>
 <body class="portal-body">
 
@@ -63,6 +63,7 @@
         <a href="#planering" data-vy="planering">Planera kurs</a>
         <a href="#kalender" data-vy="kalender">Kalender</a>
         <a href="#ekonomi" data-vy="ekonomi">Kostnader</a>
+        <a href="#support" data-vy="support">Hjälp och kontakt</a>
         <span class="meny-avdelare"></span>
         <a href="#installningar" data-vy="installningar">Inställningar</a>
         <a href="/kurser" class="meny-extern">Alla kursdatum &#8599;</a>
@@ -71,12 +72,17 @@
     </div>
   </div>
 
+  <button class="hjalp-knapp" id="hjalp-knapp" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9.1 9a3 3 0 1 1 4.2 2.7c-.8.4-1.3 1.1-1.3 2M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
+    Behöver du hjälp?
+  </button>
+
   <div class="notis-panel" id="notis-panel" hidden>
     <div class="np-head"><h3>Notiser</h3><button type="button" id="notis-stang" aria-label="Stäng">&#10005;</button></div>
     <ul id="notis-lista"></ul>
   </div>
 
   <script src="kurser-data.js"></script>
-  <script src="portal.js?v=1"></script>
+  <script src="portal.js?v=2"></script>
 </body>
 </html>
