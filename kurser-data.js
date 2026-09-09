@@ -1,6 +1,6 @@
 /* UGL Sverige, kursdata. Format per rad:
-   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)
-   Kurspris ar 23 900 kr for samtliga. Slutdatum = start + 4 dagar. */
+   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)|kurspris (valfritt)
+   Lamnas kurspris tomt anvands standardpriset nedan. Slutdatum = start + 4 dagar. */
 window.UGL_KURSPRIS = 23900;
 window.UGL_RADER = `
 2026-09-14|38|Bykrogen|Kristianstad|Nurgül Iljas Eminovska;Susann Swahn|8900|L

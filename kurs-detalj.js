@@ -11,9 +11,9 @@
   var SVG=function(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>'};
 
   var kurser=window.UGL_RADER.split('\n').map(function(rad){
-    var d=rad.split('|'),start=new Date(d[0]+'T00:00:00'),slut=new Date(start.getTime()+4*864e5),logi=+d[5];
+    var d=rad.split('|'),start=new Date(d[0]+'T00:00:00'),slut=new Date(start.getTime()+4*864e5),logi=+d[5],kurspris=d[7]?+d[7]:window.UGL_KURSPRIS;
     return {start:start,slut:slut,vecka:+d[1],anlaggning:d[2],ort:d[3],region:REGIONER[d[3]]||d[3],
-      handledare:d[4]?d[4].split(';'):[],logi:logi,total:logi?window.UGL_KURSPRIS+logi:0,ledig:d[6]==='L',
+      handledare:d[4]?d[4].split(';'):[],kurspris:kurspris,logi:logi,total:logi?kurspris+logi:0,ledig:d[6]==='L',
       bild:'assets/'+BILDER[hash(d[2]+d[3])%BILDER.length],
       period:fmt(start)+' till '+fmt(slut)+' '+slut.getFullYear(),
       nyckel:d[0]+'-'+slug(d[2])};
@@ -54,8 +54,8 @@
   document.getElementById('kp-vecka').textContent='UGL vecka '+k.vecka;
   document.getElementById('kp-pris').textContent=k.total?kr(k.total):'Pris meddelas';
   document.getElementById('kp-split').innerHTML=k.total
-    ? '<div><dt>Kursavgift</dt><dd>'+kr(window.UGL_KURSPRIS)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
-    : '<div><dt>Kursavgift</dt><dd>'+kr(window.UGL_KURSPRIS)+'</dd></div><div><dt>Kost och logi</dt><dd>Meddelas</dd></div>';
+    ? '<div><dt>Kursavgift</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div><div class="kp-tot"><dt>Totalpris</dt><dd>'+kr(k.total)+'</dd></div>'
+    : '<div><dt>Kursavgift</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>Meddelas</dd></div>';
   var cta=document.getElementById('kp-cta');
   cta.href='/kurser?valj='+encodeURIComponent(k.ledig?etikett:'Intresselista')+'#anmalan';
   if(!k.ledig){cta.textContent='Bevaka veckan →';document.querySelector('.kp-ingar').textContent='Veckan är fullbokad. Vi hör av oss om en plats blir ledig.'}
