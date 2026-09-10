@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='3';
+  var BYGGE='4';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -9,6 +9,9 @@
     var v=new Date(t.getFullYear(),0,4);return 1+Math.round(((t-v)/864e5-3+((v.getDay()+6)%7))/7)}
   function period(datum){var s=new Date(datum+'T00:00:00'),e=new Date(s.getTime()+4*864e5);
     return fmt(s)+' till '+fmt(e)+' '+e.getFullYear()}
+  var KORT=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  function periodKort(datum){var s=new Date(datum+'T00:00:00'),e=new Date(s.getTime()+4*864e5);
+    return s.getDate()+' till '+e.getDate()+' '+KORT[e.getMonth()]+' '+e.getFullYear()}
   var SVG=function(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>'};
 
   var STATUS={utkast:['Utkast','st-utkast'],publicerad:['Publicerad','st-bekraftad'],
@@ -96,9 +99,10 @@
     return '<span class="bel"><i style="width:'+p+'%" class="'+(k.bokade>=8?'bel-ok':'bel-lag')+'"></i></span><small>'+k.bokade+' av '+k.max+'</small>';
   }
   function hlChips(k){
-    if(!k.handledare.length)return '<span class="chip-status st-ingen">Ingen kopplad</span>';
-    return k.handledare.map(function(h){
-      return '<span class="hl-chip '+(h.status==='bekraftad'?'ar-bekraftad':'')+'">'+hl(h.hid).namn+'<i>'+HSTATUS[h.status][0]+'</i></span>'}).join('');
+    if(!k.handledare.length)return '<span class="hl-tom">Ingen kopplad</span>';
+    return '<div class="hl-rad">'+k.handledare.map(function(h){
+      return '<span class="hl-chip '+(h.status==='bekraftad'?'ar-bekraftad':h.status==='nekad'?'ar-nekad':'')+'" title="'+HSTATUS[h.status][0]+'">'+
+        hl(h.hid).namn+(h.status==='bekraftad'?'':'<i>'+HSTATUS[h.status][0]+'</i>')+'</span>'}).join('')+'</div>';
   }
 
   /* ---------- Arrangörsvyer ---------- */
@@ -122,7 +126,7 @@
     if(!lista.length)return '<p class="tom">Inga kurser än.</p>';
     return '<table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.slice().sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
-        return '<tr><td><b>'+vecka(k)+'</b></td><td>'+period(k.datum)+'</td>'+
+        return '<tr><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
           '<td><b>'+k.anlaggning+'</b><small>'+k.ort+'</small></td>'+
           '<td class="td-hl">'+hlChips(k)+'</td>'+
           '<td>'+belaggning(k)+'</td>'+
