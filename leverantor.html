@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Leverantörsportal | UGL Sverige</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="portal.css?v=5">
+</head>
+<body class="portal-body">
+
+  <div class="demo-flagga">Demoläge, ingen riktig inloggning och ingen data sparas hos oss</div>
+
+  <main class="login" id="login">
+    <div class="login-kort">
+      <span class="brand-type login-brand"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span>
+      <h1>Portal för arrangörer och handledare</h1>
+      <p class="lead">Lägg upp kurser, koppla handledare och håll koll på beläggningen. Handledare ser sina uppdrag och sin egen profil.</p>
+      <form id="login-form">
+        <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@arrangor.se" autocomplete="email"></div>
+        <div class="field">
+          <label>Logga in som</label>
+          <div class="roll-val">
+            <label class="roll"><input type="radio" name="roll" value="arrangor" checked><span><b>Arrangör</b><small>Ni arrangerar UGL-veckor</small></span></label>
+            <label class="roll"><input type="radio" name="roll" value="handledare"><span><b>Handledare</b><small>Du leder veckor åt en eller flera arrangörer</small></span></label>
+          </div>
+        </div>
+        <button class="button" type="submit">Skicka inloggningslänk</button>
+      </form>
+      <p class="login-not">Inloggningslänk via mejl, inga lösenord.</p>
+      <p class="login-demo">I demon räcker det att välja roll och trycka på knappen.</p>
+    </div>
+    <aside class="login-bild">
+      <ul class="login-punkter">
+        <li><b>Ett ställe för hela utbudet</b><span>Lägg upp en vecka en gång, den syns direkt i det publika kursutbudet.</span></li>
+        <li><b>Handledarnätverket samlat</b><span>Se vilka som är lediga vilken vecka och skicka förfrågan med ett klick.</span></li>
+        <li><b>Inga dubbelbokningar</b><span>Portalen varnar om en handledare redan är bokad samma vecka.</span></li>
+        <li><b>Handledaren äger sin profil</b><span>Bild och presentation skrivs av handledaren själv och används på kurssidorna.</span></li>
+      </ul>
+    </aside>
+  </main>
+
+  <div class="app" id="app" hidden>
+    <header class="app-topp">
+      <div class="app-kund">
+        <span class="kund-logga" id="kund-logga"></span>
+        <span class="kund-namn"><b id="kund-namn"></b><small id="kund-typ"></small></span>
+      </div>
+      <div class="app-hoger">
+        <button class="notis-knapp" id="notis-knapp" aria-label="Notiser">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-2 8-2 8h16s-2-1-2-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="notis-prick" id="notis-prick" hidden></span>
+        </button>
+        <span class="app-anv"><b id="anv-namn"></b><small id="anv-roll"></small></span>
+        <span class="app-avatar" id="anv-init"></span>
+        <button class="app-ut" id="logga-ut">Logga ut</button>
+      </div>
+    </header>
+    <div class="app-kropp">
+      <nav class="app-meny" id="meny" aria-label="Portalmeny"></nav>
+      <main class="app-vy" id="vy"></main>
+    </div>
+  </div>
+
+  <div class="notis-panel" id="notis-panel" hidden>
+    <div class="np-head"><h3>Notiser</h3><button type="button" id="notis-stang" aria-label="Stäng">&#10005;</button></div>
+    <ul id="notis-lista"></ul>
+  </div>
+
+  <script src="kurser-data.js"></script>
+  <script src="leverantor.js?v=1"></script>
+</body>
+</html>

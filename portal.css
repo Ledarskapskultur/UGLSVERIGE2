@@ -189,3 +189,45 @@
 .panel .fragor p{font-size:.93rem;padding-bottom:1rem}
 .panel .button{margin-top:1.1rem}
 .meny-version{display:block;margin-top:1.2rem;padding:0 .9rem;font-size:.72rem;color:#b3b8b4;letter-spacing:.04em}
+
+/* ---- Leverantörsportal ---- */
+.roll-val{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;max-width:420px}
+.roll{display:flex;gap:.6rem;align-items:flex-start;border:1px solid var(--line);padding:.8rem .9rem;cursor:pointer;transition:.15s;background:#fff}
+.roll:hover{border-color:var(--sage)}
+.roll input{accent-color:#123d35;width:17px;height:17px;flex:none;margin-top:.15rem}
+.roll b{display:block;color:var(--green);font-size:.95rem;text-transform:none;letter-spacing:0}
+.roll small{display:block;font-size:.83rem;line-height:1.45;color:#6b7370;text-transform:none;letter-spacing:0;font-weight:400}
+@media(max-width:620px){.roll-val{grid-template-columns:1fr}}
+.td-hl{max-width:230px}
+.hl-chip{display:inline-flex;flex-direction:column;background:#f4f2ec;border:1px solid #e3e0d7;padding:.3rem .6rem;margin:0 .35rem .35rem 0;font-size:.85rem;color:var(--green);line-height:1.25}
+.hl-chip i{font-style:normal;font-size:.72rem;color:#8a918d}
+.hl-chip.ar-bekraftad{background:#e6f0e8;border-color:#cfe0d4}
+.hl-chip.ar-bekraftad i{color:#33684a}
+.bel{display:block;width:82px;height:6px;background:#eceadf;margin-bottom:.3rem}
+.bel i{display:block;height:100%}
+.bel-ok{background:#4b8b60}
+.bel-lag{background:var(--brass)}
+.veckochip{display:inline-block;background:#e6f0e8;color:#33684a;font-size:.78rem;padding:.2rem .5rem;margin:0 .3rem .3rem 0;border-radius:3px}
+.nk-knappar{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.4rem}
+.nk-knappar .button{margin-top:0}
+.valj-rad.ar-krock{background:#fdf5ee;border-color:#e8d5c0}
+.vecko-rutnat{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:.5rem}
+.veckoknapp{background:#fff;border:1px solid var(--line);font:inherit;font-size:.9rem;color:#5f6763;padding:.7rem 0;cursor:pointer;transition:.15s}
+.veckoknapp:hover{border-color:var(--green)}
+.veckoknapp.ar-ledig{background:#e6f0e8;border-color:#4b8b60;color:#2c5c40;font-weight:600}
+.portratt-ruta{width:150px;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#eceadf;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.portratt-ruta img{width:100%;height:100%;object-fit:cover}
+.fil-in{font:inherit;font-size:.88rem;color:#5f6763}
+.forhand-publik{margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+.fp-kort{display:grid;grid-template-columns:1fr 110px;gap:1.2rem;align-items:center;border:1px solid var(--line);padding:1.1rem}
+.fp-kort b{display:block;color:var(--green);font-size:1.02rem}
+.fp-kort small{display:block;font-size:.84rem;color:#6b7370;margin-bottom:.6rem}
+.fp-kort p{margin:0;font-size:.9rem;line-height:1.6;color:#555d5a}
+.fp-bild{aspect-ratio:3/4;border-radius:10px;background:#eceadf;color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:600;overflow:hidden}
+.fp-bild img{width:100%;height:100%;object-fit:cover}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(10,32,28,.55);display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem)}
+.modal-inre{background:#fff;max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:clamp(1.5rem,3vw,2.4rem)}
+.modal-inre .button{margin-top:1.2rem}
+.pf{font-size:.85rem;color:#8a918d}
+.panel .field input{font:inherit;background:#fff;border:1px solid var(--line);color:var(--green);padding:.75rem .9rem}
+.panel .field input:focus{outline:2px solid var(--brass);outline-offset:1px}
