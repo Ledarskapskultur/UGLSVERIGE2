@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='6';
+  var BYGGE='7';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -37,12 +37,12 @@
       {id:6,namn:'Hagastrand',ort:'Stockholm',adress:'Stockholm',bild:'',platser:12,logipris:10500,kontakt:'',text:''}
     ],
     kurser:[
-      {id:1,datum:'2026-10-05',anlId:1,anlaggning:'Tylebäck',ort:'Halmstad',kurspris:23900,logi:8900,max:12,bokade:9,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:4,status:'bekraftad'}]},
-      {id:2,datum:'2026-10-12',anlId:2,anlaggning:'Skogshem & Wijk',ort:'Lidingö',kurspris:23900,logi:9900,max:12,bokade:12,status:'fullbokad',handledare:[{hid:2,status:'bekraftad'},{hid:5,status:'bekraftad'}]},
-      {id:3,datum:'2026-10-19',anlId:3,anlaggning:'Lovik',ort:'Stockholm',kurspris:23900,logi:9900,max:12,bokade:4,status:'publicerad',handledare:[{hid:2,status:'bekraftad'}]},
-      {id:4,datum:'2026-11-02',anlId:4,anlaggning:'Ringenäs',ort:'Halmstad',kurspris:23900,logi:9900,max:12,bokade:6,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:3,status:'tillfragad'}]},
-      {id:5,datum:'2026-11-16',anlId:5,anlaggning:'Bykrogen',ort:'Kristianstad',kurspris:23900,logi:9500,max:12,bokade:0,status:'utkast',handledare:[]},
-      {id:6,datum:'2026-12-07',anlId:6,anlaggning:'Hagastrand',ort:'Stockholm',kurspris:23900,logi:10500,max:12,bokade:7,status:'publicerad',handledare:[{hid:3,status:'bekraftad'},{hid:5,status:'bekraftad'}]}
+      {id:1,datum:'2026-10-05',anlId:1,anlaggning:'Tylebäck',ort:'Halmstad',kurspris:23900,logi:null,max:12,bokade:9,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:4,status:'bekraftad'}]},
+      {id:2,datum:'2026-10-12',anlId:2,anlaggning:'Skogshem & Wijk',ort:'Lidingö',kurspris:23900,logi:null,max:12,bokade:12,status:'fullbokad',handledare:[{hid:2,status:'bekraftad'},{hid:5,status:'bekraftad'}]},
+      {id:3,datum:'2026-10-19',anlId:3,anlaggning:'Lovik',ort:'Stockholm',kurspris:23900,logi:10400,max:12,bokade:4,status:'publicerad',handledare:[{hid:2,status:'bekraftad'}]},
+      {id:4,datum:'2026-11-02',anlId:4,anlaggning:'Ringenäs',ort:'Halmstad',kurspris:23900,logi:null,max:12,bokade:6,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:3,status:'tillfragad'}]},
+      {id:5,datum:'2026-11-16',anlId:5,anlaggning:'Bykrogen',ort:'Kristianstad',kurspris:23900,logi:null,max:12,bokade:0,status:'utkast',handledare:[]},
+      {id:6,datum:'2026-12-07',anlId:6,anlaggning:'Hagastrand',ort:'Stockholm',kurspris:23900,logi:null,max:12,bokade:7,status:'publicerad',handledare:[{hid:3,status:'bekraftad'},{hid:5,status:'bekraftad'}]}
     ],
     deltagare:[
       {kid:1,namn:'Johan Lind',org:'Nordvik Industri AB',status:'bekraftad'},
@@ -72,12 +72,20 @@
   function kurs(id){return S.kurser.filter(function(k){return k.id===id})[0]}
   function anlById(id){return (S.anlaggningar||[]).filter(function(a){return a.id===id})[0]}
   function anl(k){return anlById(k.anlId)||{id:0,namn:k.anlaggning,ort:k.ort,bild:'',platser:12,logipris:k.logi,adress:'',kontakt:'',text:''}}
+  function bildRuta(bild,namn,storlek){
+    return bild?'<span class="anl-bild '+(storlek||'')+'"><img src="'+bild+'" alt=""></span>'
+      :'<span class="anl-bild anl-tom '+(storlek||'')+'">'+(namn||'?').slice(0,1).toUpperCase()+'</span>';
+  }
   function anlBild(a,storlek){
     return a.bild?'<span class="anl-bild '+(storlek||'')+'"><img src="'+a.bild+'" alt=""></span>'
       :'<span class="anl-bild anl-tom '+(storlek||'')+'">'+a.namn.slice(0,1).toUpperCase()+'</span>';
   }
   function vecka(k){return veckoNr(new Date(k.datum+'T00:00:00'))}
-  function total(k){return k.kurspris+k.logi}
+  function kLogi(k){return k.logi==null?anl(k).logipris:k.logi}
+  function kBild(k){return k.bild||anl(k).bild}
+  function kText(k){return k.text||anl(k).text}
+  function arver(k){return {logi:k.logi==null,bild:!k.bild,text:!k.text}}
+  function total(k){return k.kurspris+kLogi(k)}
   function dagarKvar(k){return Math.round((new Date(k.datum+'T00:00:00')-new Date())/864e5)}
   function mina(){return S.kurser.filter(function(k){return k.handledare.some(function(h){return h.hid===jagId})})}
 
@@ -142,12 +150,13 @@
     return '<table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.slice().sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
         return '<tr><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
-          '<td class="td-plats">'+anlBild(anl(k))+'<span><b>'+anl(k).namn+'</b><small>'+anl(k).ort+'</small></span></td>'+
+          '<td class="td-plats">'+bildRuta(kBild(k),anl(k).namn)+'<span><b>'+anl(k).namn+'</b><small>'+anl(k).ort+'</small>'+(arver(k).logi&&arver(k).bild?'':'<em class="justerad">Justerad</em>')+'</span></td>'+
           '<td class="td-hl">'+hlChips(k)+'</td>'+
           '<td>'+belaggning(k)+'</td>'+
           '<td>'+chip(k.status,STATUS)+'</td>'+
           '<td class="tab-atg">'+
             (k.status==='utkast'?'<button class="mini mini-primar" data-publicera="'+k.id+'">Publicera</button>':'')+
+            '<button class="mini" data-redigera="'+k.id+'">Redigera</button>'+
             '<button class="mini" data-koppla="'+k.id+'">Handledare</button></td></tr>';
       }).join('')+'</tbody></table>';
   }
@@ -223,7 +232,7 @@
   }
 
   function aAnlaggningar(){
-    var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Era egna kursgårdar. Bild och text följer med till kurslistan och kurssidan. Samma anläggning kan finnas hos flera arrangörer, var och en med sitt eget avtal och pris.</p></div>'+
+    var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Varje kursgård är en mall. Nya kurser ärver bild, pris och beskrivning härifrån, och kan justeras var för sig. Samma anläggning kan finnas hos flera arrangörer, var och en med sitt eget avtal.</p></div>'+
       '<button class="button" id="ny-anl">Lägg till anläggning</button></div>';
     if(!S.anlaggningar.length)return h+'<div class="panel"><p class="tom">Inga anläggningar än.</p></div>';
     h+='<div class="anl-rutnat">'+S.anlaggningar.map(function(a){
@@ -395,11 +404,64 @@
     function stang(){document.querySelector('.modal').remove();rita()}
   }
 
+  function kursFormular(id){
+    var k=kurs(id),a=anl(k),ar=arver(k);
+    var rad=function(etikett,arvd,innehall,falt){
+      return '<div class="arv-rad"><div class="arv-topp"><span class="arv-etikett">'+etikett+'</span>'+
+        (arvd?'<span class="arv-markor">Ärver från '+a.namn+'</span>'
+             :'<span class="arv-markor ar-egen">Justerad för den här kursen <button type="button" class="arv-ater" data-ater="'+falt+'">Återställ</button></span>')+
+        '</div>'+innehall+'</div>';
+    };
+    var html='<div class="modal"><div class="modal-inre"><div class="cp-head"><h3>Vecka '+vecka(k)+', '+a.namn+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+      '<p class="delad-not">'+SVG('<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/>')+
+      'Kursen ärver bild, pris och beskrivning från anläggningen. Ändrar du något här gäller det bara den här veckan.</p>'+
+      '<div class="form-grid">'+
+        '<label class="ro"><span>Startdatum</span><input type="date" id="kf-datum" value="'+k.datum+'"></label>'+
+        '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="kf-pris" type="number" value="'+k.kurspris+'"></label>'+
+      '</div>'+
+      rad('Kost och logi, exkl. moms',ar.logi,'<input class="arv-falt" id="kf-logi" type="number" value="'+kLogi(k)+'">','logi')+
+      rad('Bild för den här veckan',ar.bild,'<div class="arv-bild"><div id="kf-forhand">'+bildRuta(kBild(k),a.namn,'anl-stor')+'</div>'+
+        '<input type="file" id="kf-bild" accept="image/*" class="fil-in"></div>','bild')+
+      rad('Beskrivning',ar.text,'<textarea class="arv-falt" id="kf-text" rows="3" placeholder="Beskrivning som visas på kurssidan.">'+(kText(k)||'')+'</textarea>','text')+
+      '<div class="nk-knappar"><button class="button" id="kf-spara">Spara</button>'+
+      '<button class="button button-outline-dark" id="kf-allt">Återställ allt till mallen</button></div></div></div>';
+    var d=document.createElement('div');d.innerHTML=html;document.body.appendChild(d.firstChild);
+    var nyBild=k.bild;
+    document.getElementById('kf-bild').addEventListener('change',function(e){
+      var f=e.target.files[0];if(!f)return;
+      var r=new FileReader();r.onload=function(){nyBild=r.result;
+        document.getElementById('kf-forhand').innerHTML='<span class="anl-bild anl-stor"><img src="'+nyBild+'" alt=""></span>'};
+      r.readAsDataURL(f);
+    });
+    document.querySelectorAll('[data-ater]').forEach(function(b){b.addEventListener('click',function(){
+      var f=b.getAttribute('data-ater');
+      if(f==='logi')k.logi=null; if(f==='bild')k.bild=''; if(f==='text')k.text='';
+      spara();stang();kursFormular(id);
+    })});
+    document.getElementById('kf-allt').addEventListener('click',function(){
+      k.logi=null;k.bild='';k.text='';spara();stang();toast('Kursen följer mallen igen.');
+    });
+    document.getElementById('kf-spara').addEventListener('click',function(){
+      k.datum=document.getElementById('kf-datum').value;
+      k.kurspris=+document.getElementById('kf-pris').value;
+      var logi=+document.getElementById('kf-logi').value;
+      k.logi=(logi===a.logipris)?null:logi;
+      k.bild=(nyBild===a.bild)?'':nyBild;
+      var txt=document.getElementById('kf-text').value.trim();
+      k.text=(txt===(a.text||''))?'':txt;
+      spara();stang();toast('Kursen är sparad.');
+    });
+    document.getElementById('mod-stang').addEventListener('click',stang);
+    function stang(){var m=document.querySelector('.modal');if(m)m.remove();rita()}
+  }
+
   function koppla(){
     document.querySelectorAll('[data-publicera]').forEach(function(b){b.addEventListener('click',function(){
       var k=kurs(+b.getAttribute('data-publicera'));
       k.status='publicerad';spara();toast('Kursen är publicerad och syns i det publika utbudet.');rita();
     })});
+    document.querySelectorAll('[data-redigera]').forEach(function(b){b.addEventListener('click',function(){
+      kursFormular(+b.getAttribute('data-redigera'))})});
     document.querySelectorAll('[data-koppla]').forEach(function(b){b.addEventListener('click',function(){
       kopplaHandledare(+b.getAttribute('data-koppla'))})});
     document.querySelectorAll('[data-ja]').forEach(function(b){b.addEventListener('click',function(){
@@ -464,7 +526,7 @@
     var a=anlById(aid);
     var valda=[].slice.call(document.querySelectorAll('#nk-hl input:checked')).map(function(c){return +c.value});
     S.kurser.push({id:nastaId++,datum:$('nk-datum').value,anlId:aid,anlaggning:a.namn,ort:a.ort,
-      kurspris:+$('nk-pris').value,logi:+$('nk-logi').value,max:12,bokade:0,
+      kurspris:+$('nk-pris').value,logi:null,bild:'',text:'',max:12,bokade:0,
       status:publicera?'publicerad':'utkast',
       handledare:valda.map(function(h){return {hid:h,status:'tillfragad'}})});
     spara();
