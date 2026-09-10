@@ -231,3 +231,5 @@
 .pf{font-size:.85rem;color:#8a918d}
 .panel .field input{font:inherit;background:#fff;border:1px solid var(--line);color:var(--green);padding:.75rem .9rem}
 .panel .field input:focus{outline:2px solid var(--brass);outline-offset:1px}
+.valfritt{text-transform:none;letter-spacing:0;font-weight:400;color:#9aa39e;margin-left:.4rem}
+.kv-not{font-size:.78rem;color:#8a918d;white-space:nowrap}

@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='1';
+  var BYGGE='2';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -67,21 +67,9 @@
   function problem(){
     var p=[];
     S.kurser.filter(function(k){return k.status==='publicerad'}).forEach(function(k){
-      var bekr=k.handledare.filter(function(h){return h.status==='bekraftad'}).length;
       var d=dagarKvar(k);
-      if(bekr<2)p.push({niva:'varning',rubrik:'Kurs utan två bekräftade handledare',
-        text:'Vecka '+vecka(k)+' i '+k.ort+' har '+bekr+' bekräftad'+(bekr===1?'':'e')+' handledare. UGL kräver två.'+(d>0?' '+d+' dagar kvar.':''),kid:k.id});
       if(k.bokade<8&&d>0&&d<45)p.push({niva:'varning',rubrik:'Låg beläggning nära start',
         text:'Vecka '+vecka(k)+' i '+k.ort+' har '+k.bokade+' av minst 8 platser fyllda och startar om '+d+' dagar.',kid:k.id});
-    });
-    /* dubbelbokade handledare */
-    var per={};
-    S.kurser.forEach(function(k){k.handledare.forEach(function(h){
-      var n=h.hid+':'+k.datum;(per[n]=per[n]||[]).push(k)})});
-    Object.keys(per).forEach(function(n){
-      if(per[n].length>1){var h=hl(+n.split(':')[0]);
-        p.push({niva:'varning',rubrik:'Handledare dubbelbokad',
-          text:h.namn+' är inlagd på '+per[n].length+' kurser samma vecka ('+per[n].map(function(k){return k.ort}).join(', ')+').'})}
     });
     S.kurser.filter(function(k){return k.status==='utkast'}).forEach(function(k){
       p.push({niva:'info',rubrik:'Utkast ej publicerat',text:'Vecka '+vecka(k)+' i '+k.ort+' syns inte i det publika utbudet än.',kid:k.id});
@@ -159,13 +147,13 @@
       '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="nk-pris" type="number" value="23900"></label>'+
       '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="nk-logi" type="number" value="9900"></label>'+
     '</div>'+
-    '<p class="ip-rubrik" style="margin-top:1.4rem">Handledare</p>'+
+    '<p class="ip-rubrik" style="margin-top:1.4rem">Handledare <span class="valfritt">valfritt, kan kopplas senare</span></p>'+
     '<div class="valj-lista" id="nk-hl">'+S.handledare.map(function(h){
       return '<label class="valj-rad"><input type="checkbox" value="'+h.id+'"><span class="n-init liten">'+init(h.namn)+'</span>'+
       '<span class="vr-text"><b>'+h.namn+'</b><small>'+h.roll+'</small></span></label>'}).join('')+'</div>'+
     '<div class="nk-knappar"><button class="button" id="nk-publicera">Skapa och publicera</button>'+
     '<button class="button button-outline-dark" id="nk-utkast">Spara som utkast</button></div>'+
-    '<p class="tom">Två handledare krävs för att en kurs ska kunna publiceras.</p></div>';
+    '<p class="tom">Handledare kan lämnas tomt nu och kopplas på när ni vet vilka som ska köra veckan.</p></div>';
   }
   function aHandledare(){
     var h='<div class="vy-head"><div><h1>Handledarnätverk</h1><p class="lead">'+S.handledare.length+' handledare. Grön markering betyder ledig den veckan.</p></div>'+
@@ -294,10 +282,10 @@
       '<div class="valj-lista">'+S.handledare.map(function(h){
         var pa=k.handledare.filter(function(x){return x.hid===h.id})[0];
         var ledig=h.lediga.indexOf(v)>-1,krock=upptagna[h.id];
-        return '<label class="valj-rad'+(krock?' ar-krock':'')+'"><input type="checkbox" data-hkoppla="'+h.id+'"'+(pa?' checked':'')+'>'+
+        return '<label class="valj-rad"><input type="checkbox" data-hkoppla="'+h.id+'"'+(pa?' checked':'')+'>'+
           '<span class="n-init liten">'+init(h.namn)+'</span>'+
           '<span class="vr-text"><b>'+h.namn+'</b><small>'+h.roll+'</small></span>'+
-          '<span class="vr-status">'+(krock?'<span class="kv-varn">Bokad i '+krock+'</span>':(ledig?'<span class="chip-status st-bekraftad">Ledig v '+v+'</span>':'<span class="chip-status st-ingen">Ej markerad ledig</span>'))+
+          '<span class="vr-status">'+(krock?'<span class="kv-not">Även inlagd i '+krock+'</span>':(ledig?'<span class="chip-status st-bekraftad">Ledig v '+v+'</span>':'<span class="chip-status st-ingen">Ej markerad ledig</span>'))+
           (pa?' '+chip(pa.status,HSTATUS):'')+'</span></label>';
       }).join('')+'</div>'+
       '<p class="tom">Kryssa i en handledare för att skicka förfrågan. Hen svarar i sin egen portal.</p>'+
@@ -317,8 +305,6 @@
   function koppla(){
     document.querySelectorAll('[data-publicera]').forEach(function(b){b.addEventListener('click',function(){
       var k=kurs(+b.getAttribute('data-publicera'));
-      if(k.handledare.filter(function(h){return h.status==='bekraftad'}).length<2){
-        toast('Kursen behöver två bekräftade handledare innan den kan publiceras.');return}
       k.status='publicerad';spara();toast('Kursen är publicerad och syns i det publika utbudet.');rita();
     })});
     document.querySelectorAll('[data-koppla]').forEach(function(b){b.addEventListener('click',function(){
@@ -365,7 +351,6 @@
     var anl=$('nk-anl').value.trim(),ort=$('nk-ort').value.trim();
     if(!anl||!ort){toast('Fyll i anläggning och ort.');return}
     var valda=[].slice.call(document.querySelectorAll('#nk-hl input:checked')).map(function(c){return +c.value});
-    if(publicera&&valda.length<2){toast('Välj två handledare för att kunna publicera.');return}
     S.kurser.push({id:nastaId++,datum:$('nk-datum').value,anlaggning:anl,ort:ort,
       kurspris:+$('nk-pris').value,logi:+$('nk-logi').value,max:+$('nk-max').value,bokade:0,
       status:publicera?'publicerad':'utkast',
