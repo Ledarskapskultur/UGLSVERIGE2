@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='5';
+  var BYGGE='6';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -223,7 +223,7 @@
   }
 
   function aAnlaggningar(){
-    var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Kursgårdar ni arbetar med. Bilden och texten följer med till kurslistan och kurssidan.</p></div>'+
+    var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Era egna kursgårdar. Bild och text följer med till kurslistan och kurssidan. Samma anläggning kan finnas hos flera arrangörer, var och en med sitt eget avtal och pris.</p></div>'+
       '<button class="button" id="ny-anl">Lägg till anläggning</button></div>';
     if(!S.anlaggningar.length)return h+'<div class="panel"><p class="tom">Inga anläggningar än.</p></div>';
     h+='<div class="anl-rutnat">'+S.anlaggningar.map(function(a){
