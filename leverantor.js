@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='8';
+  var BYGGE='9';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -235,14 +235,13 @@
     var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Varje kursgård är en mall. Nya kurser ärver bild, pris och beskrivning härifrån, och kan justeras var för sig. Samma anläggning kan finnas hos flera arrangörer, var och en med sitt eget avtal.</p></div>'+
       '<button class="button" id="ny-anl">Lägg till anläggning</button></div>';
     if(!S.anlaggningar.length)return h+'<div class="panel"><p class="tom">Inga anläggningar än.</p></div>';
-    h+='<div class="panel"><table class="tab tab-anl"><thead><tr><th>Anläggning</th><th>Beskrivning</th><th class="hoger">Kost och logi</th><th class="hoger">Platser</th><th class="hoger">Kurser</th><th></th></tr></thead><tbody>'+
+    h+='<div class="panel"><table class="tab tab-anl"><thead><tr><th>Anläggning</th><th>Beskrivning</th><th class="hoger">Kost och logi</th><th class="hoger">Kurser</th><th></th></tr></thead><tbody>'+
       S.anlaggningar.map(function(a){
         var antal=S.kurser.filter(function(k){return k.anlId===a.id}).length;
         return '<tr><td><div class="td-anl">'+anlBild(a,'anl-mellan')+
           '<span><b>'+a.namn+'</b><small>'+(a.ort||'Ort saknas')+(a.bild?'':' · bild saknas')+'</small></span></div></td>'+
           '<td class="td-besk">'+(a.text?a.text:'<span class="anl-utan">Ingen beskrivning än.</span>')+'</td>'+
           '<td class="hoger">'+kr(a.logipris)+'</td>'+
-          '<td class="hoger">'+a.platser+'</td>'+
           '<td class="hoger">'+antal+'</td>'+
           '<td class="tab-atg"><button class="mini" data-anl="'+a.id+'">Redigera</button></td></tr>';
       }).join('')+'</tbody></table></div>';
@@ -261,7 +260,6 @@
             '<label class="ro"><span>Ort</span><input id="af-ort" value="'+a.ort+'"></label>'+
             '<label class="ro ro-bred"><span>Adress</span><input id="af-adress" value="'+a.adress+'"></label>'+
             '<label class="ro ro-bred"><span>Kontaktperson</span><input id="af-kontakt" value="'+a.kontakt+'"></label>'+
-            '<label class="ro"><span>Platser</span><input id="af-platser" type="number" value="'+a.platser+'"></label>'+
             '<label class="ro"><span>Kost och logi, ex moms</span><input id="af-logi" type="number" value="'+a.logipris+'"></label>'+
           '</div>'+
           '<label class="ro ro-text"><span>Beskrivning</span>'+
@@ -284,7 +282,7 @@
       if(!namn){toast('Anläggningen behöver ett namn.');return}
       var post={id:a.id||nastaId++,namn:namn,ort:document.getElementById('af-ort').value.trim(),
         adress:document.getElementById('af-adress').value.trim(),kontakt:document.getElementById('af-kontakt').value.trim(),
-        platser:+document.getElementById('af-platser').value,logipris:+document.getElementById('af-logi').value,
+        platser:a.platser||12,logipris:+document.getElementById('af-logi').value,
         text:document.getElementById('af-text').value.trim(),bild:nyBild};
       if(a.id){S.anlaggningar=S.anlaggningar.map(function(x){return x.id===a.id?post:x})}
       else S.anlaggningar.push(post);
