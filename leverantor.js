@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='11';
+  var BYGGE='12';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -436,14 +436,20 @@
       '<div class="modal-kropp">'+
       '<p class="delad-not">'+SVG('<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/>')+
       'Kursen ärver bild, pris och beskrivning från anläggningen. Ändrar du något här gäller det bara den här veckan.</p>'+
-      '<div class="form-grid">'+
-        '<label class="ro"><span>Startdatum</span><input type="date" id="kf-datum" value="'+k.datum+'"></label>'+
-        '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="kf-pris" type="number" value="'+k.kurspris+'"></label>'+
+      '<div class="kf-grid">'+
+        '<div class="kf-bild">'+
+          rad('Bild för den här veckan',ar.bild,'<div id="kf-forhand" class="kf-forhand">'+bildRuta(kBild(k),a.namn,'anl-stor')+'</div>'+
+          '<input type="file" id="kf-bild" accept="image/*" class="fil-in">','bild')+
+        '</div>'+
+        '<div class="kf-falt">'+
+          '<div class="form-grid">'+
+            '<label class="ro"><span>Startdatum</span><input type="date" id="kf-datum" value="'+k.datum+'"></label>'+
+            '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="kf-pris" type="number" value="'+k.kurspris+'"></label>'+
+          '</div>'+
+          rad('Kost och logi, exkl. moms',ar.logi,'<input class="arv-falt" id="kf-logi" type="number" value="'+kLogi(k)+'">','logi')+
+        '</div>'+
       '</div>'+
-      rad('Kost och logi, exkl. moms',ar.logi,'<input class="arv-falt" id="kf-logi" type="number" value="'+kLogi(k)+'">','logi')+
-      rad('Bild för den här veckan',ar.bild,'<div class="arv-bild"><div id="kf-forhand">'+bildRuta(kBild(k),a.namn,'anl-stor')+'</div>'+
-        '<input type="file" id="kf-bild" accept="image/*" class="fil-in"></div>','bild')+
-      rad('Beskrivning',ar.text,'<textarea class="arv-falt" id="kf-text" rows="3" placeholder="Beskrivning som visas på kurssidan.">'+(kText(k)||'')+'</textarea>','text')+
+      rad('Beskrivning',ar.text,'<textarea class="arv-falt" id="kf-text" rows="2" placeholder="Beskrivning som visas på kurssidan.">'+(kText(k)||'')+'</textarea>','text')+
       '</div>'+
       '<div class="modal-fot"><button class="button" id="kf-spara">Spara</button>'+
       '<button class="button button-outline-dark" id="kf-allt">Återställ allt till mallen</button></div></div></div>';
