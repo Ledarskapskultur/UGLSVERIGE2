@@ -398,3 +398,32 @@
 @media(max-width:620px){.st-rad,.tratt li{grid-template-columns:1fr auto;gap:.4rem .8rem}
   .st-spar,.tr-spar{grid-column:1/-1}
   .dg-varde{display:none}}
+
+/* ---------- Kundresa ---------- */
+.filter-tva{align-items:center;margin-top:-.3rem}
+.filter-sort{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.84rem;color:#8a918d}
+.filter-sort select{font:inherit;font-size:.86rem;background:#fff;border:1px solid var(--line);border-radius:99px;padding:.35rem .7rem;color:#5f6763}
+.tab small.varn{color:#b06b34}
+.kon-tal{font-weight:600;color:var(--green)}
+.kon-hog{color:#33684a}
+.kon-noll{color:#a5aca8;font-weight:400}
+.tidslinje-blk{margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.tidslinje-blk h4,.ny-kontakt h4{margin:0 0 .9rem;font:600 1rem/1.2 "Libre Franklin",sans-serif;color:var(--green)}
+.tidslinje{list-style:none;padding:0;margin:0;position:relative}
+.tidslinje:before{content:"";position:absolute;left:15px;top:14px;bottom:14px;width:1px;background:var(--line)}
+.tidslinje li{position:relative;display:grid;grid-template-columns:32px 1fr auto;gap:.9rem;align-items:start;padding:.5rem 0}
+.tl-ikon{width:31px;height:31px;border-radius:50%;background:#f4f2ec;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#7d8a83;z-index:1}
+.tl-ikon svg{width:15px;height:15px}
+.tl-in .tl-ikon{background:#e6f0e8;border-color:#cfe0d4;color:#33684a}
+.tl-bokad .tl-ikon{background:var(--green);border-color:var(--green);color:#fff}
+.tl-txt{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.tl-txt b{font-size:.92rem;color:var(--green);font-weight:600}
+.tl-txt span{font-size:.88rem;line-height:1.5;color:#5f6763}
+.tl-dat{font-size:.82rem;color:#8a918d;text-align:right;white-space:nowrap}
+.tl-dat small{display:block;font-size:.76rem;color:#a5aca8}
+.tl-bokad .tl-txt b{color:var(--brass)}
+.ny-kontakt{margin-top:1.5rem;padding:1.1rem 1.2rem;background:#faf9f5;border:1px solid var(--line)}
+.ny-kontakt .field{margin-top:.9rem}
+.ny-kontakt .mini{margin:1rem 0 0}
+.ny-kontakt input,.ny-kontakt select{background:#fff}
+@media(max-width:620px){.tidslinje li{grid-template-columns:32px 1fr}.tl-dat{grid-column:2;text-align:left}}

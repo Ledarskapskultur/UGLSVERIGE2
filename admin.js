@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='2';
+  var BYGGE='3';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   var KORT=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
@@ -12,6 +12,7 @@
   function dat(d){var x=new Date(d+'T00:00:00');return x.getDate()+' '+KORT[x.getMonth()]+' '+x.getFullYear()}
   function idagISO(){var d=new Date();return d.toISOString().slice(0,10)}
   function dagarSedan(d){return Math.round((new Date()-new Date(d+'T00:00:00'))/864e5)}
+  function dagar(x){return x+' '+(Math.abs(x)===1?'dag':'dagar')}
   var SVG=function(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>'};
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
@@ -22,6 +23,15 @@
   var LSTATUS={ny:['Ny','st-forfragan'],kontaktad:['Kontaktad','st-utkast'],vunnen:['Bokad','st-bekraftad'],tappad:['Tappad','st-ingen']};
   var FSTATUS={utkast:['Underlag','st-utkast'],skickad:['Skickad','st-forfragan'],betald:['Betald','st-bekraftad'],forfallen:['Förfallen','st-ingen']};
   var LTYP={intresse:'Intresselista',chef:'Skickat till chef',bokning:'Bokningsförfrågan'};
+  var KALLA={linkedin:'LinkedIn',google:'Google',nyhetsbrev:'Nyhetsbrev',rekommendation:'Rekommendation',
+             massa:'Mässa och event',chefsutskick:'Skickat till chef',arbetsgivarportal:'Arbetsgivarportal',direkt:'Direkt till sajten'};
+  var KANAL={webb:'Webbformulär',mejl:'Mejl',telefon:'Telefon',mote:'Möte',linkedin:'LinkedIn',nyhetsbrev:'Nyhetsbrev'};
+  var KANALIKON={webb:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>',
+    mejl:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/>',
+    telefon:'<path d="M5 3.5h3.5l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5V18a2.5 2.5 0 0 1-2.7 2.5C10.6 20 4 13.4 3.5 6.2A2.5 2.5 0 0 1 5 3.5z"/>',
+    mote:'<circle cx="9" cy="9" r="2.6"/><circle cx="16.5" cy="10" r="2.1"/><path d="M3 19c0-2.7 2.7-4.3 6-4.3s6 1.6 6 4.3M16 14.9c2.6.2 5 1.7 5 4.1"/>',
+    linkedin:'<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M8 10v7M8 7.2v.1M12 17v-4a2 2 0 0 1 4 0v4"/>',
+    nyhetsbrev:'<path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/>'};
   var ITYP={arrangor:'Arrangör',foretag:'Arbetsgivare',anlaggning:'Anläggning',admin:'Admin'};
 
   var MALLAR=[
@@ -56,11 +66,88 @@
       {id:4,namn:'Vinga Vård',orgnr:'556212-3344',ort:'Göteborg',kontakt:'Lisa Norén',epost:'lisa@vingavard.se',anstallda:340,bokade:0,status:'inbjuden',sedan:'2026-09-01'}
     ],
     leads:[
-      {id:1,namn:'Elin Sandberg',epost:'elin.sandberg@nordvikindustri.se',org:'Nordvik Industri AB',typ:'intresse',kurs:'Vecka 41, Tylebäck',datum:'2026-09-03',status:'ny',not:''},
-      {id:2,namn:'Marcus Ohlin',epost:'marcus.ohlin@almvik.se',org:'Almvik Kommun',typ:'chef',kurs:'Vecka 45, Ringenäs',datum:'2026-09-02',status:'ny',not:''},
-      {id:3,namn:'Sara Bergqvist',epost:'sara@vingavard.se',org:'Vinga Vård',typ:'bokning',kurs:'Vecka 43, Lovik',datum:'2026-08-30',status:'kontaktad',not:'Vill veta om resa ingår.'},
-      {id:4,namn:'Peter Lund',epost:'peter.lund@sydkraftbygg.se',org:'Sydkraft Bygg',typ:'intresse',kurs:'Vecka 50, Hagastrand',datum:'2026-08-27',status:'vunnen',not:'Bokade två platser.'},
-      {id:5,namn:'Amina Yusuf',epost:'amina.yusuf@almvik.se',org:'Almvik Kommun',typ:'intresse',kurs:'Vecka 3, Villa Lovik',datum:'2026-08-25',status:'ny',not:''}
+      {id:1,namn:'Elin Sandberg',epost:'elin.sandberg@nordvikindustri.se',telefon:'070-111 22 33',roll:'Produktionschef',org:'Nordvik Industri AB',bransch:'Industri',storlek:'100-499',
+       kalla:'linkedin',kampanj:'Höstkampanj UGL 2026',typ:'intresse',kurs:'Vecka 41, Tylebäck',kursdatum:'2026-10-05',
+       datum:'2026-08-19',status:'kontaktad',bokad:'',varde:32800,agare:'Carl-Fredrik',not:'Vill gå tillsammans med en kollega, förklarat främlingsgrupp.',
+       kontakter:[{d:'2026-08-19',kanal:'webb',riktning:'in',not:'Anmälde intresse på kurssidan'},
+                  {d:'2026-08-20',kanal:'mejl',riktning:'ut',not:'Skickade veckoöversikt och tre datum'},
+                  {d:'2026-08-27',kanal:'telefon',riktning:'ut',not:'Kort samtal, vill stämma av med sin chef'}]},
+      {id:2,namn:'Marcus Ohlin',epost:'marcus.ohlin@almvik.se',telefon:'070-222 33 44',roll:'HR-partner',org:'Almvik Kommun',bransch:'Offentlig sektor',storlek:'500+',
+       kalla:'chefsutskick',kampanj:'',typ:'chef',kurs:'Vecka 45, Ringenäs',kursdatum:'2026-11-02',
+       datum:'2026-09-02',status:'ny',bokad:'',varde:33400,agare:'Carl-Fredrik',not:'',
+       kontakter:[{d:'2026-09-02',kanal:'webb',riktning:'in',not:'En medarbetare skickade kursen till hen'}]},
+      {id:3,namn:'Sara Bergqvist',epost:'sara@vingavard.se',telefon:'070-333 44 55',roll:'Verksamhetschef',org:'Vinga Vård',bransch:'Vård och omsorg',storlek:'100-499',
+       kalla:'google',kampanj:'Sök UGL kurs',typ:'bokning',kurs:'Vecka 43, Lovik',kursdatum:'2026-10-19',
+       datum:'2026-08-11',status:'kontaktad',bokad:'',varde:33800,agare:'Carl-Fredrik',not:'Vill veta om resa ingår.',
+       kontakter:[{d:'2026-08-11',kanal:'webb',riktning:'in',not:'Bokningsförfrågan via formulär'},
+                  {d:'2026-08-12',kanal:'mejl',riktning:'ut',not:'Bekräftade förfrågan och skickade praktisk info'},
+                  {d:'2026-08-18',kanal:'mote',riktning:'ut',not:'Digitalt möte om upplägget'},
+                  {d:'2026-08-30',kanal:'mejl',riktning:'in',not:'Frågade om resa och boende'}]},
+      {id:4,namn:'Peter Lund',epost:'peter.lund@sydkraftbygg.se',telefon:'070-444 55 66',roll:'Platschef',org:'Sydkraft Bygg',bransch:'Bygg',storlek:'20-99',
+       kalla:'rekommendation',kampanj:'',typ:'intresse',kurs:'Vecka 50, Hagastrand',kursdatum:'2026-12-07',
+       datum:'2026-07-28',status:'vunnen',bokad:'2026-08-27',varde:68800,agare:'Carl-Fredrik',not:'Bokade två platser.',
+       kontakter:[{d:'2026-07-28',kanal:'telefon',riktning:'in',not:'Ringde efter tips från kollega som gått UGL'},
+                  {d:'2026-07-29',kanal:'mejl',riktning:'ut',not:'Skickade datum och prisbild'},
+                  {d:'2026-08-14',kanal:'mote',riktning:'ut',not:'Möte med honom och HR'},
+                  {d:'2026-08-27',kanal:'mejl',riktning:'in',not:'Bokade två platser'}]},
+      {id:5,namn:'Amina Yusuf',epost:'amina.yusuf@almvik.se',telefon:'',roll:'Enhetschef',org:'Almvik Kommun',bransch:'Offentlig sektor',storlek:'500+',
+       kalla:'nyhetsbrev',kampanj:'Nyhetsbrev augusti',typ:'intresse',kurs:'Vecka 3, Villa Lovik',kursdatum:'2027-01-18',
+       datum:'2026-08-25',status:'ny',bokad:'',varde:33800,agare:'Carl-Fredrik',not:'',
+       kontakter:[{d:'2026-08-25',kanal:'webb',riktning:'in',not:'Klickade i nyhetsbrevet och anmälde intresse'}]},
+      {id:6,namn:'Johan Lind',epost:'johan.lind@nordvikindustri.se',telefon:'070-555 66 77',roll:'Teamledare',org:'Nordvik Industri AB',bransch:'Industri',storlek:'100-499',
+       kalla:'arbetsgivarportal',kampanj:'',typ:'bokning',kurs:'Vecka 41, Tylebäck',kursdatum:'2026-10-05',
+       datum:'2026-06-02',status:'vunnen',bokad:'2026-06-16',varde:32800,agare:'Carl-Fredrik',not:'HR planerade in honom i portalen.',
+       kontakter:[{d:'2026-06-02',kanal:'webb',riktning:'in',not:'HR lade in honom i planeringen'},
+                  {d:'2026-06-03',kanal:'mejl',riktning:'ut',not:'Välkomstinfo till deltagaren'},
+                  {d:'2026-06-16',kanal:'mejl',riktning:'in',not:'Bekräftade platsen'}]},
+      {id:7,namn:'Petra Sjöqvist',epost:'petra.sjoqvist@almvik.se',telefon:'070-666 77 88',roll:'Avdelningschef',org:'Almvik Kommun',bransch:'Offentlig sektor',storlek:'500+',
+       kalla:'linkedin',kampanj:'Höstkampanj UGL 2026',typ:'intresse',kurs:'Vecka 42, Skogshem & Wijk',kursdatum:'2026-10-12',
+       datum:'2026-05-14',status:'vunnen',bokad:'2026-07-01',varde:33800,agare:'Carl-Fredrik',not:'Lång process, budget föll på plats i juni.',
+       kontakter:[{d:'2026-05-14',kanal:'linkedin',riktning:'in',not:'Kommenterade ett inlägg och bad om info'},
+                  {d:'2026-05-15',kanal:'mejl',riktning:'ut',not:'Skickade kursbeskrivning'},
+                  {d:'2026-05-28',kanal:'telefon',riktning:'ut',not:'Uppföljning, väntar på budget'},
+                  {d:'2026-06-18',kanal:'mejl',riktning:'ut',not:'Påminnelse med två lediga veckor'},
+                  {d:'2026-07-01',kanal:'telefon',riktning:'in',not:'Bokade plats'}]},
+      {id:8,namn:'Nadia Rahimi',epost:'nadia.rahimi@nordvikindustri.se',telefon:'',roll:'Projektledare',org:'Nordvik Industri AB',bransch:'Industri',storlek:'100-499',
+       kalla:'google',kampanj:'Sök UGL kurs',typ:'intresse',kurs:'Vecka 43, Lovik',kursdatum:'2026-10-19',
+       datum:'2026-08-05',status:'tappad',bokad:'',varde:0,agare:'Carl-Fredrik',not:'Valde en intern utbildning i stället.',
+       kontakter:[{d:'2026-08-05',kanal:'webb',riktning:'in',not:'Anmälde intresse'},
+                  {d:'2026-08-06',kanal:'mejl',riktning:'ut',not:'Skickade info'},
+                  {d:'2026-08-20',kanal:'mejl',riktning:'in',not:'Tackade nej, går intern kurs'}]},
+      {id:9,namn:'Martin Berg',epost:'martin.berg@sydkraftbygg.se',telefon:'070-777 88 99',roll:'Arbetsledare',org:'Sydkraft Bygg',bransch:'Bygg',storlek:'20-99',
+       kalla:'rekommendation',kampanj:'',typ:'bokning',kurs:'Vecka 45, Ringenäs',kursdatum:'2026-11-02',
+       datum:'2026-07-14',status:'vunnen',bokad:'2026-07-21',varde:33400,agare:'Carl-Fredrik',not:'Kollegan Peter tipsade.',
+       kontakter:[{d:'2026-07-14',kanal:'telefon',riktning:'in',not:'Ringde direkt, visste vad han ville'},
+                  {d:'2026-07-21',kanal:'mejl',riktning:'in',not:'Bokade plats'}]},
+      {id:10,namn:'Lisa Norén',epost:'lisa@vingavard.se',telefon:'070-888 99 00',roll:'HR-chef',org:'Vinga Vård',bransch:'Vård och omsorg',storlek:'100-499',
+       kalla:'massa',kampanj:'HR-dagarna 2026',typ:'chef',kurs:'Flera veckor',kursdatum:'',
+       datum:'2026-04-22',status:'kontaktad',bokad:'',varde:135000,agare:'Carl-Fredrik',not:'Vill skicka fyra chefer under 2027. Stort men långsamt.',
+       kontakter:[{d:'2026-04-22',kanal:'mote',riktning:'in',not:'Besökte montern på HR-dagarna'},
+                  {d:'2026-04-29',kanal:'mejl',riktning:'ut',not:'Skickade upplägg för fyra deltagare'},
+                  {d:'2026-05-20',kanal:'mote',riktning:'ut',not:'Digitalt möte med henne och ekonomichefen'},
+                  {d:'2026-06-30',kanal:'mejl',riktning:'ut',not:'Uppföljning inför budgetarbetet'},
+                  {d:'2026-09-01',kanal:'mejl',riktning:'ut',not:'Inbjudan till arbetsgivarportalen'}]},
+      {id:11,namn:'Jonas Ahl',epost:'jonas@sydkraftbygg.se',telefon:'070-999 00 11',roll:'VD',org:'Sydkraft Bygg',bransch:'Bygg',storlek:'20-99',
+       kalla:'direkt',kampanj:'',typ:'chef',kurs:'Vecka 47, Bykrogen',kursdatum:'2026-11-16',
+       datum:'2026-08-31',status:'ny',bokad:'',varde:33400,agare:'Carl-Fredrik',not:'',
+       kontakter:[{d:'2026-08-31',kanal:'webb',riktning:'in',not:'En medarbetare skickade kursen till honom'}]},
+      {id:12,namn:'Sofia Berg',epost:'sofia.berg@almvik.se',telefon:'070-121 21 21',roll:'HR-strateg',org:'Almvik Kommun',bransch:'Offentlig sektor',storlek:'500+',
+       kalla:'nyhetsbrev',kampanj:'Nyhetsbrev maj',typ:'intresse',kurs:'Vecka 50, Hagastrand',kursdatum:'2026-12-07',
+       datum:'2026-05-06',status:'vunnen',bokad:'2026-06-11',varde:34400,agare:'Carl-Fredrik',not:'',
+       kontakter:[{d:'2026-05-06',kanal:'webb',riktning:'in',not:'Anmälde intresse via nyhetsbrevet'},
+                  {d:'2026-05-07',kanal:'mejl',riktning:'ut',not:'Skickade datum'},
+                  {d:'2026-05-25',kanal:'telefon',riktning:'ut',not:'Samtal om vilken vecka som passar'},
+                  {d:'2026-06-11',kanal:'mejl',riktning:'in',not:'Bokade plats'}]},
+      {id:13,namn:'Henrik Palm',epost:'henrik.palm@bergslagensenergi.se',telefon:'',roll:'Driftchef',org:'Bergslagens Energi',bransch:'Energi',storlek:'100-499',
+       kalla:'linkedin',kampanj:'Höstkampanj UGL 2026',typ:'intresse',kurs:'Vecka 3, Villa Lovik',kursdatum:'2027-01-18',
+       datum:'2026-09-01',status:'ny',bokad:'',varde:33800,agare:'Carl-Fredrik',not:'',
+       kontakter:[{d:'2026-09-01',kanal:'linkedin',riktning:'in',not:'Skickade meddelande efter ett inlägg om grupputveckling'}]},
+      {id:14,namn:'Karin Ek',epost:'karin.ek@nordvikindustri.se',telefon:'070-131 31 31',roll:'HR-chef',org:'Nordvik Industri AB',bransch:'Industri',storlek:'100-499',
+       kalla:'rekommendation',kampanj:'',typ:'chef',kurs:'Flera veckor',kursdatum:'',
+       datum:'2026-03-11',status:'vunnen',bokad:'2026-04-08',varde:98400,agare:'Carl-Fredrik',not:'Blev kund i arbetsgivarportalen, planerar tre per år.',
+       kontakter:[{d:'2026-03-11',kanal:'mejl',riktning:'in',not:'Hörde av sig efter tips från annan kommun'},
+                  {d:'2026-03-18',kanal:'mote',riktning:'ut',not:'Möte om behovet i chefsgruppen'},
+                  {d:'2026-04-08',kanal:'mejl',riktning:'in',not:'Beställde tre platser under året'}]}
     ],
     inbjudningar:[
       {id:1,typ:'arrangor',namn:'Nordlys Utveckling AB',epost:'petra@nordlys.se',skickad:'2026-08-28',status:'oppnad'},
@@ -140,6 +227,38 @@
   function pil(){return '<span class="rad-pil" aria-hidden="true">&#8250;</span>'}
 
   /* ---------- Härledda tal ---------- */
+  function kontakter(l){return Array.isArray(l.kontakter)?l.kontakter.slice().sort(function(a,b){return a.d<b.d?-1:1}):[]}
+  function forstaKontakt(l){var k=kontakter(l);return k.length?k[0].d:l.datum}
+  function senasteKontakt(l){var k=kontakter(l);return k.length?k[k.length-1].d:l.datum}
+  function antalKontakter(l){return kontakter(l).length}
+  function ledtid(l){return l.bokad?Math.round((new Date(l.bokad)-new Date(forstaKontakt(l)))/864e5):null}
+  function alderDagar(l){return dagarSedan(forstaKontakt(l))}
+  function tystDagar(l){return dagarSedan(senasteKontakt(l))}
+  function vunna(){return S.leads.filter(function(l){return l.status==='vunnen'})}
+  function snitt(lista){return lista.length?Math.round(lista.reduce(function(a,b){return a+b},0)/lista.length):0}
+  function snittLedtid(){return snitt(vunna().map(ledtid).filter(function(x){return x!=null}))}
+  function snittKontakter(){var v=vunna().map(antalKontakter);return v.length?Math.round(snitt(v.map(function(x){return x*10}))/10*10)/10:0}
+  function kallStat(){
+    var m={};
+    S.leads.forEach(function(l){
+      var k=l.kalla||'direkt';
+      m[k]=m[k]||{kalla:k,leads:0,vunna:0,varde:0,ledtider:[],kontakter:0};
+      m[k].leads++;m[k].kontakter+=antalKontakter(l);
+      if(l.status==='vunnen'){m[k].vunna++;m[k].varde+=l.varde||0;var t=ledtid(l);if(t!=null)m[k].ledtider.push(t)}
+    });
+    return Object.keys(m).map(function(k){var x=m[k];
+      x.konv=x.leads?Math.round(x.vunna/x.leads*100):0;
+      x.ledtid=snitt(x.ledtider);
+      return x}).sort(function(a,b){return b.leads-a.leads});
+  }
+  function spann(varden,granser,etiketter){
+    var ut=etiketter.map(function(e){return {namn:e,antal:0}});
+    varden.forEach(function(v){
+      for(var i=0;i<granser.length;i++){if(v<=granser[i]){ut[i].antal++;return}}
+      ut[ut.length-1].antal++;
+    });
+    return ut;
+  }
   function provisionFor(a){var s=stat(a.id);return Math.round(s.omsattning*a.avtal.provision/100)}
   function totalProvision(){return S.arrangorer.reduce(function(n,a){return n+provisionFor(a)},0)}
   function attGora(){
@@ -157,6 +276,9 @@
       text:'Underlagen är klara och väntar på att gå iväg.',vy:'ekonomi'});
     var l=S.leads.filter(function(x){return x.status==='ny'}).length;
     if(l)p.push({niva:'info',rubrik:l===1?'Ett nytt lead':l+' nya leads',text:'Personer som visat intresse och inte kontaktats än.',vy:'leads'});
+    var t=S.leads.filter(function(x){return x.status==='kontaktad'&&tystDagar(x)>14}).length;
+    if(t)p.push({niva:'varning',rubrik:t===1?'Ett lead har legat stilla':t+' leads har legat stilla',
+      text:'Ingen kontakt på över två veckor. Följ upp innan de svalnar.',vy:'leads'});
     var s=S.arrangorer.filter(function(a){return a.avtal.status==='signering'}).length;
     if(s)p.push({niva:'info',rubrik:s===1?'Ett avtal väntar på signering':s+' avtal väntar på signering',
       text:'Arrangören har fått avtalet men inte skrivit under.',vy:'arrangorer'});
@@ -233,7 +355,7 @@
       '<td><div class="td-anl">'+logga(a)+'<span><b>'+esc(a.namn)+'</b></span></div></td>'+
       '<td>'+esc(g.anlaggning)+'<small>'+esc(g.ort)+'</small></td>'+
       '<td class="hoger">'+kr(g.kurspris+g.logi)+'</td>'+
-      '<td>'+(d===0?'i dag':d+' dagar sedan')+'</td><td class="tab-atg">'+pil()+'</td></tr>';
+      '<td>'+(d===0?'i dag':dagar(d)+' sedan')+'</td><td class="tab-atg">'+pil()+'</td></tr>';
   }
 
   function vForetag(){
@@ -250,23 +372,42 @@
     return h;
   }
 
-  var leadFilter='alla';
+  var leadFilter='alla',leadKalla='alla',leadSort='datum';
   function vLeads(){
-    var lista=leadFilter==='alla'?S.leads:S.leads.filter(function(l){return l.typ===leadFilter});
-    var h='<div class="vy-head"><div><h1>Leads</h1><p class="lead">Alla som anmält intresse, skickat en kurs till sin chef eller lämnat en bokningsförfrågan.</p></div></div>';
+    var lista=S.leads.filter(function(l){
+      return (leadFilter==='alla'||l.typ===leadFilter)&&(leadKalla==='alla'||l.kalla===leadKalla)});
+    lista.sort(leadSort==='tyst'?function(a,b){return tystDagar(b)-tystDagar(a)}
+      :leadSort==='varde'?function(a,b){return (b.varde||0)-(a.varde||0)}
+      :function(a,b){return forstaKontakt(a)<forstaKontakt(b)?1:-1});
+    var v=vunna();
+    var h='<div class="vy-head"><div><h1>Leads och kundresa</h1><p class="lead">Varje kontakt loggas, så du ser var personen kom in, hur många beröringar det tog och hur lång tid det gick till bokning.</p></div>'+
+      '<button class="button button-outline-dark" id="exportera">Exportera som CSV</button></div>';
     h+='<div class="kpi-rad">'+
       kpi(S.leads.filter(function(l){return l.status==='ny'}).length,'nya, ej kontaktade')+
-      kpi(S.leads.filter(function(l){return l.typ==='intresse'}).length,'på intresselistan')+
-      kpi(S.leads.filter(function(l){return l.typ==='chef'}).length,'skickade till chef')+
-      kpi(S.leads.filter(function(l){return l.status==='vunnen'}).length,'blev bokning')+'</div>';
+      kpi(dagar(snittLedtid()),'snitt till bokning','från första kontakt')+
+      kpi(String(snittKontakter()).replace('.',','),'kontakter i snitt','innan bokning')+
+      kpi(S.leads.length?Math.round(v.length/S.leads.length*100)+' %':'-','blir bokning')+'</div>';
     h+='<div class="panel"><div class="filterchips">'+
-      [['alla','Alla'],['intresse','Intresselista'],['chef','Skickat till chef'],['bokning','Bokningsförfrågan']].map(function(f){
+      [['alla','Alla typer'],['intresse','Intresselista'],['chef','Skickat till chef'],['bokning','Bokningsförfrågan']].map(function(f){
         return '<button type="button" class="fchip'+(leadFilter===f[0]?' ar-pa':'')+'" data-lfilter="'+f[0]+'">'+f[1]+'</button>'}).join('')+'</div>';
-    h+=lista.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Organisation</th><th>Typ</th><th>Kurs</th><th>Inkom</th><th>Status</th><th></th></tr></thead><tbody>'+
-      lista.map(function(l){
-        return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc(l.epost)+'</small></td>'+
-          '<td>'+esc(l.org)+'</td><td>'+LTYP[l.typ]+'</td><td>'+esc(l.kurs)+'</td>'+
-          '<td>'+dat(l.datum)+'</td><td>'+chip(l.status,LSTATUS)+'</td><td class="tab-atg">'+pil()+'</td></tr>';
+    h+='<div class="filterchips filter-tva">'+
+      '<button type="button" class="fchip'+(leadKalla==='alla'?' ar-pa':'')+'" data-lkalla="alla">Alla källor</button>'+
+      Object.keys(KALLA).filter(function(k){return S.leads.some(function(l){return l.kalla===k})}).map(function(k){
+        return '<button type="button" class="fchip'+(leadKalla===k?' ar-pa':'')+'" data-lkalla="'+k+'">'+KALLA[k]+'</button>'}).join('')+
+      '<span class="filter-sort">Sortera<select id="l-sort">'+
+      [['datum','Senast inkommen'],['tyst','Längst utan kontakt'],['varde','Högst värde']].map(function(o){
+        return '<option value="'+o[0]+'"'+(leadSort===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></span></div>';
+    h+=lista.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Källa</th><th class="hoger">Kontakter</th>'+
+      '<th>Första kontakt</th><th>Senaste</th><th class="hoger">Ledtid</th><th class="hoger">Värde</th><th>Status</th><th></th></tr></thead><tbody>'+
+      lista.map(function(l){var t=ledtid(l),ty=tystDagar(l);
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc(l.roll)+', '+esc(l.org)+'</small></td>'+
+          '<td>'+(KALLA[l.kalla]||'-')+(l.kampanj?'<small>'+esc(l.kampanj)+'</small>':'')+'</td>'+
+          '<td class="hoger">'+antalKontakter(l)+'</td>'+
+          '<td>'+dat(forstaKontakt(l))+'<small>'+dagar(alderDagar(l))+' sedan</small></td>'+
+          '<td>'+dat(senasteKontakt(l))+(l.status!=='vunnen'&&l.status!=='tappad'&&ty>14?'<small class="varn">'+dagar(ty)+' tyst</small>':'<small>'+dagar(ty)+' sedan</small>')+'</td>'+
+          '<td class="hoger">'+(t!=null?dagar(t):'-')+'</td>'+
+          '<td class="hoger">'+(l.varde?kr(l.varde):'-')+'</td>'+
+          '<td>'+chip(l.status,LSTATUS)+'</td><td class="tab-atg">'+pil()+'</td></tr>';
       }).join('')+'</tbody></table></div>':'<p class="tom">Inga leads i det här urvalet.</p>';
     h+='</div>';
     return h;
@@ -302,7 +443,7 @@
     h+='<div class="panel"><div class="tab-svep"><table class="tab"><thead><tr><th>Mottagare</th><th>Typ</th><th>Skickad</th><th>Status</th><th class="tab-atg">Åtgärd</th></tr></thead><tbody>'+
       S.inbjudningar.slice().sort(function(a,b){return a.skickad<b.skickad?1:-1}).map(function(i){
         return '<tr><td><b>'+esc(i.namn)+'</b><small>'+esc(i.epost)+'</small></td>'+
-          '<td>'+ITYP[i.typ]+'</td><td>'+dat(i.skickad)+'<small>'+dagarSedan(i.skickad)+' dagar sedan</small></td>'+
+          '<td>'+ITYP[i.typ]+'</td><td>'+dat(i.skickad)+'<small>'+dagar(dagarSedan(i.skickad))+' sedan</small></td>'+
           '<td>'+chip(i.status,ISTATUS)+'</td>'+
           '<td class="tab-atg">'+(i.status==='aktiverad'?'':'<button class="mini" data-paminn="'+i.id+'">Påminn</button>')+
           '<button class="mini" data-lank="'+i.id+'">Kopiera länk</button></td></tr>';
@@ -380,6 +521,41 @@
           '<span class="tr-spar"><span class="tr-fyll" style="width:'+Math.max(b,3)+'%"></span></span>'+
           '<span class="tr-tal">'+x.antal+(i?'<small>'+fran+' % vidare</small>':'<small>av dem som tittat</small>')+'</span></li>'}).join('')+
       '</ol></div>';
+    h+='<div class="panel"><h2>Var kunderna kommer ifrån</h2>'+
+      '<p class="tom">Källa, hur många som blev bokning och hur lång tid det tog. Grunden för var marknadsföringen ska ligga.</p>'+
+      '<div class="tab-svep"><table class="tab"><thead><tr><th>Källa</th><th class="hoger">Leads</th><th class="hoger">Bokningar</th>'+
+      '<th class="hoger">Konvertering</th><th class="hoger">Snitt kontakter</th><th class="hoger">Snitt ledtid</th><th class="hoger">Värde</th></tr></thead><tbody>'+
+      kallStat().map(function(x){
+        return '<tr><td><b>'+(KALLA[x.kalla]||x.kalla)+'</b></td><td class="hoger">'+x.leads+'</td>'+
+          '<td class="hoger">'+x.vunna+'</td>'+
+          '<td class="hoger"><span class="kon-tal'+(x.konv>=50?' kon-hog':x.konv>0?'':' kon-noll')+'">'+x.konv+' %</span></td>'+
+          '<td class="hoger">'+(x.leads?Math.round(x.kontakter/x.leads*10)/10:0).toString().replace('.',',')+'</td>'+
+          '<td class="hoger">'+(x.ledtid?dagar(x.ledtid):'-')+'</td>'+
+          '<td class="hoger">'+(x.varde?kr(x.varde):'-')+'</td></tr>'}).join('')+'</tbody></table></div></div>';
+    var vun=vunna();
+    h+='<div class="panel"><h2>Hur lång tid en bokning tar</h2>'+
+      '<p class="tom">Dagar från första kontakt till bokad plats. Snittet är '+dagar(snittLedtid())+'.</p>'+
+      andelsstaplar(spann(vun.map(ledtid).filter(function(x){return x!=null}),[7,30,90],
+        ['Inom en vecka','8 till 30 dagar','31 till 90 dagar','Mer än 90 dagar']),'antal','namn','bokningar')+'</div>';
+    h+='<div class="panel"><h2>Antal kontakter innan bokning</h2>'+
+      '<p class="tom">Snittet är '+String(snittKontakter()).replace('.',',')+' kontakter. Det säger hur mycket uppföljning som behövs.</p>'+
+      andelsstaplar(spann(vun.map(antalKontakter),[1,2,3,4],
+        ['En kontakt','Två','Tre','Fyra','Fem eller fler']),'antal','namn','bokningar')+'</div>';
+    var kanalmix={};
+    vun.forEach(function(l){kontakter(l).forEach(function(x){kanalmix[x.kanal]=(kanalmix[x.kanal]||0)+1})});
+    h+='<div class="panel"><h2>Kanaler i affärer som blev av</h2>'+
+      '<p class="tom">Alla kontakter i de bokningar som gick igenom, fördelade per kanal.</p>'+
+      andelsstaplar(Object.keys(kanalmix).map(function(k){return {namn:KANAL[k]||k,antal:kanalmix[k]}})
+        .sort(function(a,b){return b.antal-a.antal}),'antal','namn','kontakter')+'</div>';
+    var koh={};
+    S.leads.forEach(function(l){var m=forstaKontakt(l).slice(0,7);
+      koh[m]=koh[m]||{m:m,leads:0,vunna:0};koh[m].leads++;if(l.status==='vunnen')koh[m].vunna++});
+    var kohl=Object.keys(koh).sort().map(function(k){return koh[k]});
+    h+='<div class="panel"><h2>Leads per månad och hur många som bokade</h2>'+
+      '<div class="tab-svep"><table class="tab"><thead><tr><th>Månad</th><th class="hoger">Nya leads</th><th class="hoger">Blev bokning</th><th class="hoger">Konvertering</th></tr></thead><tbody>'+
+      kohl.map(function(x){return '<tr><td><b>'+MANADER[+x.m.slice(5)-1]+' '+x.m.slice(0,4)+'</b></td>'+
+        '<td class="hoger">'+x.leads+'</td><td class="hoger">'+x.vunna+'</td>'+
+        '<td class="hoger">'+Math.round(x.vunna/x.leads*100)+' %</td></tr>'}).join('')+'</tbody></table></div></div>';
     h+='<div class="panel"><h2>Beläggning per arrangör</h2><div class="tab-svep"><table class="tab"><thead><tr><th>Arrangör</th>'+
       '<th class="hoger">Kurser</th><th class="hoger">Platser</th><th class="hoger">Bokade</th><th class="hoger">Beläggning</th><th class="hoger">Förmedlat värde</th></tr></thead><tbody>'+
       S.arrangorer.map(function(a){var s=stat(a.id);
@@ -516,16 +692,66 @@
 
   function leadModal(id){
     var l=S.leads.filter(function(x){return x.id===id})[0];
-    var kropp='<dl class="avtal-lista">'+rad('Namn',l.namn)+rad('E-post',l.epost)+rad('Organisation',l.org)+
-      rad('Typ',LTYP[l.typ])+rad('Kurs',l.kurs)+rad('Inkom',dat(l.datum))+'</dl>'+
-      '<div class="form-grid"><label class="ro"><span>Status</span><select id="l-status">'+
-      Object.keys(LSTATUS).map(function(k){return '<option value="'+k+'"'+(l.status===k?' selected':'')+'>'+LSTATUS[k][0]+'</option>'}).join('')+
-      '</select></label></div>'+
-      '<div class="field field-wide"><label for="l-not">Anteckning</label><textarea id="l-not" rows="2">'+esc(l.not||'')+'</textarea></div>';
-    var fot='<button class="button" id="l-spara">Spara</button><button class="button button-outline-dark" id="l-mejl">Skicka mejl</button>';
+    var t=ledtid(l),k=kontakter(l);
+    var kropp='<div class="detalj-topp"><span class="n-init stor">'+init(l.namn)+'</span>'+
+      '<div><b>'+esc(l.namn)+'</b><small>'+esc(l.roll)+', '+esc(l.org)+'</small>'+
+      '<small>'+esc(l.epost)+(l.telefon?' · '+esc(l.telefon):'')+'</small></div>'+
+      '<div class="detalj-status">'+chip(l.status,LSTATUS)+'<small>'+(KALLA[l.kalla]||'')+'</small></div></div>';
+    kropp+='<div class="kpi-rad kpi-tat">'+kpi(antalKontakter(l),'kontakter')+
+      kpi(alderDagar(l),'dagar sedan första')+
+      kpi(t!=null?t:tystDagar(l),t!=null?'dagar till bokning':'dagar sedan senaste')+
+      kpi(l.varde?kr(l.varde):'-','värde')+'</div>';
+    kropp+='<dl class="avtal-lista">'+rad('Organisation',l.org)+rad('Bransch',l.bransch||'-')+
+      rad('Storlek',l.storlek?l.storlek+' anställda':'-')+
+      rad('Kanal in',LTYP[l.typ])+
+      rad('Kampanj',l.kampanj||'Ingen')+
+      rad('Kurs',l.kurs+(l.kursdatum?', '+dat(l.kursdatum):''))+
+      rad('Ansvarig',l.agare||'-')+'</dl>';
+    kropp+='<div class="tidslinje-blk"><h4>Kontakthistorik</h4><ol class="tidslinje">'+
+      k.map(function(x,i){
+        var forra=i?Math.round((new Date(x.d)-new Date(k[i-1].d))/864e5):0;
+        return '<li class="tl-'+x.riktning+'"><span class="tl-ikon">'+SVG(KANALIKON[x.kanal]||KANALIKON.mejl)+'</span>'+
+          '<span class="tl-txt"><b>'+(KANAL[x.kanal]||x.kanal)+', '+(x.riktning==='in'?'kunden hörde av sig':'vi kontaktade')+'</b>'+
+          '<span>'+esc(x.not)+'</span></span>'+
+          '<span class="tl-dat">'+dat(x.d)+(i?'<small>'+(forra?dagar(forra)+' senare':'samma dag')+'</small>':'<small>första kontakt</small>')+'</span></li>'}).join('')+
+      (l.bokad?'<li class="tl-bokad"><span class="tl-ikon">'+SVG('<path d="M4 12.5l5 5L20 6.5"/>')+'</span>'+
+        '<span class="tl-txt"><b>Bokning</b><span>'+(l.varde?kr(l.varde)+' i värde':'Plats bokad')+'</span></span>'+
+        '<span class="tl-dat">'+dat(l.bokad)+'<small>'+dagar(t)+' från start</small></span></li>':'')+
+      '</ol></div>';
+    kropp+='<div class="ny-kontakt"><h4>Logga en kontakt</h4><div class="form-grid">'+
+      '<label class="ro"><span>Datum</span><input id="nk-datum" type="date" value="'+idagISO()+'"></label>'+
+      '<label class="ro"><span>Kanal</span><select id="nk-kanal">'+Object.keys(KANAL).map(function(x){
+        return '<option value="'+x+'">'+KANAL[x]+'</option>'}).join('')+'</select></label>'+
+      '<label class="ro"><span>Riktning</span><select id="nk-rikt"><option value="ut">Vi kontaktade kunden</option><option value="in">Kunden hörde av sig</option></select></label>'+
+      '<label class="ro"><span>Nytt status</span><select id="nk-status">'+Object.keys(LSTATUS).map(function(x){
+        return '<option value="'+x+'"'+(l.status===x?' selected':'')+'>'+LSTATUS[x][0]+'</option>'}).join('')+'</select></label>'+
+      '</div>'+
+      '<div class="field field-wide"><label for="nk-not">Vad hände</label><input id="nk-not" placeholder="Kort notering, en rad räcker."></div>'+
+      '<button class="mini mini-primar" id="nk-lagg">Lägg till kontakt</button></div>';
+    kropp+='<div class="field field-wide"><label for="l-not">Anteckning om kunden</label><textarea id="l-not" rows="2">'+esc(l.not||'')+'</textarea></div>';
+    var fot='<button class="button" id="l-spara">Spara</button>'+
+      (l.status!=='vunnen'?'<button class="button button-outline-dark" id="l-bokad">Markera som bokad</button>':'')+
+      '<button class="button button-outline-dark" id="l-mejl">Skicka mejl</button>';
     modal(skal(esc(l.namn),kropp,fot,true));
+    $('nk-lagg').addEventListener('click',function(){
+      var n=$('nk-not').value.trim();
+      if(!n){toast('Skriv en kort notering om vad som hände.');return}
+      l.kontakter=kontakter(l);
+      l.kontakter.push({d:$('nk-datum').value||idagISO(),kanal:$('nk-kanal').value,riktning:$('nk-rikt').value,not:n});
+      l.status=$('nk-status').value;
+      if(l.status==='vunnen'&&!l.bokad)l.bokad=$('nk-datum').value||idagISO();
+      l.not=$('l-not').value.trim();
+      spara();stang();toast('Kontakten är loggad.');leadModal(id);
+    });
     $('l-spara').addEventListener('click',function(){
-      l.status=$('l-status').value;l.not=$('l-not').value.trim();spara();stang();toast('Leadet är uppdaterat.');rita()});
+      l.status=$('nk-status').value;l.not=$('l-not').value.trim();
+      if(l.status==='vunnen'&&!l.bokad)l.bokad=idagISO();
+      spara();stang();toast('Kundkortet är uppdaterat.');rita()});
+    if($('l-bokad'))$('l-bokad').addEventListener('click',function(){
+      l.status='vunnen';l.bokad=idagISO();
+      l.kontakter=kontakter(l);
+      l.kontakter.push({d:idagISO(),kanal:'mejl',riktning:'in',not:'Bokade plats'});
+      spara();stang();toast('Bokningen är registrerad. Ledtiden blev '+dagar(ledtid(l))+'.');rita()});
     $('l-mejl').addEventListener('click',function(){stang();toast('I skarpt läge öppnas ett mejl till '+l.epost+'.')});
   }
 
@@ -686,6 +912,10 @@
     });
     document.querySelectorAll('[data-lfilter]').forEach(function(b){b.addEventListener('click',function(){
       leadFilter=b.getAttribute('data-lfilter');rita('leads')})});
+    document.querySelectorAll('[data-lkalla]').forEach(function(b){b.addEventListener('click',function(){
+      leadKalla=b.getAttribute('data-lkalla');rita('leads')})});
+    if($('l-sort'))$('l-sort').addEventListener('change',function(){leadSort=$('l-sort').value;rita('leads')});
+    if($('exportera'))$('exportera').addEventListener('click',exportera);
     document.querySelectorAll('[data-paminn]').forEach(function(b){b.addEventListener('click',function(){
       var i=S.inbjudningar.filter(function(x){return x.id===+b.getAttribute('data-paminn')})[0];
       toast('Påminnelse skickad till '+i.epost+'.')})});
@@ -694,6 +924,22 @@
       var lank='https://uglsverige.store/valkommen?kod='+(i.typ.slice(0,3)+i.id+'k'+(1000+i.id*7));
       if(navigator.clipboard)navigator.clipboard.writeText(lank);
       toast('Inbjudningslänken är kopierad.')})});
+  }
+
+  function exportera(){
+    var rub=['Namn','Roll','Organisation','Bransch','Storlek','E-post','Telefon','Kalla','Kampanj','Kanal in',
+             'Kurs','Forsta kontakt','Senaste kontakt','Antal kontakter','Ledtid dagar','Bokad','Varde','Status','Anteckning'];
+    var rader=S.leads.map(function(l){
+      var t=ledtid(l);
+      return [l.namn,l.roll,l.org,l.bransch,l.storlek,l.epost,l.telefon,KALLA[l.kalla]||l.kalla,l.kampanj,LTYP[l.typ],
+              l.kurs,forstaKontakt(l),senasteKontakt(l),antalKontakter(l),t==null?'':t,l.bokad,l.varde||0,LSTATUS[l.status][0],l.not];
+    });
+    var csv=[rub].concat(rader).map(function(r){return r.map(function(c){
+      return '"'+String(c==null?'':c).replace(/"/g,'""')+'"'}).join(';')}).join('\r\n');
+    var b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(b);
+    a.download='ugl-leads-'+idagISO()+'.csv';document.body.appendChild(a);a.click();a.remove();
+    toast('Filen är exporterad, '+S.leads.length+' rader.');
   }
 
   /* ---------- Inloggning ---------- */
