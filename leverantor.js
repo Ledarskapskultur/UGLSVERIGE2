@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='7';
+  var BYGGE='8';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -235,36 +235,39 @@
     var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Varje kursgård är en mall. Nya kurser ärver bild, pris och beskrivning härifrån, och kan justeras var för sig. Samma anläggning kan finnas hos flera arrangörer, var och en med sitt eget avtal.</p></div>'+
       '<button class="button" id="ny-anl">Lägg till anläggning</button></div>';
     if(!S.anlaggningar.length)return h+'<div class="panel"><p class="tom">Inga anläggningar än.</p></div>';
-    h+='<div class="anl-rutnat">'+S.anlaggningar.map(function(a){
-      var antal=S.kurser.filter(function(k){return k.anlId===a.id}).length;
-      return '<article class="anl-kort">'+
-        '<div class="anl-topp">'+anlBild(a,'anl-stor')+(a.bild?'':'<span class="anl-saknas">Bild saknas</span>')+'</div>'+
-        '<div class="anl-text"><h3>'+a.namn+'</h3><span class="anl-ort">'+a.ort+'</span>'+
-        (a.text?'<p>'+a.text+'</p>':'<p class="anl-utan">Ingen beskrivning än.</p>')+
-        '<dl class="anl-fakta"><div><dt>Kost och logi</dt><dd>'+kr(a.logipris)+'</dd></div>'+
-        '<div><dt>Platser</dt><dd>'+a.platser+'</dd></div>'+
-        '<div><dt>Kurser här</dt><dd>'+antal+'</dd></div></dl>'+
-        '<button class="mini" data-anl="'+a.id+'">Redigera</button></div></article>';
-    }).join('')+'</div>';
+    h+='<div class="panel"><table class="tab tab-anl"><thead><tr><th>Anläggning</th><th>Beskrivning</th><th class="hoger">Kost och logi</th><th class="hoger">Platser</th><th class="hoger">Kurser</th><th></th></tr></thead><tbody>'+
+      S.anlaggningar.map(function(a){
+        var antal=S.kurser.filter(function(k){return k.anlId===a.id}).length;
+        return '<tr><td><div class="td-anl">'+anlBild(a,'anl-mellan')+
+          '<span><b>'+a.namn+'</b><small>'+(a.ort||'Ort saknas')+(a.bild?'':' · bild saknas')+'</small></span></div></td>'+
+          '<td class="td-besk">'+(a.text?a.text:'<span class="anl-utan">Ingen beskrivning än.</span>')+'</td>'+
+          '<td class="hoger">'+kr(a.logipris)+'</td>'+
+          '<td class="hoger">'+a.platser+'</td>'+
+          '<td class="hoger">'+antal+'</td>'+
+          '<td class="tab-atg"><button class="mini" data-anl="'+a.id+'">Redigera</button></td></tr>';
+      }).join('')+'</tbody></table></div>';
     return h;
   }
   function anlFormular(id){
     var a=id?anlById(id):{id:0,namn:'',ort:'',adress:'',bild:'',platser:12,logipris:9900,kontakt:'',text:''};
-    var html='<div class="modal"><div class="modal-inre"><div class="cp-head"><h3>'+(id?'Redigera anläggning':'Ny anläggning')+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+    var html='<div class="modal"><div class="modal-inre modal-bred"><div class="cp-head"><h3>'+(id?'Redigera anläggning':'Ny anläggning')+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
       '<div class="anl-form">'+
         '<div class="anl-bildvalj"><div class="anl-forhand" id="anl-forhand">'+anlBild(a,'anl-stor')+'</div>'+
         '<input type="file" id="af-bild" accept="image/*" class="fil-in">'+
         '<p class="tom">Liggande bild, minst 1000 pixlar bred. Den visas på kurskorten och överst på kurssidan.</p></div>'+
-        '<div class="form-grid">'+
-          '<label class="ro"><span>Namn</span><input id="af-namn" value="'+a.namn+'"></label>'+
-          '<label class="ro"><span>Ort</span><input id="af-ort" value="'+a.ort+'"></label>'+
-          '<label class="ro"><span>Adress</span><input id="af-adress" value="'+a.adress+'"></label>'+
-          '<label class="ro"><span>Kontakt</span><input id="af-kontakt" value="'+a.kontakt+'"></label>'+
-          '<label class="ro"><span>Platser</span><input id="af-platser" type="number" value="'+a.platser+'"></label>'+
-          '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="af-logi" type="number" value="'+a.logipris+'"></label>'+
+        '<div class="anl-falt">'+
+          '<div class="form-grid">'+
+            '<label class="ro"><span>Namn</span><input id="af-namn" value="'+a.namn+'"></label>'+
+            '<label class="ro"><span>Ort</span><input id="af-ort" value="'+a.ort+'"></label>'+
+            '<label class="ro ro-bred"><span>Adress</span><input id="af-adress" value="'+a.adress+'"></label>'+
+            '<label class="ro ro-bred"><span>Kontaktperson</span><input id="af-kontakt" value="'+a.kontakt+'"></label>'+
+            '<label class="ro"><span>Platser</span><input id="af-platser" type="number" value="'+a.platser+'"></label>'+
+            '<label class="ro"><span>Kost och logi, ex moms</span><input id="af-logi" type="number" value="'+a.logipris+'"></label>'+
+          '</div>'+
+          '<label class="ro ro-text"><span>Beskrivning</span>'+
+          '<textarea id="af-text" rows="4" placeholder="Kort om läget, boendet och miljön.">'+(a.text||'')+'</textarea>'+
+          '<em>Visas på kurssidan för alla kurser som ärver från mallen.</em></label>'+
         '</div>'+
-        '<div class="field field-wide"><label for="af-text">Beskrivning <span>Visas på kurssidan</span></label>'+
-        '<textarea id="af-text" rows="3" placeholder="Kort om läget, boendet och miljön.">'+(a.text||'')+'</textarea></div>'+
       '</div>'+
       '<div class="nk-knappar"><button class="button" id="af-spara">Spara</button>'+
       (id?'<button class="button button-outline-dark" id="af-ta">Ta bort</button>':'')+'</div></div></div>';
