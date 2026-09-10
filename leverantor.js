@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='9';
+  var BYGGE='10';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -149,7 +149,7 @@
     if(!lista.length)return '<p class="tom">Inga kurser än.</p>';
     return '<table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.slice().sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
-        return '<tr><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="kurs:'+k.id+'"><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
           '<td class="td-plats">'+bildRuta(kBild(k),anl(k).namn)+'<span><b>'+anl(k).namn+'</b><small>'+anl(k).ort+'</small>'+(arver(k).logi&&arver(k).bild?'':'<em class="justerad">Justerad</em>')+'</span></td>'+
           '<td class="td-hl">'+hlChips(k)+'</td>'+
           '<td>'+belaggning(k)+'</td>'+
@@ -238,12 +238,12 @@
     h+='<div class="panel"><table class="tab tab-anl"><thead><tr><th>Anläggning</th><th>Beskrivning</th><th class="hoger">Kost och logi</th><th class="hoger">Kurser</th><th></th></tr></thead><tbody>'+
       S.anlaggningar.map(function(a){
         var antal=S.kurser.filter(function(k){return k.anlId===a.id}).length;
-        return '<tr><td><div class="td-anl">'+anlBild(a,'anl-mellan')+
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="anl:'+a.id+'"><td><div class="td-anl">'+anlBild(a,'anl-mellan')+
           '<span><b>'+a.namn+'</b><small>'+(a.ort||'Ort saknas')+(a.bild?'':' · bild saknas')+'</small></span></div></td>'+
           '<td class="td-besk">'+(a.text?a.text:'<span class="anl-utan">Ingen beskrivning än.</span>')+'</td>'+
           '<td class="hoger">'+kr(a.logipris)+'</td>'+
           '<td class="hoger">'+antal+'</td>'+
-          '<td class="tab-atg"><button class="mini" data-anl="'+a.id+'">Redigera</button></td></tr>';
+          '<td class="tab-atg"><span class="rad-pil" aria-hidden="true">&#8250;</span></td></tr>';
       }).join('')+'</tbody></table></div>';
     return h;
   }
@@ -310,7 +310,7 @@
       m.sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
         var mitt=k.handledare.filter(function(x){return x.hid===jagId})[0];
         var med=k.handledare.filter(function(x){return x.hid!==jagId}).map(function(x){return hl(x.hid).namn}).join(', ')||'Ingen inlagd';
-        return '<tr><td><b>'+vecka(k)+'</b></td><td>'+period(k.datum)+'</td>'+
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="detalj:'+k.id+'"><td><b>'+vecka(k)+'</b></td><td>'+period(k.datum)+'</td>'+
           '<td><b>'+k.anlaggning+'</b><small>'+k.ort+'</small></td><td>'+med+'</td>'+
           '<td>'+k.bokade+' av '+k.max+'</td><td>'+chip(mitt.status,HSTATUS)+'</td>'+
           '<td class="tab-atg">'+(mitt.status==='tillfragad'
@@ -360,6 +360,23 @@
       '<span class="meny-avdelare"></span><a href="/kurser" class="meny-extern">Publikt kursutbud &#8599;</a>'+
       '<span class="meny-version">Prototyp, bygge '+BYGGE+'</span>';
   }
+  var OPPNA={
+    kurs:function(id){kursFormular(id)},
+    anl:function(id){anlFormular(id)},
+    detalj:function(id){var k=kurs(id);toast('Vecka '+vecka(k)+' i '+k.ort+'. '+k.bokade+' av '+k.max+' platser bokade.')}
+  };
+  function radKlick(e){
+    if(e.target.closest('button,a,input,select,textarea,label'))return;
+    var r=e.target.closest('[data-oppna]');if(!r)return;
+    var d=r.getAttribute('data-oppna').split(':');
+    if(OPPNA[d[0]])OPPNA[d[0]](+d[1]);
+  }
+  $('vy').addEventListener('click',radKlick);
+  $('vy').addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    if(!e.target.getAttribute||!e.target.getAttribute('data-oppna'))return;
+    e.preventDefault();radKlick(e);
+  });
   function rita(vy){
     vy=vy||(location.hash||'#'+MENY[roll][0][0]).slice(1);
     if(MENY[roll].map(function(m){return m[0]}).indexOf(vy)<0)vy=MENY[roll][0][0];

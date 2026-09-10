@@ -308,7 +308,9 @@ body{position:relative}
 
 .kurskort{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1rem}
 .kort{display:grid;grid-template-columns:230px 1.25fr .95fr auto;gap:clamp(1.2rem,2vw,2rem);align-items:center;border:1px solid var(--line);background:#fff;padding:1rem;transition:.18s}
+.kort.rad-oppna{cursor:pointer}
 .kort:hover{border-color:var(--sage);box-shadow:0 6px 22px rgba(18,61,53,.07)}
+.kort.rad-oppna:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 .kort.is-full{opacity:.72}
 .kort figure{margin:0;height:150px;position:relative;overflow:hidden}
 .kort figcaption{position:absolute;top:.7rem;left:.7rem;background:#fff;color:var(--green);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;padding:.35rem .65rem}

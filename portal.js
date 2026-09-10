@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='4';
+  var BYGGE='5';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -141,7 +141,7 @@
     return '<table class="tab"><thead><tr><th>Medarbetare</th><th>Vecka</th><th>Datum</th><th>Plats</th><th>Kostnad</th><th>Status</th><th></th></tr></thead><tbody>'+
       rader.map(function(p){
         var k=kurs(p.nyckel),m=medarb(p.mid);
-        return '<tr><td><b>'+m.namn+'</b><small>'+m.avd+'</small></td>'+
+        return '<tr data-mid="'+m.id+'"><td><b>'+m.namn+'</b><small>'+m.avd+'</small></td>'+
           '<td>'+k.vecka+'</td><td>'+k.period+'</td>'+
           '<td>'+k.anlaggning+'<small>'+k.ort+'</small></td>'+
           '<td>'+(k.total?kr(k.total):'Meddelas')+'</td>'+
@@ -162,10 +162,10 @@
       h+='<div class="panel"><h2>'+a+'</h2><table class="tab"><thead><tr><th>Namn</th><th>Roll</th><th>UGL-status</th><th></th></tr></thead><tbody>'+
         avd[a].map(function(m){
           var p=S.plan.filter(function(x){return x.mid===m.id})[0];
-          return '<tr><td><span class="n-init liten">'+init(m.namn)+'</span><b>'+m.namn+'</b></td>'+
+          return '<tr class="rad-oppna" tabindex="0" data-oppna="planera:'+m.id+'"><td><span class="n-init liten">'+init(m.namn)+'</span><b>'+m.namn+'</b></td>'+
             '<td>'+m.roll+'</td>'+
             '<td>'+(p?statusChip(p.status)+' <small>vecka '+kurs(p.nyckel).vecka+'</small>':'<span class="chip-status st-ingen">Ingen plan</span>')+'</td>'+
-            '<td class="tab-atg">'+(p?'':'<button class="mini" data-planera="'+m.id+'">Planera UGL</button>')+'</td></tr>';
+            '<td class="tab-atg"><span class="rad-pil" aria-hidden="true">&#8250;</span></td></tr>';
         }).join('')+'</tbody></table></div>';
     });
     return h;
@@ -344,6 +344,34 @@
 
   /* ---------- Ram ---------- */
   var VYER={oversikt:vyOversikt,medarbetare:vyMedarbetare,planering:vyPlanering,kalender:vyKalender,ekonomi:vyEkonomi,support:vySupport,installningar:vyInstallningar};
+  function planeraFor(id){
+    var planerad=S.plan.some(function(p){return p.mid===id});
+    rita(planerad?'oversikt':'planering');
+    setTimeout(function(){peka(id,planerad)},30);
+  }
+  function peka(id,planerad){
+    if(!planerad){
+      var r=document.querySelector('input[name=medarb][value="'+id+'"]');
+      if(r&&!r.disabled){r.checked=true;r.closest('.valj-rad').scrollIntoView({block:'center'})}
+      return;
+    }
+    var rad=document.querySelector('tr[data-mid="'+id+'"]');
+    if(rad){rad.scrollIntoView({block:'center'});rad.classList.add('rad-blink');
+      setTimeout(function(){rad.classList.remove('rad-blink')},1800)}
+  }
+  var OPPNA={planera:function(id){planeraFor(id)}};
+  function radKlick(e){
+    if(e.target.closest('button,a,input,select,textarea,label'))return;
+    var r=e.target.closest('[data-oppna]');if(!r)return;
+    var d=r.getAttribute('data-oppna').split(':');
+    if(OPPNA[d[0]])OPPNA[d[0]](+d[1]);
+  }
+  $('vy').addEventListener('click',radKlick);
+  $('vy').addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    if(!e.target.getAttribute||!e.target.getAttribute('data-oppna'))return;
+    e.preventDefault();radKlick(e);
+  });
   function rita(vy){
     vy=vy||(location.hash||'#oversikt').slice(1);
     if(!VYER[vy])vy='oversikt';
@@ -372,10 +400,7 @@
       S.plan=S.plan.filter(function(x){return x.id!=b.getAttribute('data-ta')});spara();toast('Raden är borttagen.');rita();
     })});
     document.querySelectorAll('[data-planera]').forEach(function(b){b.addEventListener('click',function(){
-      rita('planering');
-      var r=document.querySelector('input[name=medarb][value="'+b.getAttribute('data-planera')+'"]');
-      if(r){r.checked=true;r.closest('.valj-rad').scrollIntoView({block:'center'})}
-    })});
+      planeraFor(+b.getAttribute('data-planera'))})});
     if($('plan-manad')){
       [...new Set(kurser.filter(function(k){return k.ledig}).map(function(k){return k.start.getFullYear()+'-'+String(k.start.getMonth()+1).padStart(2,'0')}))]
         .forEach(function(m){var d=new Date(m+'-01T00:00:00');

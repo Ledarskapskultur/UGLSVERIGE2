@@ -116,7 +116,7 @@
             : '<dl class="kort-split"><div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div></dl>');
       var hl=k.handledare.length?k.handledare.join('<br>'):'Handledare meddelas senare';
       var vald=valda.indexOf(k.id)>-1;
-      return '<li class="kort'+(k.ledig?'':' is-full')+'">'+
+      return '<li class="kort rad-oppna'+(k.ledig?'':' is-full')+'" tabindex="0" data-lank="'+lank(k)+'">'+
         '<figure><img src="'+k.bild+'" alt="'+(k.egenBild?k.anlaggning+', '+k.ort:'Deltagare under en UGL-vecka')+'" loading="lazy">'+
           (k.ledig?mark:'<figcaption>Fullbokad</figcaption>')+'</figure>'+
         '<div class="kort-mitt">'+
@@ -136,6 +136,16 @@
     }).join('');
     merKnapp.hidden=f.length<=visade;
     merKnapp.textContent='Visa fler ('+Math.max(f.length-visade,0)+' till)';
+    lista.querySelectorAll('.kort[data-lank]').forEach(function(li){
+      var ga=function(e){
+        if(e.target.closest('a,button,input,label,select,textarea'))return;
+        location.href=li.getAttribute('data-lank');
+      };
+      li.addEventListener('click',ga);
+      li.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();location.href=li.getAttribute('data-lank')}
+      });
+    });
     lista.querySelectorAll('[data-kurs]').forEach(function(a){
       a.addEventListener('click',function(){valjKurs(a.getAttribute('data-kurs'))})});
     lista.querySelectorAll('[data-bevaka]').forEach(function(c){
