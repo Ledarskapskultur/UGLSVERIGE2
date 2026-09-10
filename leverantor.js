@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='4';
+  var BYGGE='5';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -28,13 +28,21 @@
       {id:4,namn:'Tomas Edlund',roll:'UGL-handledare sedan 2020',epost:'tomas@nordlys.se',cert:'2020',text:'',bild:'',lediga:[41,43,48,49]},
       {id:5,namn:'Lena Sobel',roll:'UGL-handledare sedan 2016',epost:'lena@nordlys.se',cert:'2016',text:'',bild:'',lediga:[42,46,50,51]}
     ],
+    anlaggningar:[
+      {id:1,namn:'Tylebäck',ort:'Halmstad',adress:'Tylebäcksvägen 1, 302 73 Halmstad',bild:'',platser:12,logipris:8900,kontakt:'bokning@tyleback.se',text:'Kursgård vid havet strax söder om Halmstad. Enkelrum, alla måltider och avskilda grupprum.'},
+      {id:2,namn:'Skogshem & Wijk',ort:'Lidingö',adress:'Ekholmsnäsvägen 91, 181 41 Lidingö',bild:'',platser:12,logipris:9900,kontakt:'konferens@skogshemwijk.se',text:'Konferensanläggning i skogen på Lidingö, en halvtimme från Stockholms city.'},
+      {id:3,namn:'Lovik',ort:'Stockholm',adress:'Lidingö',bild:'',platser:12,logipris:9900,kontakt:'',text:''},
+      {id:4,namn:'Ringenäs',ort:'Halmstad',adress:'Ringenäs, Halmstad',bild:'',platser:12,logipris:9900,kontakt:'',text:''},
+      {id:5,namn:'Bykrogen',ort:'Kristianstad',adress:'Kristianstad',bild:'',platser:12,logipris:9500,kontakt:'',text:''},
+      {id:6,namn:'Hagastrand',ort:'Stockholm',adress:'Stockholm',bild:'',platser:12,logipris:10500,kontakt:'',text:''}
+    ],
     kurser:[
-      {id:1,datum:'2026-10-05',anlaggning:'Tylebäck',ort:'Halmstad',kurspris:23900,logi:8900,max:12,bokade:9,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:4,status:'bekraftad'}]},
-      {id:2,datum:'2026-10-12',anlaggning:'Skogshem & Wijk',ort:'Lidingö',kurspris:23900,logi:9900,max:12,bokade:12,status:'fullbokad',handledare:[{hid:2,status:'bekraftad'},{hid:5,status:'bekraftad'}]},
-      {id:3,datum:'2026-10-19',anlaggning:'Lovik',ort:'Stockholm',kurspris:23900,logi:9900,max:12,bokade:4,status:'publicerad',handledare:[{hid:2,status:'bekraftad'}]},
-      {id:4,datum:'2026-11-02',anlaggning:'Ringenäs',ort:'Halmstad',kurspris:23900,logi:9900,max:12,bokade:6,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:3,status:'tillfragad'}]},
-      {id:5,datum:'2026-11-16',anlaggning:'Bykrogen',ort:'Kristianstad',kurspris:23900,logi:9500,max:12,bokade:0,status:'utkast',handledare:[]},
-      {id:6,datum:'2026-12-07',anlaggning:'Hagastrand',ort:'Stockholm',kurspris:23900,logi:10500,max:12,bokade:7,status:'publicerad',handledare:[{hid:3,status:'bekraftad'},{hid:5,status:'bekraftad'}]}
+      {id:1,datum:'2026-10-05',anlId:1,anlaggning:'Tylebäck',ort:'Halmstad',kurspris:23900,logi:8900,max:12,bokade:9,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:4,status:'bekraftad'}]},
+      {id:2,datum:'2026-10-12',anlId:2,anlaggning:'Skogshem & Wijk',ort:'Lidingö',kurspris:23900,logi:9900,max:12,bokade:12,status:'fullbokad',handledare:[{hid:2,status:'bekraftad'},{hid:5,status:'bekraftad'}]},
+      {id:3,datum:'2026-10-19',anlId:3,anlaggning:'Lovik',ort:'Stockholm',kurspris:23900,logi:9900,max:12,bokade:4,status:'publicerad',handledare:[{hid:2,status:'bekraftad'}]},
+      {id:4,datum:'2026-11-02',anlId:4,anlaggning:'Ringenäs',ort:'Halmstad',kurspris:23900,logi:9900,max:12,bokade:6,status:'publicerad',handledare:[{hid:1,status:'bekraftad'},{hid:3,status:'tillfragad'}]},
+      {id:5,datum:'2026-11-16',anlId:5,anlaggning:'Bykrogen',ort:'Kristianstad',kurspris:23900,logi:9500,max:12,bokade:0,status:'utkast',handledare:[]},
+      {id:6,datum:'2026-12-07',anlId:6,anlaggning:'Hagastrand',ort:'Stockholm',kurspris:23900,logi:10500,max:12,bokade:7,status:'publicerad',handledare:[{hid:3,status:'bekraftad'},{hid:5,status:'bekraftad'}]}
     ],
     deltagare:[
       {kid:1,namn:'Johan Lind',org:'Nordvik Industri AB',status:'bekraftad'},
@@ -55,12 +63,19 @@
     s.handledare=Array.isArray(s.handledare)&&s.handledare.length?s.handledare:JSON.parse(JSON.stringify(DEMO.handledare));
     s.kurser=Array.isArray(s.kurser)?s.kurser:JSON.parse(JSON.stringify(DEMO.kurser));
     s.deltagare=Array.isArray(s.deltagare)?s.deltagare:[];
+    s.anlaggningar=Array.isArray(s.anlaggningar)&&s.anlaggningar.length?s.anlaggningar:JSON.parse(JSON.stringify(DEMO.anlaggningar));
     s.kurser.forEach(function(k){k.handledare=Array.isArray(k.handledare)?k.handledare:[]});
     return s;
   }
   var $=function(id){return document.getElementById(id)};
   function hl(id){return S.handledare.filter(function(h){return h.id===id})[0]}
   function kurs(id){return S.kurser.filter(function(k){return k.id===id})[0]}
+  function anlById(id){return (S.anlaggningar||[]).filter(function(a){return a.id===id})[0]}
+  function anl(k){return anlById(k.anlId)||{id:0,namn:k.anlaggning,ort:k.ort,bild:'',platser:12,logipris:k.logi,adress:'',kontakt:'',text:''}}
+  function anlBild(a,storlek){
+    return a.bild?'<span class="anl-bild '+(storlek||'')+'"><img src="'+a.bild+'" alt=""></span>'
+      :'<span class="anl-bild anl-tom '+(storlek||'')+'">'+a.namn.slice(0,1).toUpperCase()+'</span>';
+  }
   function vecka(k){return veckoNr(new Date(k.datum+'T00:00:00'))}
   function total(k){return k.kurspris+k.logi}
   function dagarKvar(k){return Math.round((new Date(k.datum+'T00:00:00')-new Date())/864e5)}
@@ -127,7 +142,7 @@
     return '<table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.slice().sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
         return '<tr><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
-          '<td><b>'+k.anlaggning+'</b><small>'+k.ort+'</small></td>'+
+          '<td class="td-plats">'+anlBild(anl(k))+'<span><b>'+anl(k).namn+'</b><small>'+anl(k).ort+'</small></span></td>'+
           '<td class="td-hl">'+hlChips(k)+'</td>'+
           '<td>'+belaggning(k)+'</td>'+
           '<td>'+chip(k.status,STATUS)+'</td>'+
@@ -146,8 +161,10 @@
     '<div class="nykurs-layout">'+
       '<div class="panel"><h2>Kursen</h2><div class="form-grid">'+
         '<label class="ro"><span>Startdatum, måndag</span><input type="date" id="nk-datum" value="2027-01-18"></label>'+
-        '<label class="ro"><span>Anläggning</span><input id="nk-anl" placeholder="Till exempel Lovik"></label>'+
-        '<label class="ro"><span>Ort</span><input id="nk-ort" placeholder="Till exempel Stockholm"></label>'+
+        '<label class="ro"><span>Anläggning</span><select id="nk-anl"><option value="">Välj anläggning</option>'+
+          S.anlaggningar.map(function(a){return '<option value="'+a.id+'">'+a.namn+', '+a.ort+'</option>'}).join('')+
+          '</select></label>'+
+        '<label class="ro"><span>Ort</span><input id="nk-ort" readonly placeholder="Fylls i automatiskt"></label>'+
         '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="nk-pris" type="number" value="23900"></label>'+
         '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="nk-logi" type="number" value="9900"></label>'+
         '<label class="ro"><span>Deltagare</span><input value="8 till 12, enligt UGL" readonly></label>'+
@@ -205,6 +222,71 @@
     return h;
   }
 
+  function aAnlaggningar(){
+    var h='<div class="vy-head"><div><h1>Anläggningar</h1><p class="lead">Kursgårdar ni arbetar med. Bilden och texten följer med till kurslistan och kurssidan.</p></div>'+
+      '<button class="button" id="ny-anl">Lägg till anläggning</button></div>';
+    if(!S.anlaggningar.length)return h+'<div class="panel"><p class="tom">Inga anläggningar än.</p></div>';
+    h+='<div class="anl-rutnat">'+S.anlaggningar.map(function(a){
+      var antal=S.kurser.filter(function(k){return k.anlId===a.id}).length;
+      return '<article class="anl-kort">'+
+        '<div class="anl-topp">'+anlBild(a,'anl-stor')+(a.bild?'':'<span class="anl-saknas">Bild saknas</span>')+'</div>'+
+        '<div class="anl-text"><h3>'+a.namn+'</h3><span class="anl-ort">'+a.ort+'</span>'+
+        (a.text?'<p>'+a.text+'</p>':'<p class="anl-utan">Ingen beskrivning än.</p>')+
+        '<dl class="anl-fakta"><div><dt>Kost och logi</dt><dd>'+kr(a.logipris)+'</dd></div>'+
+        '<div><dt>Platser</dt><dd>'+a.platser+'</dd></div>'+
+        '<div><dt>Kurser här</dt><dd>'+antal+'</dd></div></dl>'+
+        '<button class="mini" data-anl="'+a.id+'">Redigera</button></div></article>';
+    }).join('')+'</div>';
+    return h;
+  }
+  function anlFormular(id){
+    var a=id?anlById(id):{id:0,namn:'',ort:'',adress:'',bild:'',platser:12,logipris:9900,kontakt:'',text:''};
+    var html='<div class="modal"><div class="modal-inre"><div class="cp-head"><h3>'+(id?'Redigera anläggning':'Ny anläggning')+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+      '<div class="anl-form">'+
+        '<div class="anl-bildvalj"><div class="anl-forhand" id="anl-forhand">'+anlBild(a,'anl-stor')+'</div>'+
+        '<input type="file" id="af-bild" accept="image/*" class="fil-in">'+
+        '<p class="tom">Liggande bild, minst 1000 pixlar bred. Den visas på kurskorten och överst på kurssidan.</p></div>'+
+        '<div class="form-grid">'+
+          '<label class="ro"><span>Namn</span><input id="af-namn" value="'+a.namn+'"></label>'+
+          '<label class="ro"><span>Ort</span><input id="af-ort" value="'+a.ort+'"></label>'+
+          '<label class="ro"><span>Adress</span><input id="af-adress" value="'+a.adress+'"></label>'+
+          '<label class="ro"><span>Kontakt</span><input id="af-kontakt" value="'+a.kontakt+'"></label>'+
+          '<label class="ro"><span>Platser</span><input id="af-platser" type="number" value="'+a.platser+'"></label>'+
+          '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="af-logi" type="number" value="'+a.logipris+'"></label>'+
+        '</div>'+
+        '<div class="field field-wide"><label for="af-text">Beskrivning <span>Visas på kurssidan</span></label>'+
+        '<textarea id="af-text" rows="3" placeholder="Kort om läget, boendet och miljön.">'+(a.text||'')+'</textarea></div>'+
+      '</div>'+
+      '<div class="nk-knappar"><button class="button" id="af-spara">Spara</button>'+
+      (id?'<button class="button button-outline-dark" id="af-ta">Ta bort</button>':'')+'</div></div></div>';
+    var d=document.createElement('div');d.innerHTML=html;document.body.appendChild(d.firstChild);
+    var nyBild=a.bild;
+    document.getElementById('af-bild').addEventListener('change',function(e){
+      var f=e.target.files[0];if(!f)return;
+      var r=new FileReader();r.onload=function(){nyBild=r.result;
+        document.getElementById('anl-forhand').innerHTML='<span class="anl-bild anl-stor"><img src="'+nyBild+'" alt=""></span>'};
+      r.readAsDataURL(f);
+    });
+    document.getElementById('af-spara').addEventListener('click',function(){
+      var namn=document.getElementById('af-namn').value.trim();
+      if(!namn){toast('Anläggningen behöver ett namn.');return}
+      var post={id:a.id||nastaId++,namn:namn,ort:document.getElementById('af-ort').value.trim(),
+        adress:document.getElementById('af-adress').value.trim(),kontakt:document.getElementById('af-kontakt').value.trim(),
+        platser:+document.getElementById('af-platser').value,logipris:+document.getElementById('af-logi').value,
+        text:document.getElementById('af-text').value.trim(),bild:nyBild};
+      if(a.id){S.anlaggningar=S.anlaggningar.map(function(x){return x.id===a.id?post:x})}
+      else S.anlaggningar.push(post);
+      spara();stang();toast('Anläggningen är sparad.');
+    });
+    if(id)document.getElementById('af-ta').addEventListener('click',function(){
+      var antal=S.kurser.filter(function(k){return k.anlId===id}).length;
+      if(antal){toast('Anläggningen används av '+antal+' kurser och kan inte tas bort.');return}
+      S.anlaggningar=S.anlaggningar.filter(function(x){return x.id!==id});spara();stang();toast('Anläggningen är borttagen.');
+    });
+    document.getElementById('mod-stang').addEventListener('click',stang);
+    function stang(){var m=document.querySelector('.modal');if(m)m.remove();rita()}
+  }
+
   /* ---------- Handledarvyer ---------- */
   function hUppdrag(){
     var m=mina();
@@ -258,10 +340,10 @@
 
   /* ---------- Ram ---------- */
   var MENY={
-    arrangor:[['oversikt','Översikt'],['kurser','Kurser'],['nykurs','Lägg upp kurs'],['handledare','Handledarnätverk'],['deltagare','Deltagare'],['ekonomi','Ekonomi']],
+    arrangor:[['oversikt','Översikt'],['kurser','Kurser'],['nykurs','Lägg upp kurs'],['anlaggningar','Anläggningar'],['handledare','Handledarnätverk'],['deltagare','Deltagare'],['ekonomi','Ekonomi']],
     handledare:[['uppdrag','Mina uppdrag'],['tillganglighet','Min tillgänglighet'],['profil','Min profil']]
   };
-  var VYER={oversikt:aOversikt,kurser:aKurser,nykurs:aNyKurs,handledare:aHandledare,deltagare:aDeltagare,ekonomi:aEkonomi,
+  var VYER={oversikt:aOversikt,kurser:aKurser,nykurs:aNyKurs,anlaggningar:aAnlaggningar,handledare:aHandledare,deltagare:aDeltagare,ekonomi:aEkonomi,
             uppdrag:hUppdrag,tillganglighet:hTillganglighet,profil:hProfil};
   function ritaMeny(){
     $('meny').innerHTML=MENY[roll].map(function(m){return '<a href="#'+m[0]+'" data-vy="'+m[0]+'">'+m[1]+'</a>'}).join('')+
@@ -339,6 +421,13 @@
       if(i>-1)mig.lediga.splice(i,1);else mig.lediga.push(v);
       spara();rita();
     })});
+    document.querySelectorAll('[data-anl]').forEach(function(b){b.addEventListener('click',function(){
+      anlFormular(+b.getAttribute('data-anl'))})});
+    if($('ny-anl'))$('ny-anl').addEventListener('click',function(){anlFormular(0)});
+    if($('nk-anl'))$('nk-anl').addEventListener('change',function(){
+      var a=anlById(+$('nk-anl').value);
+      if(a){$('nk-ort').value=a.ort;$('nk-logi').value=a.logipris}
+    });
     if($('nk-sok')){
       var sok=function(){
         var q=$('nk-sok').value.trim().toLowerCase(),n=0;
@@ -370,10 +459,11 @@
     if($('nollstall'))$('nollstall').addEventListener('click',function(){nollstall();toast('Demodata återställd.');rita(MENY[roll][0][0])});
   }
   function nyKurs(publicera){
-    var anl=$('nk-anl').value.trim(),ort=$('nk-ort').value.trim();
-    if(!anl||!ort){toast('Fyll i anläggning och ort.');return}
+    var aid=+$('nk-anl').value;
+    if(!aid){toast('Välj anläggning.');return}
+    var a=anlById(aid);
     var valda=[].slice.call(document.querySelectorAll('#nk-hl input:checked')).map(function(c){return +c.value});
-    S.kurser.push({id:nastaId++,datum:$('nk-datum').value,anlaggning:anl,ort:ort,
+    S.kurser.push({id:nastaId++,datum:$('nk-datum').value,anlId:aid,anlaggning:a.namn,ort:a.ort,
       kurspris:+$('nk-pris').value,logi:+$('nk-logi').value,max:12,bokade:0,
       status:publicera?'publicerad':'utkast',
       handledare:valda.map(function(h){return {hid:h,status:'tillfragad'}})});

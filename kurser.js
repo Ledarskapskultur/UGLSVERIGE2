@@ -11,6 +11,7 @@
             plats:SVG('<path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>'),
             person:SVG('<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/>'),
             bil:SVG('<path d="M4 16h16v-3l-2-5H6l-2 5z"/><circle cx="7.5" cy="17.5" r="1.6"/><circle cx="16.5" cy="17.5" r="1.6"/>')};
+  var ANL=window.UGL_ANLAGGNINGAR||{};
   function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
 
   var kurser=window.UGL_RADER.split('\n').map(function(rad,i){
@@ -19,7 +20,8 @@
       region:REGIONER[d[3]]||d[3],
       handledare:d[4]?d[4].split(';'):[],kurspris:kurspris,logi:logi,samlat:samlat,total:logi?kurspris+logi:(samlat?kurspris:0),
       ledig:d[6]==='L',
-      bild:'assets/'+BILDER[hash(d[2]+d[3])%BILDER.length],
+      bild:(ANL[d[2]]&&ANL[d[2]].bild)?'assets/'+ANL[d[2]].bild:'assets/'+BILDER[hash(d[2]+d[3])%BILDER.length],
+      egenBild:!!(ANL[d[2]]&&ANL[d[2]].bild),
       datum:d[0],
       period:fmt(start)+' till '+fmt(slut)+' '+slut.getFullYear(),
       manad:start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')};
@@ -115,7 +117,7 @@
       var hl=k.handledare.length?k.handledare.join('<br>'):'Handledare meddelas senare';
       var vald=valda.indexOf(k.id)>-1;
       return '<li class="kort'+(k.ledig?'':' is-full')+'">'+
-        '<figure><img src="'+k.bild+'" alt="Deltagare under en UGL-vecka" loading="lazy">'+
+        '<figure><img src="'+k.bild+'" alt="'+(k.egenBild?k.anlaggning+', '+k.ort:'Deltagare under en UGL-vecka')+'" loading="lazy">'+
           (k.ledig?mark:'<figcaption>Fullbokad</figcaption>')+'</figure>'+
         '<div class="kort-mitt">'+
           '<h3>Vecka '+k.vecka+'</h3>'+
