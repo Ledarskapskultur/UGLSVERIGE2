@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Leverantörsportal | UGL Sverige</title>
+  <title>Administration | UGL Sverige</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
@@ -18,28 +18,21 @@
   <main class="login" id="login">
     <div class="login-kort">
       <span class="brand-type login-brand"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span>
-      <h1>Portal för arrangörer och handledare</h1>
-      <p class="lead">Lägg upp kurser, koppla handledare och håll koll på beläggningen. Handledare ser sina uppdrag och sin egen profil.</p>
+      <h1>Administration</h1>
+      <p class="lead">Bjud in arrangörer och arbetsgivare, sätt avtalen, granska nya kurser och följ intäkterna. Den här vyn ligger ett steg ovanför arrangörernas egen portal.</p>
       <form id="login-form">
-        <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@arrangor.se" autocomplete="email"></div>
-        <div class="field">
-          <label>Logga in som</label>
-          <div class="roll-val">
-            <label class="roll"><input type="radio" name="roll" value="arrangor" checked><span><b>Arrangör</b><small>Ni arrangerar UGL-veckor</small></span></label>
-            <label class="roll"><input type="radio" name="roll" value="handledare"><span><b>Handledare</b><small>Du leder veckor åt en eller flera arrangörer</small></span></label>
-          </div>
-        </div>
+        <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@uglsverige.store" autocomplete="email"></div>
         <button class="button" type="submit">Skicka inloggningslänk</button>
       </form>
       <p class="login-not">Inloggningslänk via mejl, inga lösenord.</p>
-      <p class="login-demo">I demon räcker det att välja roll och trycka på knappen.</p>
+      <p class="login-demo">I demon räcker det att trycka på knappen.</p>
     </div>
     <aside class="login-bild">
       <ul class="login-punkter">
-        <li><b>Ett ställe för hela utbudet</b><span>Lägg upp en vecka en gång, den syns direkt i det publika kursutbudet.</span></li>
-        <li><b>Handledarnätverket samlat</b><span>Se vilka som är lediga vilken vecka och skicka förfrågan med ett klick.</span></li>
-        <li><b>Lägg upp veckan tidigt</b><span>Sätt datum och plats när ni vet det, koppla handledare när det är bestämt.</span></li>
-        <li><b>Handledaren äger sin profil</b><span>Bild och presentation skrivs av handledaren själv och används på kurssidorna.</span></li>
+        <li><b>En inbjudan startar allt</b><span>Arrangör, arbetsgivare, anläggning eller kollega får en egen inloggning med rätt behörighet.</span></li>
+        <li><b>Avtalet följer arrangören</b><span>Mall, provision och period sätts vid inbjudan och kan justeras när som helst.</span></li>
+        <li><b>Inget publiceras oläst</b><span>Nya veckor hamnar i granskningskön innan de syns i det publika utbudet.</span></li>
+        <li><b>Underlagen räknas fram</b><span>Provision per arrangör blir till fakturaunderlag med ett klick.</span></li>
       </ul>
     </aside>
   </main>
@@ -61,17 +54,16 @@
       </div>
     </header>
     <div class="app-kropp">
-      <nav class="app-meny" id="meny" aria-label="Portalmeny"></nav>
+      <nav class="app-meny" id="meny" aria-label="Adminmeny"></nav>
       <main class="app-vy" id="vy"></main>
     </div>
   </div>
 
   <div class="notis-panel" id="notis-panel" hidden>
-    <div class="np-head"><h3>Notiser</h3><button type="button" id="notis-stang" aria-label="Stäng">&#10005;</button></div>
+    <div class="np-head"><h3>Att göra</h3><button type="button" id="notis-stang" aria-label="Stäng">&#10005;</button></div>
     <ul id="notis-lista"></ul>
   </div>
 
-  <script src="kurser-data.js"></script>
-  <script src="leverantor.js?v=12"></script>
+  <script src="admin.js?v=2"></script>
 </body>
 </html>
