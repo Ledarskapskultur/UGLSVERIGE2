@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='10';
+  var BYGGE='11';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -124,8 +124,9 @@
   function hlChips(k){
     if(!k.handledare.length)return '<span class="hl-tom">Ingen kopplad</span>';
     return '<div class="hl-rad">'+k.handledare.map(function(h){
-      return '<span class="hl-chip '+(h.status==='bekraftad'?'ar-bekraftad':h.status==='nekad'?'ar-nekad':'')+'" title="'+HSTATUS[h.status][0]+'">'+
-        hl(h.hid).namn+(h.status==='bekraftad'?'':'<i>'+HSTATUS[h.status][0]+'</i>')+'</span>'}).join('')+'</div>';
+      return '<span class="hl-chip '+(h.status==='bekraftad'?'ar-bekraftad':h.status==='nekad'?'ar-nekad':'ar-tillfragad')+'" title="'+hl(h.hid).namn+', '+HSTATUS[h.status][0].toLowerCase()+'">'+
+        '<i class="hl-prick" aria-hidden="true"></i>'+hl(h.hid).namn+
+        '<span class="dolt">, '+HSTATUS[h.status][0].toLowerCase()+'</span></span>'}).join('')+'</div>';
   }
 
   /* ---------- Arrangörsvyer ---------- */
@@ -147,18 +148,17 @@
   }
   function kursTabell(lista){
     if(!lista.length)return '<p class="tom">Inga kurser än.</p>';
-    return '<table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
+    return '<div class="tab-svep"><table class="tab"><thead><tr><th>Vecka</th><th>Datum</th><th>Plats</th><th>Handledare</th><th>Beläggning</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.slice().sort(function(a,b){return a.datum<b.datum?-1:1}).map(function(k){
         return '<tr class="rad-oppna" tabindex="0" data-oppna="kurs:'+k.id+'"><td><b>'+vecka(k)+'</b></td><td class="td-datum">'+periodKort(k.datum)+'</td>'+
           '<td class="td-plats">'+bildRuta(kBild(k),anl(k).namn)+'<span><b>'+anl(k).namn+'</b><small>'+anl(k).ort+'</small>'+(arver(k).logi&&arver(k).bild?'':'<em class="justerad">Justerad</em>')+'</span></td>'+
-          '<td class="td-hl">'+hlChips(k)+'</td>'+
+          '<td class="td-hl" data-oppna="koppla:'+k.id+'" title="Klicka för att koppla handledare">'+hlChips(k)+'</td>'+
           '<td>'+belaggning(k)+'</td>'+
           '<td>'+chip(k.status,STATUS)+'</td>'+
           '<td class="tab-atg">'+
             (k.status==='utkast'?'<button class="mini mini-primar" data-publicera="'+k.id+'">Publicera</button>':'')+
-            '<button class="mini" data-redigera="'+k.id+'">Redigera</button>'+
-            '<button class="mini" data-koppla="'+k.id+'">Handledare</button></td></tr>';
-      }).join('')+'</tbody></table>';
+            '<span class="rad-pil" aria-hidden="true">&#8250;</span></td></tr>';
+      }).join('')+'</tbody></table></div>';
   }
   function aKurser(){
     return '<div class="vy-head"><div><h1>Kurser</h1><p class="lead">Alla veckor ni arrangerar, publicerade och utkast.</p></div>'+
@@ -250,7 +250,7 @@
   function anlFormular(id){
     var a=id?anlById(id):{id:0,namn:'',ort:'',adress:'',bild:'',platser:12,logipris:9900,kontakt:'',text:''};
     var html='<div class="modal"><div class="modal-inre modal-bred"><div class="cp-head"><h3>'+(id?'Redigera anläggning':'Ny anläggning')+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
-      '<div class="anl-form">'+
+      '<div class="modal-kropp"><div class="anl-form">'+
         '<div class="anl-bildvalj"><div class="anl-forhand" id="anl-forhand">'+anlBild(a,'anl-stor')+'</div>'+
         '<input type="file" id="af-bild" accept="image/*" class="fil-in">'+
         '<p class="tom">Liggande bild, minst 1000 pixlar bred. Den visas på kurskorten och överst på kurssidan.</p></div>'+
@@ -266,8 +266,8 @@
           '<textarea id="af-text" rows="4" placeholder="Kort om läget, boendet och miljön.">'+(a.text||'')+'</textarea>'+
           '<em>Visas på kurssidan för alla kurser som ärver från mallen.</em></label>'+
         '</div>'+
-      '</div>'+
-      '<div class="nk-knappar"><button class="button" id="af-spara">Spara</button>'+
+      '</div></div>'+
+      '<div class="modal-fot"><button class="button" id="af-spara">Spara</button>'+
       (id?'<button class="button button-outline-dark" id="af-ta">Ta bort</button>':'')+'</div></div></div>';
     var d=document.createElement('div');d.innerHTML=html;document.body.appendChild(d.firstChild);
     var nyBild=a.bild;
@@ -362,6 +362,7 @@
   }
   var OPPNA={
     kurs:function(id){kursFormular(id)},
+    koppla:function(id){kopplaHandledare(id)},
     anl:function(id){anlFormular(id)},
     detalj:function(id){var k=kurs(id);toast('Vecka '+vecka(k)+' i '+k.ort+'. '+k.bokade+' av '+k.max+' platser bokade.')}
   };
@@ -399,6 +400,7 @@
     var upptagna={};
     S.kurser.forEach(function(x){if(x.id!==kid&&x.datum===k.datum)x.handledare.forEach(function(h){upptagna[h.hid]=x.ort})});
     var html='<div class="modal"><div class="modal-inre"><div class="cp-head"><h3>Handledare, vecka '+v+' i '+k.ort+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+      '<div class="modal-kropp">'+
       '<div class="valj-lista">'+S.handledare.map(function(h){
         var pa=k.handledare.filter(function(x){return x.hid===h.id})[0];
         var ledig=h.lediga.indexOf(v)>-1,krock=upptagna[h.id];
@@ -408,8 +410,8 @@
           '<span class="vr-status">'+(krock?'<span class="kv-not">Även inlagd i '+krock+'</span>':(ledig?'<span class="chip-status st-bekraftad">Ledig v '+v+'</span>':'<span class="chip-status st-ingen">Ej markerad ledig</span>'))+
           (pa?' '+chip(pa.status,HSTATUS):'')+'</span></label>';
       }).join('')+'</div>'+
-      '<p class="tom">Kryssa i en handledare för att skicka förfrågan. Hen svarar i sin egen portal.</p>'+
-      '<button class="button" id="mod-klar">Klar</button></div></div>';
+      '<p class="tom">Kryssa i en handledare för att skicka förfrågan. Hen svarar i sin egen portal.</p></div>'+
+      '<div class="modal-fot"><button class="button" id="mod-klar">Klar</button></div></div></div>';
     var d=document.createElement('div');d.innerHTML=html;document.body.appendChild(d.firstChild);
     document.querySelectorAll('[data-hkoppla]').forEach(function(c){c.addEventListener('change',function(){
       var hid=+c.getAttribute('data-hkoppla');
@@ -430,7 +432,8 @@
              :'<span class="arv-markor ar-egen">Justerad för den här kursen <button type="button" class="arv-ater" data-ater="'+falt+'">Återställ</button></span>')+
         '</div>'+innehall+'</div>';
     };
-    var html='<div class="modal"><div class="modal-inre"><div class="cp-head"><h3>Vecka '+vecka(k)+', '+a.namn+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+    var html='<div class="modal"><div class="modal-inre modal-bred"><div class="cp-head"><h3>Vecka '+vecka(k)+', '+a.namn+'</h3><button type="button" id="mod-stang" aria-label="Stäng">&#10005;</button></div>'+
+      '<div class="modal-kropp">'+
       '<p class="delad-not">'+SVG('<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/>')+
       'Kursen ärver bild, pris och beskrivning från anläggningen. Ändrar du något här gäller det bara den här veckan.</p>'+
       '<div class="form-grid">'+
@@ -441,7 +444,8 @@
       rad('Bild för den här veckan',ar.bild,'<div class="arv-bild"><div id="kf-forhand">'+bildRuta(kBild(k),a.namn,'anl-stor')+'</div>'+
         '<input type="file" id="kf-bild" accept="image/*" class="fil-in"></div>','bild')+
       rad('Beskrivning',ar.text,'<textarea class="arv-falt" id="kf-text" rows="3" placeholder="Beskrivning som visas på kurssidan.">'+(kText(k)||'')+'</textarea>','text')+
-      '<div class="nk-knappar"><button class="button" id="kf-spara">Spara</button>'+
+      '</div>'+
+      '<div class="modal-fot"><button class="button" id="kf-spara">Spara</button>'+
       '<button class="button button-outline-dark" id="kf-allt">Återställ allt till mallen</button></div></div></div>';
     var d=document.createElement('div');d.innerHTML=html;document.body.appendChild(d.firstChild);
     var nyBild=k.bild;
