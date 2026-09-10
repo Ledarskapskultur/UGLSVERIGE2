@@ -1,5 +1,5 @@
 (function(){
-  var BYGGE='2';
+  var BYGGE='3';
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   function kr(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' kr'}
   function fmt(d){return d.getDate()+' '+MANADER[d.getMonth()]}
@@ -139,22 +139,29 @@
   }
   function aNyKurs(){
     return '<div class="vy-head"><div><h1>Lägg upp ny kurs</h1><p class="lead">Veckonummer och slutdatum räknas ut automatiskt. Publicerade kurser syns direkt i det publika utbudet.</p></div></div>'+
-    '<div class="panel"><div class="form-grid">'+
-      '<label class="ro"><span>Startdatum, måndag</span><input type="date" id="nk-datum" value="2027-01-18"></label>'+
-      '<label class="ro"><span>Anläggning</span><input id="nk-anl" placeholder="Till exempel Lovik"></label>'+
-      '<label class="ro"><span>Ort</span><input id="nk-ort" placeholder="Till exempel Stockholm"></label>'+
-      '<label class="ro"><span>Max deltagare</span><input id="nk-max" type="number" value="12" min="8" max="12"></label>'+
-      '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="nk-pris" type="number" value="23900"></label>'+
-      '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="nk-logi" type="number" value="9900"></label>'+
-    '</div>'+
-    '<p class="ip-rubrik" style="margin-top:1.4rem">Handledare <span class="valfritt">valfritt, kan kopplas senare</span></p>'+
-    '<div class="valj-lista" id="nk-hl">'+S.handledare.map(function(h){
-      return '<label class="valj-rad"><input type="checkbox" value="'+h.id+'"><span class="n-init liten">'+init(h.namn)+'</span>'+
-      '<span class="vr-text"><b>'+h.namn+'</b><small>'+h.roll+'</small></span></label>'}).join('')+'</div>'+
-    '<div class="nk-knappar"><button class="button" id="nk-publicera">Skapa och publicera</button>'+
-    '<button class="button button-outline-dark" id="nk-utkast">Spara som utkast</button></div>'+
-    '<p class="tom">Handledare kan lämnas tomt nu och kopplas på när ni vet vilka som ska köra veckan.</p></div>';
+    '<div class="nykurs-layout">'+
+      '<div class="panel"><h2>Kursen</h2><div class="form-grid">'+
+        '<label class="ro"><span>Startdatum, måndag</span><input type="date" id="nk-datum" value="2027-01-18"></label>'+
+        '<label class="ro"><span>Anläggning</span><input id="nk-anl" placeholder="Till exempel Lovik"></label>'+
+        '<label class="ro"><span>Ort</span><input id="nk-ort" placeholder="Till exempel Stockholm"></label>'+
+        '<label class="ro"><span>Kursavgift, exkl. moms</span><input id="nk-pris" type="number" value="23900"></label>'+
+        '<label class="ro"><span>Kost och logi, exkl. moms</span><input id="nk-logi" type="number" value="9900"></label>'+
+        '<label class="ro"><span>Deltagare</span><input value="8 till 12, enligt UGL" readonly></label>'+
+      '</div>'+
+      '<div class="nk-knappar"><button class="button" id="nk-publicera">Skapa och publicera</button>'+
+      '<button class="button button-outline-dark" id="nk-utkast">Spara som utkast</button></div></div>'+
+
+      '<div class="panel"><div class="panel-head"><h2>Handledare</h2><span class="valfritt">Valfritt, kan kopplas senare</span></div>'+
+        '<div class="sok-falt">'+SVG('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>')+
+        '<input type="search" id="nk-sok" placeholder="Sök på namn eller år" autocomplete="off"></div>'+
+        '<div class="valj-lista" id="nk-hl">'+S.handledare.map(function(h){
+          return '<label class="valj-rad" data-namn="'+(h.namn+' '+h.roll+' '+h.cert).toLowerCase()+'">'+
+          '<input type="checkbox" value="'+h.id+'"><span class="n-init liten">'+init(h.namn)+'</span>'+
+          '<span class="vr-text"><b>'+h.namn+'</b><small>'+h.roll+'</small></span></label>'}).join('')+'</div>'+
+        '<p class="tom" id="nk-traffar"></p></div>'+
+    '</div>';
   }
+
   function aHandledare(){
     var h='<div class="vy-head"><div><h1>Handledarnätverk</h1><p class="lead">'+S.handledare.length+' handledare. Grön markering betyder ledig den veckan.</p></div>'+
       '<button class="button button-outline-dark" id="ny-hl">Bjud in handledare</button></div>';
@@ -328,6 +335,17 @@
       if(i>-1)mig.lediga.splice(i,1);else mig.lediga.push(v);
       spara();rita();
     })});
+    if($('nk-sok')){
+      var sok=function(){
+        var q=$('nk-sok').value.trim().toLowerCase(),n=0;
+        document.querySelectorAll('#nk-hl .valj-rad').forEach(function(r){
+          var pa=!q||r.getAttribute('data-namn').indexOf(q)>-1;
+          r.hidden=!pa;if(pa)n++;
+        });
+        $('nk-traffar').textContent=q?(n===1?'1 handledare matchar':n+' handledare matchar'):'';
+      };
+      $('nk-sok').addEventListener('input',sok);
+    }
     if($('nk-publicera'))$('nk-publicera').addEventListener('click',function(){nyKurs(true)});
     if($('nk-utkast'))$('nk-utkast').addEventListener('click',function(){nyKurs(false)});
     if($('pr-spara'))$('pr-spara').addEventListener('click',function(){
@@ -352,7 +370,7 @@
     if(!anl||!ort){toast('Fyll i anläggning och ort.');return}
     var valda=[].slice.call(document.querySelectorAll('#nk-hl input:checked')).map(function(c){return +c.value});
     S.kurser.push({id:nastaId++,datum:$('nk-datum').value,anlaggning:anl,ort:ort,
-      kurspris:+$('nk-pris').value,logi:+$('nk-logi').value,max:+$('nk-max').value,bokade:0,
+      kurspris:+$('nk-pris').value,logi:+$('nk-logi').value,max:12,bokade:0,
       status:publicera?'publicerad':'utkast',
       handledare:valda.map(function(h){return {hid:h,status:'tillfragad'}})});
     spara();

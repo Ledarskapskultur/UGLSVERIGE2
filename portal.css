@@ -233,3 +233,11 @@
 .panel .field input:focus{outline:2px solid var(--brass);outline-offset:1px}
 .valfritt{text-transform:none;letter-spacing:0;font-weight:400;color:#9aa39e;margin-left:.4rem}
 .kv-not{font-size:.78rem;color:#8a918d;white-space:nowrap}
+.nykurs-layout{display:grid;grid-template-columns:1.05fr 1fr;gap:1.4rem;align-items:start}
+@media(max-width:1000px){.nykurs-layout{grid-template-columns:1fr}}
+.sok-falt{position:relative;margin-bottom:.9rem}
+.sok-falt svg{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);width:17px;height:17px;color:#9aa39e;pointer-events:none}
+.sok-falt input{width:100%;font:inherit;font-size:.95rem;color:var(--green);background:#fff;border:1px solid var(--line);padding:.75rem .9rem .75rem 2.6rem}
+.sok-falt input:focus{outline:2px solid var(--brass);outline-offset:1px}
+.panel-head .valfritt{margin-left:0;font-size:.85rem}
+#nk-traffar{margin-top:.8rem}
