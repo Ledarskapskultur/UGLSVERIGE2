@@ -3,3 +3,30 @@ function peopleMarkup(){return colors.map((c,i)=>{const a=i*36-90,r=37,x=50+Math
 document.querySelectorAll('#people,.footer-people').forEach(el=>el.innerHTML=peopleMarkup());
 const menu=document.querySelector('.menu-button'),nav=document.querySelector('.nav');menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.isIntersecting&&entry.target.classList.add('visible')),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+/* Forskningsgrunden: klickbara modeller */
+(function(){
+  const flikar=[...document.querySelectorAll('.research-kort[data-modell]')];
+  if(!flikar.length)return;
+  const paneler={lm:document.getElementById('panel-lm'),imgd:document.getElementById('panel-imgd'),konflikt:document.getElementById('panel-konflikt')};
+  function valj(namn,flytta){
+    flikar.forEach(f=>{
+      const pa=f.getAttribute('data-modell')===namn;
+      f.classList.toggle('ar-vald',pa);
+      f.setAttribute('aria-selected',pa?'true':'false');
+    });
+    Object.keys(paneler).forEach(k=>{if(paneler[k])paneler[k].hidden=k!==namn});
+    if(flytta&&paneler[namn]){
+      const r=paneler[namn].getBoundingClientRect();
+      if(r.bottom>window.innerHeight)paneler[namn].scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
+  flikar.forEach((f,i)=>{
+    f.addEventListener('click',()=>valj(f.getAttribute('data-modell'),true));
+    f.addEventListener('keydown',e=>{
+      if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+      e.preventDefault();
+      const n=flikar[(i+(e.key==='ArrowRight'?1:flikar.length-1))%flikar.length];
+      n.focus();valj(n.getAttribute('data-modell'),true);
+    });
+  });
+})();

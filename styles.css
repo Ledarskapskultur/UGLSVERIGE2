@@ -131,6 +131,47 @@ body{position:relative}
 .research-grid p{font-size:1rem;line-height:1.75;color:#555d5a;margin:0}
 .research-grid .research-take{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--green);font-weight:500}
 .research-note{margin:clamp(2.8rem,4.5vw,4rem) 0 0;font-size:1rem;line-height:1.75;color:#5a625e;max-width:64ch}
+.research-kort{font:inherit;text-align:left;background:none;border:0;border-top:3px solid transparent;padding:1.1rem 0 0;margin:0;cursor:pointer;display:flex;flex-direction:column;transition:border-color .18s,opacity .18s}
+.research-kort>span:first-child{display:block;color:var(--brass);font-size:.8rem;letter-spacing:.16em;margin-bottom:1.1rem}
+.research-kort h3{color:var(--green);font:600 clamp(1.3rem,1.8vw,1.65rem)/1.2 "Libre Franklin",sans-serif;letter-spacing:-.02em;margin:0 0 1rem}
+.research-kort p{font-size:1rem;line-height:1.75;color:#555d5a;margin:0}
+.research-kort .research-take{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--green);font-weight:500}
+.research-kort .research-visa{margin:1.4rem 0 0;letter-spacing:0;font-size:.84rem;color:#8a918d;font-weight:600;display:inline-flex;align-items:center;gap:.45rem;transition:color .18s;margin-top:auto;padding-top:1.4rem}
+.research-visa:after{content:"\2193";font-size:.95rem}
+.research-kort:hover .research-visa,.research-kort:focus-visible .research-visa{color:var(--green)}
+.research-kort:hover{border-top-color:var(--line)}
+.research-kort.ar-vald{border-top-color:var(--brass)}
+.research-kort.ar-vald .research-visa{color:var(--brass)}
+.research-kort.ar-vald .research-visa:after{transform:translateY(2px)}
+.research-kort:focus-visible{outline:2px solid var(--brass);outline-offset:6px}
+.forsk-panel{margin:clamp(2.4rem,4vw,3.4rem) 0 0;padding:clamp(1.8rem,3vw,2.6rem);background:var(--ivory)}
+.forsk-panel figcaption{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e;font-weight:600;margin-bottom:1.8rem}
+.forsk-panel>p{margin:1.8rem 0 0;font-size:.93rem;color:#5f6763;font-style:italic}
+.lm-rader{list-style:none;padding:0;margin:0;display:grid;gap:1px;background:#d8dbd4}
+.lm-rader li{display:grid;grid-template-columns:8px 1fr;gap:1.3rem;align-items:stretch;background:var(--ivory);padding:1.1rem 0}
+.lm-stapel{display:block;width:8px;border-radius:2px}
+.lm-utv .lm-stapel{background:var(--green)}
+.lm-konv .lm-stapel{background:#8ea69a}
+.lm-dest .lm-stapel{background:#c08a5e}
+.lm-txt{display:flex;flex-direction:column;gap:.35rem}
+.lm-txt strong{color:var(--green);font:600 1.08rem/1.25 "Libre Franklin",sans-serif;letter-spacing:-.01em}
+.lm-delar{font-size:.92rem;color:#5f6763}
+.lm-effekt{font-size:.92rem;line-height:1.6;color:#7a827e}
+.trappa{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2.2vw,2rem);align-items:end}
+.trappa li{display:flex;flex-direction:column}
+.tr-steg{display:block;width:100%;margin-bottom:1.3rem;border-radius:3px 3px 0 0}
+.trappa li:nth-child(1) .tr-steg{height:26px;background:#cfd8d2}
+.trappa li:nth-child(2) .tr-steg{height:56px;background:#a9bcb0}
+.trappa li:nth-child(3) .tr-steg{height:92px;background:#c9a273}
+.trappa li:nth-child(4) .tr-steg{height:132px;background:#b4713f}
+.trappa b{color:var(--brass);font-size:.78rem;letter-spacing:.16em;margin-bottom:.45rem}
+.trappa strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:.5rem}
+.trappa li span:not(.tr-steg){font-size:.93rem;line-height:1.6;color:#5f6763}
+@media(max-width:980px){.trappa{grid-template-columns:1fr;gap:0}
+  .trappa li{padding:1.2rem 0;border-top:1px solid #d3d7d0}
+  .tr-steg{width:120px;margin-bottom:1rem}
+  .research-kort{border-top:1px solid var(--line);border-left:0;padding-top:1.6rem}
+  .research-kort.ar-vald{border-top-color:var(--brass)}}
 @media(max-width:980px){.research-grid{grid-template-columns:1fr;gap:2.6rem}}
 
 /* Sektion: fakta och bakgrund */
