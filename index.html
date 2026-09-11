@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=42">
 </head>
 <body>
   <header class="site-header">
@@ -79,21 +79,58 @@
       </div>
     </section>
 
-    <section id="veckan" class="section week reveal">
-      <div class="section-head">
-        <p class="eyebrow">02. Veckans båge</p>
-        <h2>Fem dagar, en rörelse.</h2>
-        <p class="lead">En UGL-vecka följer samma bana som varje grupp gör, fast komprimerad. Det som annars tar ett halvår på en arbetsplats hinner hända på fem dagar, och ni är med när det händer.</p>
+    <section class="cta-band reveal">
+      <div class="cb-bg" data-parallax>
+        <img src="assets/ugl-samtal.webp" alt="" loading="lazy">
+        <span class="cb-scrim" aria-hidden="true"></span>
       </div>
-      <figure class="week-band"><img src="assets/ugl-grupp.webp" alt="Deltagare sitter i ring i en ljus kurslokal med stora fönster mot skogen" loading="lazy"></figure>
-      <ol class="days">
-        <li><b>Dag 1</b><strong>Ni börjar på samma ruta</strong><span>Ingen känner någon sedan tidigare. Ni kommer överens om hur ni vill ha det under veckan, och handledarna håller ramarna.</span></li>
-        <li><b>Dag 2</b><strong>Gruppen hittar sin form</strong><span>Ni märker hur olika ni fungerar. Vem tar plats, vem väntar in, och vad gör det med arbetet?</span></li>
-        <li><b>Dag 3</b><strong>Samtalen går på djupet</strong><span>Ni tränar på att ge och ta emot feedback. Det sker i lugn takt, med handledarna nära.</span></li>
-        <li><b>Dag 4</b><strong>Tilliten bär</strong><span>När mer är sagt blir samarbetet enklare. Här märks skillnaden mot en vanlig arbetsgrupp.</span></li>
-        <li><b>Dag 5</b><strong>Du formulerar din plan</strong><span>Ni summerar veckan och du sätter ord på vad du tar med dig hem.</span></li>
-      </ol>
-      <p class="week-note">Exakt vilka uppgifter ni möter berättar vi inte i förväg, och det är med flit. Upplevelsen bygger på att ni går in i dem utan facit, ungefär som en film blir bäst när ingen har berättat slutet. Du bestämmer själv hur mycket du delar med dig av, och två certifierade handledare finns med hela veckan.</p>
+      <div class="cb-inner">
+        <p class="eyebrow">Nästa steg</p>
+        <h2>Hitta veckan som passar dig.</h2>
+        <p class="lead">Kursdatum över hela året på tolv orter. Filtrera på restid hemifrån och se vilka veckor som har platser kvar.</p>
+        <div class="actions"><a class="button button-light" href="/kurser">Se kursdatum &#8594;</a><a class="button button-outline" href="/kurser#anmalan">Anmäl intresse</a></div>
+      </div>
+    </section>
+
+    <section id="veckan" class="week-pin reveal">
+      <div class="wp-spar">
+        <div class="wp-fast">
+          <div class="wp-bg" data-parallax>
+            <img src="assets/ugl-grupp.webp" alt="" loading="lazy">
+            <span class="wp-scrim" aria-hidden="true"></span>
+          </div>
+          <div class="wp-inner">
+            <div class="wp-txt">
+              <p class="eyebrow">02. Veckans båge</p>
+              <h2>Fem dagar, en rörelse.</h2>
+              <p class="lead">En UGL-vecka följer samma bana som varje grupp gör, fast komprimerad. Det som annars tar ett halvår på en arbetsplats hinner hända på fem dagar, och ni är med när det händer.</p>
+              <ol class="wp-dagar">
+              <li data-dag="1"><b>Dag 1</b><strong>Ni börjar på samma ruta</strong><span>Ingen känner någon sedan tidigare. Ni kommer överens om hur ni vill ha det under veckan, och handledarna håller ramarna.</span></li>
+              <li data-dag="2"><b>Dag 2</b><strong>Gruppen hittar sin form</strong><span>Ni märker hur olika ni fungerar. Vem tar plats, vem väntar in, och vad gör det med arbetet?</span></li>
+              <li data-dag="3"><b>Dag 3</b><strong>Samtalen går på djupet</strong><span>Ni tränar på att ge och ta emot feedback. Det sker i lugn takt, med handledarna nära.</span></li>
+              <li data-dag="4"><b>Dag 4</b><strong>Tilliten bär</strong><span>När mer är sagt blir samarbetet enklare. Här märks skillnaden mot en vanlig arbetsgrupp.</span></li>
+              <li data-dag="5"><b>Dag 5</b><strong>Du formulerar din plan</strong><span>Ni summerar veckan och du sätter ord på vad du tar med dig hem.</span></li>
+              </ol>
+              <p class="wp-not">Exakt vilka uppgifter ni möter berättar vi inte i förväg, och det är med flit. Du bestämmer själv hur mycket du delar med dig av, och två certifierade handledare finns med hela veckan.</p>
+              <div class="actions"><a class="button button-light" href="/kurser">Se kursdatum &#8594;</a><a class="text-link text-link-ljus" href="#utbyte">Vad du får med dig</a></div>
+            </div>
+            <div class="wp-hjul" aria-hidden="true">
+              <svg viewBox="0 0 320 320">
+                <g class="wh-dekor"><circle cx="160" cy="160" r="150"></circle></g>
+                <circle class="wh-spar" cx="160" cy="160" r="128"></circle>
+                <circle class="wh-arc" cx="160" cy="160" r="128"></circle>
+              <circle class="wh-prick" data-i="0" cx="160.0" cy="32.0" r="7"></circle>
+              <circle class="wh-prick" data-i="1" cx="281.7" cy="120.4" r="7"></circle>
+              <circle class="wh-prick" data-i="2" cx="235.2" cy="263.6" r="7"></circle>
+              <circle class="wh-prick" data-i="3" cx="84.8" cy="263.6" r="7"></circle>
+              <circle class="wh-prick" data-i="4" cx="38.3" cy="120.4" r="7"></circle>
+                <text class="wh-nr" x="160" y="172">1</text>
+                <text class="wh-lbl" x="160" y="204">av fem dagar</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="utbyte" class="section outcomes reveal">
@@ -259,7 +296,7 @@
         </div>
         <p>Ingen konflikt utan ett önskemål. Den som hittar önskemålet bakom handlingen har oftast hittat vägen ut.</p>
       </figure>
-
+      <div class="sektion-cta"><p>Vill du se hur det här ser ut i praktiken?</p><a class="button" href="/kurser">Se kursdatum &#8594;</a></div>
     </section>
 
     <section id="fakta" class="section facts reveal">
@@ -296,9 +333,24 @@
       </div>
     </section>
 
-    <section id="organisationer" class="section organisations reveal">
-      <div><p class="eyebrow">07. För organisationer</p><h2>En investering i människor, grupper och ledarskap.</h2><p class="lead">Samla ledare kring ett gemensamt språk för relationer, grupputveckling och ledarskap.</p><a class="text-link" href="#kontakt">Läs om upplägg för grupper &#8594;</a></div>
-      <div class="org-points"><article><span>01</span><h3>Starkare ledarskap</h3><p>Mer trygga och medvetna ledare.</p></article><article><span>02</span><h3>Bättre samarbete</h3><p>Större tillit och tydligare dialog.</p></article><article><span>03</span><h3>Gemensamt språk</h3><p>Insikter som kan leva vidare i vardagen.</p></article></div>
+    <section id="organisationer" class="org-band reveal">
+      <div class="cb-bg" data-parallax>
+        <img src="assets/ugl-upplevelse.webp" alt="" loading="lazy">
+        <span class="cb-scrim" aria-hidden="true"></span>
+      </div>
+      <div class="ob-inner">
+        <div class="ob-txt">
+          <p class="eyebrow">07. För organisationer</p>
+          <h2>En investering i människor, grupper och ledarskap.</h2>
+          <p class="lead">Samla era ledare kring ett gemensamt språk för relationer, grupputveckling och ledarskap. Vi hjälper er planera vilka som ska gå och när.</p>
+          <div class="actions"><a class="button button-light" href="/portal">Till arbetsgivarportalen &#8594;</a><a class="button button-outline" href="#kontakt">Boka ett samtal</a></div>
+        </div>
+        <div class="org-points">
+          <article><span>01</span><h3>Starkare ledarskap</h3><p>Mer trygga och medvetna ledare.</p></article>
+          <article><span>02</span><h3>Bättre samarbete</h3><p>Större tillit och tydligare dialog.</p></article>
+          <article><span>03</span><h3>Gemensamt språk</h3><p>Insikter som kan leva vidare i vardagen.</p></article>
+        </div>
+      </div>
     </section>
 
     <section class="section testimonial reveal">
@@ -324,6 +376,6 @@
     <div class="footer-links"><a href="#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="#organisationer">För organisationer</a><a href="#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

@@ -53,3 +53,65 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     });
   });
 })();
+
+/* Veckan: fastnalad sekvens med roterande hjul */
+(function(){
+  const sek=document.querySelector('.week-pin');
+  if(!sek)return;
+  const spar=sek.querySelector('.wp-spar'),fast=sek.querySelector('.wp-fast');
+  const dagar=[...sek.querySelectorAll('.wp-dagar li')];
+  const prickar=[...sek.querySelectorAll('.wh-prick')];
+  const dekor=sek.querySelector('.wh-dekor'),arc=sek.querySelector('.wh-arc');
+  const nr=sek.querySelector('.wh-nr');
+  const OMKRETS=2*Math.PI*128;
+  let pa=false,aktiv=-1;
+  function sattAktiv(i){
+    if(i===aktiv)return;aktiv=i;
+    dagar.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    prickar.forEach((p,n)=>{p.classList.toggle('ar-pa',n===i);p.classList.toggle('ar-klar',n<i)});
+    if(nr)nr.textContent=i+1;
+  }
+  function rita(){
+    if(!pa)return;
+    const r=spar.getBoundingClientRect();
+    const total=spar.offsetHeight-window.innerHeight;
+    let p=total>0?(-r.top)/total:0;
+    p=Math.max(0,Math.min(1,p));
+    const i=Math.max(0,Math.min(4,Math.floor(p*5+0.001)));
+    sattAktiv(i);
+    const fyllt=(i+1)/5;
+    if(arc)arc.style.strokeDashoffset=OMKRETS*(1-fyllt);
+    if(dekor)dekor.style.transform='rotate('+(p*300).toFixed(1)+'deg)';
+  }
+  function slaPa(){
+    const kan=window.innerWidth>980&&window.innerHeight>560&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(kan===pa)return;
+    pa=kan;sek.classList.toggle('pin-pa',kan);
+    if(kan){aktiv=-1;sattAktiv(0);rita()}
+    else{dagar.forEach(d=>d.classList.remove('ar-pa'));aktiv=-1}
+  }
+  let tick=false;
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{rita();tick=false})}},{passive:true});
+  addEventListener('resize',()=>{slaPa();rita()});
+  slaPa();rita();
+})();
+
+/* Mjuk parallax pa bildbanor */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const lager=[...document.querySelectorAll('[data-parallax]')];
+  if(!lager.length)return;
+  let tick=false;
+  function rita(){
+    const h=window.innerHeight;
+    lager.forEach(el=>{
+      const r=el.parentElement.getBoundingClientRect();
+      if(r.bottom<-200||r.top>h+200)return;
+      const mitt=(r.top+r.height/2-h/2)/h;
+      el.style.transform='translate3d(0,'+(mitt*-6).toFixed(2)+'%,0)';
+    });
+    tick=false;
+  }
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(rita)}},{passive:true});
+  addEventListener('resize',rita);rita();
+})();
