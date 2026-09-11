@@ -9,25 +9,26 @@
 .intro-heading{display:grid;grid-template-columns:.7fr 1.3fr;gap:clamp(2rem,7vw,7rem);align-items:start;margin-bottom:clamp(3rem,5vw,4.5rem)}.intro-heading h2{margin:0}
 /* Sektion 01: fullbreddsrader i zigzag med bild */
 .reason-rows{border-top:1px solid var(--line)}
-.reason-row{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(2rem,4.5vw,4.5rem);align-items:center;padding:clamp(3rem,5vw,4.8rem) 0;border-bottom:1px solid var(--line)}
-.reason-row .reason-figure{grid-column:7/span 6;grid-row:1;margin:0;aspect-ratio:3/2;overflow:hidden}
-.reason-row .reason-text{grid-column:1/span 5;grid-row:1}
-.reason-row:nth-child(even) .reason-figure{grid-column:1/span 6;grid-row:1}
-.reason-row:nth-child(even) .reason-text{grid-column:8/span 5;grid-row:1}
+.reason-row{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(1.6rem,3vw,3rem);align-items:center;padding:clamp(1.4rem,2.2vw,2.2rem) 0;border-bottom:1px solid var(--line)}
+.reason-row .reason-figure{grid-column:8/span 5;grid-row:1;margin:0;aspect-ratio:16/9;overflow:hidden}
+.reason-row .reason-text{grid-column:1/span 6;grid-row:1}
+.reason-row:nth-child(even) .reason-figure{grid-column:1/span 5;grid-row:1}
+.reason-row:nth-child(even) .reason-text{grid-column:7/span 6;grid-row:1}
 .reason-figure img{width:100%;height:100%;object-fit:cover}
-.reason-title{display:flex;align-items:baseline;gap:clamp(.6rem,1.2vw,1.1rem);margin-bottom:clamp(1rem,1.8vw,1.5rem)}
+.reason-title{display:flex;align-items:baseline;gap:clamp(.5rem,1vw,.9rem);margin-bottom:clamp(.6rem,1vw,.9rem)}
 .reason-row:nth-child(even) .reason-title{flex-direction:row-reverse;justify-content:flex-start}
 .reason-row:nth-child(even) .reason-text{text-align:right}
 .reason-row:nth-child(even) .reason-body{text-align:left}
-.reason-row .num{font:600 clamp(2.4rem,4vw,3.6rem)/1 'Libre Franklin',sans-serif;letter-spacing:-.045em;color:var(--brass);opacity:.42;flex:none}
+.reason-row:nth-child(even) .reason-body p{margin-left:auto}
+.reason-row .num{font:600 clamp(1.7rem,2.6vw,2.5rem)/1 'Libre Franklin',sans-serif;letter-spacing:-.045em;color:var(--brass);opacity:.5;flex:none}
 .reason-row h3{margin:0;color:var(--green);font:600 clamp(1.5rem,2.3vw,2.15rem)/1.14 'Libre Franklin',sans-serif;letter-spacing:-.03em}
-.reason-row .reason-body p{font-size:clamp(1rem,1.05vw,1.06rem);line-height:1.8;color:#555d5a;margin:0}
-.reason-row .reason-body p+p{margin-top:1.1rem}
+.reason-row .reason-body p{font-size:clamp(.97rem,1vw,1.02rem);line-height:1.68;color:#555d5a;margin:0;max-width:56ch}
+.reason-row .reason-body p+p{margin-top:.7rem}
 .outcome-grid-two{grid-template-columns:repeat(2,1fr)}
 .outcome-grid-two article{min-height:0;padding:3rem clamp(2.2rem,3vw,3.2rem)}
 .outcome-grid-two h3{margin-top:2.6rem;margin-bottom:1.1rem}
 .outcome-grid-two p{font-size:.98rem;line-height:1.75;color:#cfdad4;margin-bottom:0}
-@media(max-width:980px){.intro-heading{grid-template-columns:1fr}.outcome-grid-two{grid-template-columns:1fr}.reason-row{grid-template-columns:1fr;gap:1.6rem;padding:clamp(2.4rem,7vw,3.4rem) 0}.reason-row .reason-figure,.reason-row .reason-text,.reason-row:nth-child(even) .reason-figure,.reason-row:nth-child(even) .reason-text{grid-column:1;grid-row:auto}.reason-row:nth-child(even) .reason-text{text-align:left}.reason-row:nth-child(even) .reason-title{flex-direction:row}.reason-row .reason-figure{aspect-ratio:16/10}}
+@media(max-width:980px){.intro-heading{grid-template-columns:1fr}.outcome-grid-two{grid-template-columns:1fr}.reason-row{grid-template-columns:1fr;gap:1.1rem;padding:clamp(1.6rem,5vw,2.2rem) 0}.reason-row .reason-figure,.reason-row .reason-text,.reason-row:nth-child(even) .reason-figure,.reason-row:nth-child(even) .reason-text{grid-column:1;grid-row:auto}.reason-row:nth-child(even) .reason-text{text-align:left}.reason-row:nth-child(even) .reason-title{flex-direction:row}.reason-row:nth-child(even) .reason-body p{margin-left:0}.reason-row .reason-figure{aspect-ratio:16/10;max-height:46vw}}
 /* Hero i fullbredd med meny ovanpå */
 body{position:relative}
 .site-header{position:absolute;top:0;left:0;right:0;margin-inline:auto;background:transparent;z-index:20}
@@ -53,7 +54,7 @@ body{position:relative}
 .hero-stat b{display:block;font:600 clamp(2.6rem,4.4vw,3.9rem)/1 'Libre Franklin',sans-serif;letter-spacing:-.045em}
 .hero-stat span{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.78)}
 /* Rubriker på en rad i sektion 01 */
-.reason-title h3{white-space:nowrap;font-size:clamp(1.3rem,1.85vw,1.62rem)}
+.reason-title h3{white-space:nowrap;font-size:clamp(1.22rem,1.7vw,1.48rem)}
 @media(max-width:1180px){.reason-title h3{font-size:clamp(1.15rem,1.7vw,1.45rem)}}
 @media(max-width:980px){
 .site-header{position:static;background:#fff}
@@ -119,7 +120,7 @@ body{position:relative}
 .button-light:hover{background:#e2f76f;border-color:#e2f76f}
 
 /* Sektion 01: enspaltig rubrik */
-.intro .section-head{margin-bottom:clamp(2.6rem,4.5vw,4rem)}
+.intro .section-head{margin-bottom:clamp(1.6rem,2.4vw,2.2rem)}
 .intro .section-head h2{max-width:18ch}
 
 /* Sektion: forskningsgrunden */
