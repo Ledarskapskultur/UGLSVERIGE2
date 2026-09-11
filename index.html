@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=37">
 </head>
 <body>
   <header class="site-header">
@@ -179,34 +179,51 @@
       </div>
 
       <figure class="forsk-panel" id="panel-lm" role="tabpanel" aria-labelledby="flik-lm">
-        <figcaption>Tre sorters ledarbeteenden</figcaption>
+        <figcaption>Ledarbeteendenas effekt på resultat och utveckling</figcaption>
+        <div class="lm-graf">
+          <svg viewBox="0 0 700 432" role="img" aria-labelledby="lm-titel lm-beskr">
+            <title id="lm-titel">Ledarskapsmodellen som graf</title>
+            <desc id="lm-beskr">Utvecklande ledarskap ligger högst upp till höger med högt organisatoriskt resultat och hög individuell utveckling. Konventionellt ledarskap ligger i mitten. Destruktivt ledarskap ligger nere till vänster, utanför axlarna, och ger minus på båda.</desc>
+            <rect x="60" y="300" width="110" height="76" fill="#f1e5da"></rect>
+            <text x="115" y="292" text-anchor="middle" class="lm-minus">minus</text>
+            <line x1="60" y1="300" x2="660" y2="300" class="lm-axel"></line>
+            <line x1="170" y1="376" x2="170" y2="34" class="lm-axel"></line>
+            <path d="M660 300 l-9 -5 v10 z" class="lm-pil"></path>
+            <path d="M170 34 l-5 9 h10 z" class="lm-pil"></path>
+            <text x="158" y="332" text-anchor="end" class="lm-noll">0</text>
+            <text x="655" y="326" text-anchor="end" class="lm-axeltext">Organisatoriskt resultat</text>
+            <text transform="translate(44 208) rotate(-90)" text-anchor="middle" class="lm-axeltext">Individuell utveckling</text>
+            <path d="M112 340 L395 200 L600 80" class="lm-linje"></path>
+            <line x1="112" y1="348" x2="112" y2="384" class="lm-ledare"></line>
+            <circle cx="600" cy="80" r="10" class="lm-punkt lm-p-utv"></circle>
+            <circle cx="395" cy="200" r="10" class="lm-punkt lm-p-konv"></circle>
+            <circle cx="112" cy="340" r="10" class="lm-punkt lm-p-dest"></circle>
+            <text x="580" y="56" text-anchor="end" class="lm-namn">Utvecklande ledarskap</text>
+            <text x="580" y="78" text-anchor="end" class="lm-sub">Höga resultat och människor som växer</text>
+            <text x="375" y="176" text-anchor="end" class="lm-namn">Konventionellt ledarskap</text>
+            <text x="375" y="198" text-anchor="end" class="lm-sub">Fungerar, men driver ingen utveckling</text>
+            <text x="62" y="402" class="lm-namn">Destruktivt ledarskap</text>
+            <text x="62" y="424" class="lm-sub">Under noll på båda axlarna</text>
+          </svg>
+        </div>
         <ol class="lm-rader">
           <li class="lm-utv">
-            <span class="lm-stapel" aria-hidden="true"></span>
-            <div class="lm-txt">
-              <strong>Utvecklande ledarskap</strong>
-              <span class="lm-delar">Föredöme · Personlig omtanke · Inspiration och motivation</span>
-              <span class="lm-effekt">Bygger tillit och eget ansvar. Håller över tid, även när det blir tungt.</span>
-            </div>
+            <span class="lm-prick" aria-hidden="true"></span>
+            <strong>Utvecklande</strong>
+            <span class="lm-delar">Föredöme · Personlig omtanke · Inspiration och motivation</span>
           </li>
           <li class="lm-konv">
-            <span class="lm-stapel" aria-hidden="true"></span>
-            <div class="lm-txt">
-              <strong>Konventionellt ledarskap</strong>
-              <span class="lm-delar">Krav och belöning · Kontroll · Överkontroll</span>
-              <span class="lm-effekt">Får saker gjorda på kort sikt. Utvecklar sällan människorna som gör dem.</span>
-            </div>
+            <span class="lm-prick" aria-hidden="true"></span>
+            <strong>Konventionellt</strong>
+            <span class="lm-delar">Krav och belöning · Kontroll · Överkontroll</span>
           </li>
           <li class="lm-dest">
-            <span class="lm-stapel" aria-hidden="true"></span>
-            <div class="lm-txt">
-              <strong>Destruktivt ledarskap</strong>
-              <span class="lm-delar">Orättvist och godtyckligt · Hot och straff · Låt gå, ta inte tag i något</span>
-              <span class="lm-effekt">Sliter på tillit, arbetsglädje och hälsa. Även frånvaron av ledarskap räknas hit.</span>
-            </div>
+            <span class="lm-prick" aria-hidden="true"></span>
+            <strong>Destruktivt</strong>
+            <span class="lm-delar">Orättvist och godtyckligt · Hot och straff · Låt gå</span>
           </li>
         </ol>
-        <p>Alla tre finns i de flesta ledare. Det som skiljer är proportionerna, och vad du gör när du är pressad.</p>
+        <p>Destruktivt ledarskap kostar mer än det uteblivna resultatet. Det drar ner både verksamheten och människorna, och även frånvaron av ledarskap räknas dit. Alla tre finns i de flesta ledare, det som skiljer är proportionerna och vad du gör under press.</p>
       </figure>
 
       <figure class="forsk-panel imgd" id="panel-imgd" role="tabpanel" aria-labelledby="flik-imgd" hidden>
