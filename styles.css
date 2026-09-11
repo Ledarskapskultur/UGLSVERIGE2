@@ -147,7 +147,7 @@ body{position:relative}
 .forsk-panel{margin:clamp(2.4rem,4vw,3.4rem) 0 0;padding:clamp(1.8rem,3vw,2.6rem);background:var(--ivory)}
 .forsk-panel figcaption{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e;font-weight:600;margin-bottom:1.8rem}
 .forsk-panel>p{margin:1.8rem 0 0;font-size:.93rem;color:#5f6763;font-style:italic}
-.lm-graf{margin:0 auto;max-width:760px}
+.lm-graf{margin:0 auto;max-width:620px}
 .lm-graf svg{width:100%;height:auto;display:block;overflow:visible}
 .lm-axel{stroke:#b9c0b8;stroke-width:1.5}
 .lm-pil{fill:#b9c0b8}
