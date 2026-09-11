@@ -172,3 +172,58 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   addEventListener('resize',()=>{slaPa();rita()});
   slaPa();rita();
 })();
+
+/* Forskningsgrunden: fastnalad sekvens */
+(function(){
+  const sek=document.querySelector('.forsk-pin');
+  if(!sek)return;
+  const spar=sek.querySelector('.fp-spar');
+  const punkter=[...sek.querySelectorAll('.fp-modeller li')];
+  const paneler=[...sek.querySelectorAll('.fp-paneler .forsk-panel')];
+  const knappar=[...sek.querySelectorAll('.fp-punkt')];
+  const antal=punkter.length;
+  let pa=null,aktiv=-1,obs=null;
+  function sattAktiv(i){
+    if(i===aktiv)return;aktiv=i;
+    punkter.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
+  }
+  function rita(){
+    if(!pa)return;
+    const r=spar.getBoundingClientRect();
+    const total=spar.offsetHeight-window.innerHeight;
+    let p=total>0?(-r.top)/total:0;
+    p=Math.max(0,Math.min(1,p));
+    sattAktiv(Math.max(0,Math.min(antal-1,Math.floor(p*antal+0.001))));
+  }
+  function slaPa(){
+    const kan=window.innerWidth>980&&window.innerHeight>600&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(kan===pa)return;
+    pa=kan;sek.classList.toggle('fpin-pa',kan);
+    if(obs){obs.disconnect();obs=null}
+    if(kan){aktiv=-1;sattAktiv(0);rita()}
+    else{
+      punkter.forEach(d=>d.classList.remove('ar-pa'));aktiv=-1;
+      paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===0));
+      obs=new IntersectionObserver(poster=>{
+        poster.forEach(po=>{if(po.isIntersecting){
+          const i=punkter.indexOf(po.target);
+          paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+          knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
+        }});
+      },{rootMargin:'-40% 0px -45% 0px'});
+      punkter.forEach(d=>obs.observe(d));
+    }
+  }
+  knappar.forEach(k=>k.addEventListener('click',()=>{
+    if(!pa)return;
+    const i=+k.getAttribute('data-hopp');
+    const total=spar.offsetHeight-window.innerHeight;
+    window.scrollTo({top:spar.getBoundingClientRect().top+window.scrollY+total*((i+0.5)/antal),behavior:'smooth'});
+  }));
+  let tick=false;
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{rita();tick=false})}},{passive:true});
+  addEventListener('resize',()=>{slaPa();rita()});
+  slaPa();rita();
+})();

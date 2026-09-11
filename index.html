@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=44">
 </head>
 <body>
   <header class="site-header">
@@ -179,37 +179,28 @@
       </div>
     </section>
 
-    <section id="grunder" class="section research reveal">
-      <div class="section-head">
-        <p class="eyebrow">05. Forskningsgrunden</p>
-        <h2>Det här vilar UGL på.</h2>
-        <p class="lead">UGL är inte hemsnickrat. Tre etablerade modeller håller ihop veckan, och du får pröva dem på din egen grupp och ditt eget ledarskap.</p>
-      </div>
-      <div class="research-grid" role="tablist" aria-label="Forskningsgrunder">
-        <button type="button" class="research-kort ar-vald" role="tab" id="flik-lm" aria-controls="panel-lm" aria-selected="true" data-modell="lm">
-          <span>01</span>
-          <h3>Ledarskapsmodellen</h3>
-          <p>Försvarshögskolans modell delar in ledarbeteenden i utvecklande, konventionella och destruktiva. Det handlar inte om vilken sorts ledare du är, utan om vad du gör oftast, och vad du gör när det blir pressat.</p>
-          <p class="research-take">Du får syn på dina egna mönster och vad de gör med människorna omkring dig.</p>
-          <span class="research-visa">Se modellen</span>
-        </button>
-        <button type="button" class="research-kort" role="tab" id="flik-imgd" aria-controls="panel-imgd" aria-selected="false" data-modell="imgd">
-          <span>02</span>
-          <h3>Gruppens utveckling (IMGD)</h3>
-          <p>Susan Wheelans forskning visar att grupper rör sig genom faser: först tillhörighet och trygghet, sedan opposition och konflikt, därefter tillit och struktur, och till sist verkligt arbete. Varje fas behöver olika saker av sin ledare.</p>
-          <p class="research-take">Du lär dig läsa var din grupp faktiskt står, i stället för att dra i fel spak.</p>
-          <span class="research-visa">Se modellen</span>
-        </button>
-        <button type="button" class="research-kort" role="tab" id="flik-konflikt" aria-controls="panel-konflikt" aria-selected="false" data-modell="konflikt">
-          <span>03</span>
-          <h3>Konflikthantering</h3>
-          <p>Thomas Jordans definition är avskalad: någon vill något, någon annan står i vägen, det skaver, och till slut gör någon något åt det. Konflikten börjar långt innan den syns.</p>
-          <p class="research-take">Du lär dig leta efter önskemålet bakom handlingen i stället för att fastna i det som syns.</p>
-          <span class="research-visa">Se modellen</span>
-        </button>
-      </div>
-
-      <figure class="forsk-panel" id="panel-lm" role="tabpanel" aria-labelledby="flik-lm">
+    <section id="grunder" class="forsk-pin reveal">
+      <div class="fp-spar">
+        <div class="fp-fast">
+          <div class="fp-inner">
+            <div class="fp-txt">
+              <p class="eyebrow">05. Forskningsgrunden</p>
+              <h2>Det här vilar UGL på.</h2>
+              <p class="lead">UGL är inte hemsnickrat. Tre etablerade modeller håller ihop veckan, och du får pröva dem på din egen grupp och ditt eget ledarskap.</p>
+              <ol class="fp-modeller">
+                <li data-i="0"><span class="fp-num">01</span><h3>Ledarskapsmodellen</h3><p>Försvarshögskolans modell delar in ledarbeteenden i utvecklande, konventionella och destruktiva. Det handlar inte om vilken sorts ledare du är, utan om vad du gör oftast, och vad du gör när det blir pressat.</p><p class="fp-take">Du får syn på dina egna mönster och vad de gör med människorna omkring dig.</p></li>
+                <li data-i="1"><span class="fp-num">02</span><h3>Gruppens utveckling (IMGD)</h3><p>Susan Wheelans forskning visar att grupper rör sig genom faser: först tillhörighet och trygghet, sedan opposition och konflikt, därefter tillit och struktur, och till sist verkligt arbete. Varje fas behöver olika saker av sin ledare.</p><p class="fp-take">Du lär dig läsa var din grupp faktiskt står, i stället för att dra i fel spak.</p></li>
+                <li data-i="2"><span class="fp-num">03</span><h3>Konflikthantering</h3><p>Thomas Jordans definition är avskalad: någon vill något, någon annan står i vägen, det skaver, och till slut gör någon något åt det. Konflikten börjar långt innan den syns.</p><p class="fp-take">Du lär dig leta efter önskemålet bakom handlingen i stället för att fastna i det som syns.</p></li>
+              </ol>
+              <div class="fp-steg">
+                <button type="button" class="fp-punkt ar-pa" data-hopp="0"><span>01</span></button>
+                <button type="button" class="fp-punkt" data-hopp="1"><span>02</span></button>
+                <button type="button" class="fp-punkt" data-hopp="2"><span>03</span></button>
+              </div>
+              <div class="sektion-cta"><p>Vill du se hur det här ser ut i praktiken?</p><a class="button" href="/kurser">Se kursdatum &#8594;</a></div>
+            </div>
+            <div class="fp-paneler">
+      <figure data-i="0" class="forsk-panel ar-pa" id="panel-lm">
         <figcaption>Ledarbeteendenas effekt på resultat och utveckling</figcaption>
         <div class="lm-graf">
           <svg viewBox="45 22 630 396" role="img" aria-labelledby="lm-titel lm-beskr">
@@ -253,8 +244,7 @@
           </li>
         </ol>
       </figure>
-
-      <figure class="forsk-panel imgd" id="panel-imgd" role="tabpanel" aria-labelledby="flik-imgd" hidden>
+      <figure data-i="1" class="forsk-panel imgd" id="panel-imgd">
         <figcaption>Gruppens fyra faser enligt IMGD</figcaption>
         <ol>
           <li><b>1</b><strong>Tillhörighet och trygghet</strong><span>Vi är artiga och söker vår plats. Ledaren behövs som tydlig riktning.</span></li>
@@ -264,8 +254,7 @@
         </ol>
         <p>De flesta arbetsgrupper fastnar mellan fas 1 och 2, ofta i åratal.</p>
       </figure>
-
-      <figure class="forsk-panel" id="panel-konflikt" role="tabpanel" aria-labelledby="flik-konflikt" hidden>
+      <figure data-i="2" class="forsk-panel" id="panel-konflikt">
         <figcaption>Så uppstår en konflikt</figcaption>
         <div class="formel">
           <div class="f-nod f-onskemal">
@@ -290,7 +279,10 @@
         </div>
         <p>Ingen konflikt utan ett önskemål. Den som hittar önskemålet bakom handlingen har oftast hittat vägen ut.</p>
       </figure>
-      <div class="sektion-cta"><p>Vill du se hur det här ser ut i praktiken?</p><a class="button" href="/kurser">Se kursdatum &#8594;</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="fakta" class="section facts reveal">
@@ -370,6 +362,6 @@
     <div class="footer-links"><a href="#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="#organisationer">För organisationer</a><a href="#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>
