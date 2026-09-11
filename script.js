@@ -64,7 +64,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   const dekor=sek.querySelector('.wh-dekor'),arc=sek.querySelector('.wh-arc');
   const nr=sek.querySelector('.wh-nr');
   const OMKRETS=2*Math.PI*128;
-  let pa=false,aktiv=-1;
+  let pa=null,aktiv=-1;
   function sattAktiv(i){
     if(i===aktiv)return;aktiv=i;
     dagar.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
@@ -114,4 +114,61 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   }
   addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(rita)}},{passive:true});
   addEventListener('resize',rita);rita();
+})();
+
+/* Skalen: fastnalad sekvens med bildvaxling */
+(function(){
+  const sek=document.querySelector('.skal-pin');
+  if(!sek)return;
+  const spar=sek.querySelector('.sp-spar');
+  const punkter=[...sek.querySelectorAll('.sp-punkter li')];
+  const bilder=[...sek.querySelectorAll('.sp-bild')];
+  const knappar=[...sek.querySelectorAll('.sp-punkt')];
+  const antal=punkter.length;
+  let pa=null,aktiv=-1;
+  function sattAktiv(i){
+    if(i===aktiv)return;aktiv=i;
+    punkter.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    bilder.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
+  }
+  function rita(){
+    if(!pa)return;
+    const r=spar.getBoundingClientRect();
+    const total=spar.offsetHeight-window.innerHeight;
+    let p=total>0?(-r.top)/total:0;
+    p=Math.max(0,Math.min(1,p));
+    sattAktiv(Math.max(0,Math.min(antal-1,Math.floor(p*antal+0.001))));
+  }
+  let obs=null;
+  function slaPa(){
+    const kan=window.innerWidth>980&&window.innerHeight>560&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(kan===pa)return;
+    pa=kan;sek.classList.toggle('spin-pa',kan);
+    if(obs){obs.disconnect();obs=null}
+    if(kan){aktiv=-1;sattAktiv(0);rita()}
+    else{
+      punkter.forEach(d=>d.classList.remove('ar-pa'));aktiv=-1;
+      bilder.forEach((d,n)=>d.classList.toggle('ar-pa',n===0));
+      obs=new IntersectionObserver(poster=>{
+        poster.forEach(po=>{if(po.isIntersecting){
+          const i=punkter.indexOf(po.target);
+          bilder.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+          knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
+        }});
+      },{rootMargin:'-40% 0px -45% 0px'});
+      punkter.forEach(d=>obs.observe(d));
+    }
+  }
+  knappar.forEach(k=>k.addEventListener('click',()=>{
+    if(!pa){return}
+    const i=+k.getAttribute('data-hopp');
+    const total=spar.offsetHeight-window.innerHeight;
+    const mal=spar.getBoundingClientRect().top+window.scrollY+total*((i+0.5)/antal);
+    window.scrollTo({top:mal,behavior:'smooth'});
+  }));
+  let tick=false;
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{rita();tick=false})}},{passive:true});
+  addEventListener('resize',()=>{slaPa();rita()});
+  slaPa();rita();
 })();
