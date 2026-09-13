@@ -311,6 +311,9 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   koppla('nb-form','nb-status',ENDPOINT_NYHETSBREV,'Nyhetsbrev UGL',function(f){
     return ['Anm\u00e4lan till nyhetsbrevet','E-post: '+f.epost.value,'Del av landet: '+(f.region.value||'Spelar ingen roll'),'N\u00e4r: '+(f.period.value||'Spelar ingen roll')];
   },'Tack, v\u00e4lkommen. F\u00f6rsta utskicket kommer inom kort.');
+  koppla('km-form','km-status','','UGL p\u00e5 v\u00e5r ort, boka ett samtal',function(f){
+    return ['Intresse f\u00f6r UGL p\u00e5 orten','Kommun eller region: '+f.organisation.value,'Namn: '+f.namn.value,'Roll: '+(f.roll.value||'-'),'Ort: '+f.ort.value,'E-post: '+f.epost.value,'Telefon: '+(f.telefon.value||'-'),'Om orten: '+(f.text.value||'-')];
+  },'Tack, vi h\u00f6r av oss inom tv\u00e5 arbetsdagar f\u00f6r att boka ett samtal.');
   koppla('off-form','off-status','','Prisuppgift UGL-veckor',function(f){
     return ['Prisuppgift f\u00f6r UGL-veckor','Anl\u00e4ggning: '+f.anlaggning.value,'Kontaktperson: '+f.namn.value,'Telefon: '+f.telefon.value,'E-post: '+f.epost.value,'Ort: '+(f.ort.value||'-'),'Webbplats: '+(f.webbplats.value||'-'),'Pris per deltagare exkl. moms: '+(f.pris.value||'-'),'Kommentar: '+(f.kommentar.value||'-'),'','Bifoga g\u00e4rna bilder p\u00e5 lokaler och rum.'];
   },'Tack, prisuppgiften \u00e4r mottagen. Vi \u00e5terkommer.');

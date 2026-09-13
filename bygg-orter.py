@@ -56,7 +56,7 @@ REGIONER = [
 HEAD_FONTS = '''  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=84">
+  <link rel="stylesheet" href="/styles.css?v=85">
 '''
 HEADER = '''  <header class="site-header header-solid">
     <a class="brand" href="/" aria-label="UGL Sverige, startsida">
@@ -284,7 +284,7 @@ for reg in REGIONER:
 wr(os.path.join(R,'ugl','index.html'), oversikt())
 
 # ---------- sitemap
-urls = [('/', '1.0', 'weekly'), ('/kurser', '0.9', 'weekly'), ('/ugl/', '0.8', 'weekly')] + [(f"/ugl/{r['slug']}", '0.8', 'weekly') for r in REGIONER] + [('/offert', '0.4', 'monthly'), ('/portal', '0.5', 'monthly')]
+urls = [('/', '1.0', 'weekly'), ('/kurser', '0.9', 'weekly'), ('/ugl/', '0.8', 'weekly')] + [(f"/ugl/{r['slug']}", '0.8', 'weekly') for r in REGIONER] + [('/kommun', '0.6', 'monthly'), ('/offert', '0.4', 'monthly'), ('/portal', '0.5', 'monthly')]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(
     f'  <url><loc>{BAS}{u}</loc><lastmod>{IDAG.isoformat()}</lastmod><changefreq>{c}</changefreq><priority>{p}</priority></url>\n' for u,p,c in urls) + '</urlset>\n'
 wr(os.path.join(R,'sitemap.xml'), sm)
