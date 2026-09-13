@@ -255,6 +255,35 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   });
 })();
 
+/* Offertsidan: utraknare for pris per deltagare inklusive handledarnas tva platser */
+(function(){
+  var pris=document.getElementById('kalk-pris');if(!pris)return;
+  var antal=document.getElementById('kalk-antal'),res=document.getElementById('kalk-resultat'),tab=document.getElementById('kalk-tabell'),anv=document.getElementById('kalk-anvand');
+  var formel=res.innerHTML;
+  function kr(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+' kr'}
+  function rakna(){
+    var p=parseFloat((pris.value||'').replace(/[^\d,.]/g,'').replace(',','.'));
+    var n=parseInt(antal.value,10);
+    if(!p||p<=0){res.innerHTML=formel;tab.hidden=true;anv.hidden=true;return}
+    var per=p*(n+2)/n;
+    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+kr(p)+' \u00d7 '+(n+2)+' personer = '+kr(p*(n+2))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
+    var tb=tab.querySelector('tbody');tb.innerHTML='';
+    [8,9,10,11,12].forEach(function(k){
+      var tr=document.createElement('tr');if(k===n)tr.className='ar-vald';
+      tr.innerHTML='<td>'+k+'</td><td>'+(k+2)+'</td><td>'+kr(p*(k+2))+'</td><td>'+kr(p*(k+2)/k)+'</td>';
+      tb.appendChild(tr);
+    });
+    tab.hidden=false;anv.hidden=false;
+    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (grundpris '+kr(p)+' per person)';
+  }
+  pris.addEventListener('input',rakna);antal.addEventListener('change',rakna);
+  anv.addEventListener('click',function(){
+    var f=document.getElementById('off-pris');if(!f)return;
+    f.value=anv.dataset.varde||'';
+    f.scrollIntoView({behavior:'smooth',block:'center'});f.focus();
+  });
+})();
+
 /* Nyhetsbrev och webbinarium: skickar till ENDPOINT om den ar satt, annars oppnas ett mejl */
 (function(){
   var ENDPOINT_NYHETSBREV='';
