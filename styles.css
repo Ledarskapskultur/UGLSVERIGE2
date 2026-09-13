@@ -244,20 +244,22 @@ body{position:relative}
 @media(max-width:980px){.goal-grid,.takeaway{grid-template-columns:1fr}.takeaway{gap:2rem}}
 
 /* IMGD-diagram i forskningssektionen (delar panelstil med .forsk-panel) */
-.imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,2.2vw,2rem);align-items:end}
-.imgd li{padding:0;display:flex;flex-direction:column;position:relative}
-.imgd li:before{content:'';display:block;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-radius:2px 2px 0 0}
-.imgd li:nth-child(1){--h:44px;--o:.55}
-.imgd li:nth-child(2){--h:104px;--o:.7}
-.imgd li:nth-child(3){--h:176px;--o:.85}
-.imgd li:nth-child(4){--h:256px;--o:1}
+.imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,2.2vw,2rem);align-items:stretch;min-height:260px}
+.imgd li{padding:0;display:grid;grid-template-rows:minmax(0,1fr) auto;position:relative}
+.imgd li:before{content:'';display:block;align-self:end;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-radius:2px 2px 0 0}
+.imgd li:nth-child(1){--h:17%;--o:.55}
+.imgd li:nth-child(2){--h:40%;--o:.7}
+.imgd li:nth-child(3){--h:68%;--o:.85}
+.imgd li:nth-child(4){--h:100%;--o:1}
+.imgd li>b,.imgd li>strong{grid-column:1}
+.imgd li>strong{min-height:2.6em}
 .imgd b{color:var(--brass);font-size:.78rem;letter-spacing:.16em;margin-bottom:.5rem}
 .imgd strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:0}
 .imgd li span{font-size:.93rem;line-height:1.6;color:#5f6763}
 .imgd li em{display:block;margin-top:auto;padding-top:.7rem;font-style:normal;font-size:.82rem;line-height:1.45;color:var(--green);font-weight:600}
 .imgd li span+em{margin-top:.8rem;border-top:1px solid #d3d7d0}
-.fp-faser{list-style:none;padding:0;margin:1.4rem 0 1.4rem;display:grid;gap:1rem}
-.fp-faser li{display:grid;grid-template-columns:auto 1fr;column-gap:.9rem;row-gap:.2rem;padding-top:1rem;border-top:1px solid var(--line)}
+.fp-faser{list-style:none;padding:0;margin:1.3rem 0 1.3rem;display:grid;gap:.8rem}
+.fp-faser li{display:grid;grid-template-columns:auto 1fr;column-gap:.9rem;row-gap:.15rem;padding-top:.8rem;border-top:1px solid var(--line)}
 .fp-faser b{grid-row:1/4;color:var(--brass);font:600 .8rem/1.6 "Libre Franklin",sans-serif;letter-spacing:.16em}
 .fp-faser strong{color:var(--green);font:600 1.05rem/1.35 "Libre Franklin",sans-serif;letter-spacing:-.01em}
 .fp-faser span{font-size:.97rem;line-height:1.6;color:#555d5a}
@@ -813,7 +815,11 @@ body{position:relative}
 .fp-h3{grid-column:1;grid-row:1;margin:0;padding:0 0 1.1rem}
 .fp-body{display:contents}
 .fp-txt{grid-column:1;grid-row:2;padding-bottom:clamp(2rem,3.5vw,3rem)}
-.fp-flik .forsk-panel{grid-column:2;grid-row:1/3;align-self:start;position:sticky;top:2rem;margin:0}
+.fp-flik .forsk-panel{grid-column:2;grid-row:1/3;align-self:stretch;margin:0;display:flex;flex-direction:column}
+.fp-flik .lm-graf{margin:auto 0;width:100%}
+.fp-flik .lm-graf+.lm-rader{margin-top:auto}
+.fp-flik .imgd ol{flex:1}
+.fp-flik .formel{margin:auto}
 .forsk-pin .sektion-cta{grid-column:2/4;grid-row:3;border-top:0;padding-top:0;margin-top:clamp(1.2rem,2vw,2rem)}
 .fp-ack{background:none;border:0;padding:0;font:inherit;text-align:left;cursor:default;display:grid;gap:.5rem;color:inherit;width:100%;pointer-events:none}
 .fp-num{color:var(--brass);font-size:.8rem;letter-spacing:.16em;font-weight:600}
