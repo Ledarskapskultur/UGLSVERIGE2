@@ -994,6 +994,16 @@ body{position:relative}
 .faq-lista details{border-top-color:#cdd2ca}
 .faq-lista details:last-child{border-bottom-color:#cdd2ca}
 
+/* ---------- SEO: H1-rad och definitionsblock ---------- */
+.h1-liten{display:block;font:600 .75rem/1.4 'DM Sans',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#fff;margin-bottom:1.5rem}
+.definition{padding-top:clamp(3rem,5vw,4.5rem);padding-bottom:clamp(3rem,5vw,4.5rem)}
+.def-inner{max-width:72ch}
+.definition h2{font-size:clamp(1.6rem,2.4vw,2.2rem);margin:0 0 1rem}
+.definition p{margin:0;font-size:clamp(1.05rem,1.3vw,1.2rem);line-height:1.7;color:#4a514e}
+.definition a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
+.op-kalla a{color:#cfdbd5;border-bottom:1px solid rgba(255,255,255,.4)}
+.facts-table dd a{color:var(--green);border-bottom:1px solid var(--brass)}
+
 /* ---------- Meny i fastnalade sektioner ---------- */
 .pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
 .pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;

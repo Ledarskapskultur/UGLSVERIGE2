@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /leverantor
+
+Sitemap: https://www.uglsverige.store/sitemap.xml
