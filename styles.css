@@ -247,16 +247,22 @@ body{position:relative}
 .imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,2.2vw,2rem);align-items:end}
 .imgd li{padding:0;display:flex;flex-direction:column;position:relative}
 .imgd li:before{content:'';display:block;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-radius:2px 2px 0 0}
-.imgd li:nth-child(1){--h:22px;--o:.55}
-.imgd li:nth-child(2){--h:52px;--o:.7}
-.imgd li:nth-child(3){--h:88px;--o:.85}
-.imgd li:nth-child(4){--h:128px;--o:1}
+.imgd li:nth-child(1){--h:44px;--o:.55}
+.imgd li:nth-child(2){--h:104px;--o:.7}
+.imgd li:nth-child(3){--h:176px;--o:.85}
+.imgd li:nth-child(4){--h:256px;--o:1}
 .imgd b{color:var(--brass);font-size:.78rem;letter-spacing:.16em;margin-bottom:.5rem}
-.imgd strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:.5rem}
+.imgd strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:0}
 .imgd li span{font-size:.93rem;line-height:1.6;color:#5f6763}
 .imgd li em{display:block;margin-top:auto;padding-top:.7rem;font-style:normal;font-size:.82rem;line-height:1.45;color:var(--green);font-weight:600}
 .imgd li span+em{margin-top:.8rem;border-top:1px solid #d3d7d0}
-@media(max-width:980px){.imgd ol{grid-template-columns:1fr;gap:0}.imgd li{padding:1.2rem 0;border-top:1px solid #d3d7d0}.imgd li:before{height:var(--h)!important;width:120px;margin-bottom:1rem}.imgd li em{margin-top:.6rem}}
+.fp-faser{list-style:none;padding:0;margin:1.6rem 0 1.4rem;display:grid;gap:1rem}
+.fp-faser li{display:grid;grid-template-columns:auto 1fr;column-gap:.9rem;row-gap:.2rem;padding-top:1rem;border-top:1px solid var(--line)}
+.fp-faser b{grid-row:1/4;color:var(--brass);font:600 .8rem/1.6 "Libre Franklin",sans-serif;letter-spacing:.16em}
+.fp-faser strong{color:var(--green);font:600 1.05rem/1.35 "Libre Franklin",sans-serif;letter-spacing:-.01em}
+.fp-faser span{font-size:.97rem;line-height:1.6;color:#555d5a}
+.fp-faser em{font-style:normal;font-size:.85rem;color:var(--green);font-weight:600}
+@media(max-width:980px){.imgd ol{grid-template-columns:1fr;gap:0}.imgd li{padding:1.2rem 0;border-top:1px solid #d3d7d0}.imgd li:before{height:10px!important;width:var(--h);max-width:100%;border-radius:3px;margin-bottom:.7rem}.imgd li em{margin-top:.6rem}}
 
 /* Redaktionell ton: dampade lankar */
 .organisations .text-link,.facilitators .text-link{display:inline-block;margin-top:.5rem}
@@ -860,9 +866,6 @@ body{position:relative}
   .lm-rader{grid-template-columns:1fr;gap:.7rem}
   .lm-rader li{grid-template-columns:12px auto minmax(0,1fr);align-items:baseline;gap:.35rem .7rem}
   .lm-delar{grid-column:3}
-}
-@container (max-width:380px){
-  .imgd ol{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}
 }
 
 /* ---------- Meny i fastnalade sektioner ---------- */
