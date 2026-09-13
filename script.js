@@ -302,6 +302,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     document.querySelectorAll('[data-f]').forEach(function(el){var v=F[el.getAttribute('data-f')];if(v)el.textContent=v});
     document.querySelectorAll('[data-f-value]').forEach(function(el){var v=F[el.getAttribute('data-f-value')];if(v)el.value=v});
     if(F.titel)document.title=F.titel;
+    if(F.bild){var bg=document.getElementById('ft-hero-bg'),im=document.getElementById('ft-hero-img');im.src='/assets/'+F.bild;im.alt=F.anlaggning||'';bg.hidden=false;document.getElementById('ft-hero').classList.add('ft-hero-bild')}
   }
   var HANDLEDARE=90000,MATERIAL=1500,OPPET=29000;
   var antal=document.getElementById('ft-antal'),dygn=document.getElementById('ft-dygn'),res=document.getElementById('ft-resultat'),tab=document.getElementById('ft-tabell');

@@ -6,14 +6,17 @@
    anstallda   ungefarligt antal medarbetare, i lopande text ("fler an 3 000 medarbetare")
    enheter     hur verksamheten ar spridd ("butiker i fyra lander och ett centrallager i Skara")
    titel       sidtitel i webblasaren
+   bild        valfri hero-bild av anlaggningen: filnamn i assets/ (liggande, minst 1600 px bred).
+               Anvand bara bilder ni har ratt att publicera, t.ex. fran foretaget sjalvt eller deras pressrum.
    Utan ?f= eller med okand nyckel visas den allmanna versionen. */
 window.UGL_FORETAG = {
   jula: {
     namn: 'Jula',
-    anlaggning: 'Jula Hotell & Konferens',
+    anlaggning: 'Skara Konsthotell',
     ort: 'Skara',
     anstallda: 'fler än 3 000 medarbetare',
     enheter: 'varuhus i fyra länder, e-handel och ett centrallager i Skara',
-    titel: 'UGL i egen regi för Jula | UGL Sverige'
+    titel: 'UGL i egen regi för Jula | UGL Sverige',
+    bild: ''
   }
 };

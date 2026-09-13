@@ -1159,6 +1159,18 @@ body{position:relative}
 @media(max-width:980px){.km-tre,.km-tva-kort,.km-steg{grid-template-columns:1fr}.km-vision .off-tva{grid-template-columns:1fr}.km-vision .off-tva figure{order:-1}}
 
 /* ---------- Foretagssida: UGL i egen regi ---------- */
+.ft-hero{position:relative}
+.ft-hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.ft-hero-bg img{width:100%;height:100%;object-fit:cover;display:block}
+.ft-hero-bild{max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-top:clamp(5rem,9vw,8rem);padding-bottom:clamp(3rem,5vw,4.5rem);color:#fff}
+.ft-hero-bild>*:not(.ft-hero-bg){position:relative;z-index:1}
+.ft-hero-bild .eyebrow{color:var(--lime)}
+.ft-hero-bild h1,.ft-hero-bild .lead{color:#fff}
+.ft-hero-bild .lead{color:rgba(255,255,255,.9)}
+.ft-hero-bild .facts-siffror{border-color:rgba(255,255,255,.28)}
+.ft-hero-bild .facts-siffror b{color:#fff}
+.ft-hero-bild .facts-siffror b i{color:var(--lime)}
+.ft-hero-bild .facts-siffror span{color:rgba(255,255,255,.8)}
 .ft-hero h1{max-width:20ch}
 .ft-hero .lead{max-width:66ch}
 .ft-varfor .off-tva h2{max-width:22ch}
