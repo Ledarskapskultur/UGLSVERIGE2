@@ -312,9 +312,9 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     var n=Math.round(tal(antal)),d=tal(dygn);
     if(n<8){res.innerHTML='<p class="ft-kalk-svar"><span>Ange minst 8 deltagare, det \u00e4r vad en kurs kr\u00e4ver.</span></p>';tab.hidden=true;return}
     var kurser=Math.ceil(n/12);
-    var hl=kurser*HANDLEDARE,mat=n*MATERIAL,intern=d?(n*4+kurser*2*5)*d:0,summa=hl+mat+intern,per=summa/n,oppet=n*OPPET;
+    var hl=kurser*HANDLEDARE,mat=n*MATERIAL,internD=d?n*4*d:0,internH=d?kurser*2*5*d:0,intern=internD+internH,summa=hl+mat+intern,per=summa/n,oppet=n*OPPET;
     res.innerHTML='<p class="ft-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare i egen regi'+(d?', inklusive intern kostnad f\u00f6r boende och konferens':', exklusive er interna kostnad f\u00f6r boende och konferens')+'. '+n+' deltagare p\u00e5 '+kurser+' kurs'+(kurser>1?'er':'')+' kostar '+kr(summa)+' mot '+kr(oppet)+' p\u00e5 \u00f6ppna kurser. Skillnad: '+kr(oppet-summa)+' per \u00e5r.</span></p>';
-    var rader=[['Handledare, '+kurser+' kurs'+(kurser>1?'er':'')+' \u00d7 90 000 kr',kr(hl),'ing\u00e5r i kurspriset'],['Kursmaterial, '+n+' \u00d7 1 500 kr',kr(mat),'ing\u00e5r i kurspriset'],['Boende och konferens',d?kr(intern)+' (intern kostnad)':'intern kostnad, ej medr\u00e4knad','ing\u00e5r i kurspriset']];
+    var rader=[['Handledare, '+kurser+' kurs'+(kurser>1?'er':'')+' \u00d7 90 000 kr',kr(hl),'ing\u00e5r i kurspriset'],['Kursmaterial, '+n+' \u00d7 1 500 kr',kr(mat),'ing\u00e5r i kurspriset'],['Boende och konferens, deltagare: '+n+' \u00d7 4 n\u00e4tter',d?kr(internD)+' (intern kostnad)':'intern kostnad, ej medr\u00e4knad','ing\u00e5r i kurspriset'],['Boende och konferens, handledare: '+kurser+' kurs'+(kurser>1?'er':'')+' \u00d7 2 \u00d7 5 n\u00e4tter',d?kr(internH)+' (intern kostnad)':'intern kostnad, ej medr\u00e4knad','ing\u00e5r i kurspriset']];
     var tb=tab.querySelector('tbody');tb.innerHTML='';
     rader.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td>';tb.appendChild(tr)});
     var tr=document.createElement('tr');tr.className='ft-summa';tr.innerHTML='<td>Summa f\u00f6r '+n+' deltagare</td><td>'+kr(summa)+'</td><td>'+kr(oppet)+'</td>';tb.appendChild(tr);
