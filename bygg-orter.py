@@ -56,7 +56,7 @@ REGIONER = [
 HEAD_FONTS = '''  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=81">
+  <link rel="stylesheet" href="/styles.css?v=82">
 '''
 HEADER = '''  <header class="site-header header-solid">
     <a class="brand" href="/" aria-label="UGL Sverige, startsida">

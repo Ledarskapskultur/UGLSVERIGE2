@@ -1079,6 +1079,10 @@ body{position:relative}
 .off-kalk-tabell td:last-child{color:var(--green);font-weight:600}
 .off-kalk-tabell tr.ar-vald td{background:var(--ivory)}
 #kalk-anvand{margin-top:1.2rem}
+.off-varfor-not{margin-top:1.4rem;padding:clamp(1.3rem,2vw,1.8rem) clamp(1.4rem,2.2vw,2rem);background:#fff;border-radius:calc(var(--radie) - 4px);border-left:3px solid var(--brass)}
+.off-varfor-rubrik{margin:0 0 .7rem;color:var(--green);font:600 1.05rem/1.3 "Libre Franklin",sans-serif}
+.off-varfor-not p{margin:0 0 .8rem;font-size:.97rem;line-height:1.65;color:#4a514e;max-width:64ch}
+.off-varfor-not p:last-child{margin-bottom:0}
 .off-kalk-tva{grid-template-columns:1fr 1fr}
 @media(max-width:760px){.off-kalk-tva{grid-template-columns:1fr}}
 @media(max-width:620px){.off-kalk-falt{grid-template-columns:1fr}.off-block .facts-table>div{grid-template-columns:1fr}}
