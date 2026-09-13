@@ -901,11 +901,11 @@ body{position:relative}
 .ar-oppen .mal-ikon:after{transform:translate(-50%,-50%) scaleY(0)}
 .mal-kropp{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .5s cubic-bezier(.22,.7,.24,1);pointer-events:none}
 .ar-oppen .mal-kropp{opacity:1;transform:none;pointer-events:auto;transition-delay:.18s}
-.mal-innehall{display:grid;grid-template-columns:1fr .85fr;gap:clamp(1.4rem,2.5vw,2.4rem);align-items:start;margin-top:clamp(1.4rem,2.2vw,2rem);min-width:520px}
+.mal-innehall{display:grid;grid-template-columns:1fr .72fr;gap:clamp(1.4rem,2.5vw,2.4rem);align-items:start;margin-top:clamp(1.4rem,2.2vw,2rem);min-width:520px}
 .mal-innehall ul{list-style:none;padding:0;margin:0}
 .mal-innehall li{position:relative;padding:.8rem 0 .8rem 1.6rem;border-top:1px solid rgba(255,255,255,.16);font-size:1rem;line-height:1.6;color:#dbe4df}
 .mal-innehall li:before{content:'';position:absolute;left:0;top:1.38rem;width:7px;height:1px;background:var(--brass)}
-.mal-bild{margin:0;aspect-ratio:4/5;border-radius:var(--radie);overflow:hidden}
+.mal-bild{margin:0;aspect-ratio:4/3;align-self:start;border-radius:var(--radie);overflow:hidden}
 .mal-bild img{width:100%;height:100%;object-fit:cover}
 /* stangda kolumner: rubriken staende */
 .mal-kort:not(.ar-oppen) .mal-topp{writing-mode:vertical-rl;transform:rotate(180deg);flex:1;align-items:flex-end;justify-content:flex-end;gap:1.4rem;padding:0}
