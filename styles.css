@@ -888,17 +888,17 @@ body{position:relative}
 }
 
 /* ---------- Veckan: dagar med bild kopplad till texten ---------- */
-.veckan{background:#fff}
+.veckan{background:var(--ivory);max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)))}
 .vk-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2.5rem,6vw,6rem);align-items:start}
 .vk-txt h2{margin:.7rem 0 1.1rem}
 .vk-txt .lead{max-width:52ch;margin-bottom:clamp(1.6rem,2.6vw,2.4rem)}
-.vk-dagar{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
-.vk-dagar li{border-bottom:1px solid var(--line)}
+.vk-dagar{list-style:none;padding:0;margin:0;border-top:1px solid #cdd2ca}
+.vk-dagar li{border-bottom:1px solid #d9ddd5}
 .vk-dagar button{display:grid;grid-template-columns:auto 1fr;column-gap:1.2rem;row-gap:.3rem;align-items:baseline;width:100%;background:none;border:0;padding:.95rem .9rem .95rem .9rem;font:inherit;text-align:left;cursor:pointer;color:inherit;border-left:2px solid transparent;transition:border-color .3s,background .3s}
 .vk-dagar b{grid-row:1/3;color:var(--brass);font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;align-self:start;padding-top:.35rem;min-width:3.4rem}
 .vk-dagar strong{color:var(--green);font:600 clamp(1.15rem,1.5vw,1.35rem)/1.25 "Libre Franklin",sans-serif;letter-spacing:-.02em}
 .vk-dagar span{grid-column:2;font-size:.95rem;line-height:1.6;color:#555d5a;max-width:46ch;display:block}
-.vk-dagar li.ar-pa button{border-left-color:var(--brass);background:var(--ivory)}
+.vk-dagar li.ar-pa button{border-left-color:var(--brass);background:#fff}
 .vk-dagar button:hover strong{color:#1d5146}
 .vk-dagar button:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
 .vk-txt .actions{margin-top:clamp(1.8rem,3vw,2.4rem)}
