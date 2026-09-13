@@ -258,26 +258,26 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
 /* Offertsidan: utraknare for pris per deltagare, handledarnas vistelse fordelad pa deltagarna */
 (function(){
   var delt=document.getElementById('kalk-delt');if(!delt)return;
-  var hl=document.getElementById('kalk-hl'),antal=document.getElementById('kalk-antal'),res=document.getElementById('kalk-resultat'),tab=document.getElementById('kalk-tabell'),anv=document.getElementById('kalk-anvand');
+  var hl=document.getElementById('kalk-hl'),res=document.getElementById('kalk-resultat'),tab=document.getElementById('kalk-tabell'),anv=document.getElementById('kalk-anvand');
   var formel=res.innerHTML;
   function tal(el){return parseFloat((el.value||'').replace(/[^\d,.]/g,'').replace(',','.'))||0}
   function kr(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+' kr'}
   function rakna(){
-    var d=tal(delt),h=tal(hl),n=parseInt(antal.value,10);
+    var d=tal(delt),h=tal(hl);
     if(d<=0||h<=0){res.innerHTML=formel;tab.hidden=true;anv.hidden=true;return}
     var summa=function(k){return k*d+2*h};
-    var per=summa(n)/n;
-    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+n+' \u00d7 '+kr(d)+' + 2 \u00d7 '+kr(h)+' = '+kr(summa(n))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
+    var hog=summa(8)/8,lag=summa(12)/12;
+    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(lag)+' till '+kr(hog)+'</b><span>per deltagare exklusive moms, beroende p\u00e5 om gruppen blir 14 eller 10 personer. Handledarnas tv\u00e5 platser \u00e4r inr\u00e4knade.</span></p>';
     var tb=tab.querySelector('tbody');tb.innerHTML='';
     [8,9,10,11,12].forEach(function(k){
-      var tr=document.createElement('tr');if(k===n)tr.className='ar-vald';
-      tr.innerHTML='<td>'+k+'</td><td>'+kr(k*d)+'</td><td>'+kr(2*h)+'</td><td>'+kr(summa(k))+'</td><td>'+kr(summa(k)/k)+'</td>';
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><b>'+(k+2)+'</b></td><td>'+k+'</td><td>'+kr(k*d)+'</td><td>'+kr(2*h)+'</td><td>'+kr(summa(k))+'</td><td>'+kr(summa(k)/k)+'</td>';
       tb.appendChild(tr);
     });
     tab.hidden=false;anv.hidden=false;
-    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (deltagare '+kr(d)+' m\u00e5ndag fm-fika till fredag lunch, handledare '+kr(h)+' s\u00f6ndag middag till fredag lunch)';
+    anv.dataset.varde=kr(lag)+' till '+kr(hog)+' per deltagare vid 14 till 10 personer (deltagare '+kr(d)+' m\u00e5ndag fm-fika till fredag lunch, handledare '+kr(h)+' s\u00f6ndag middag till fredag lunch)';
   }
-  delt.addEventListener('input',rakna);hl.addEventListener('input',rakna);antal.addEventListener('change',rakna);
+  delt.addEventListener('input',rakna);hl.addEventListener('input',rakna);
   anv.addEventListener('click',function(){
     var f=document.getElementById('off-pris');if(!f)return;
     f.value=anv.dataset.varde||'';

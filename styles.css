@@ -1079,8 +1079,8 @@ body{position:relative}
 .off-kalk-tabell td:last-child{color:var(--green);font-weight:600}
 .off-kalk-tabell tr.ar-vald td{background:var(--ivory)}
 #kalk-anvand{margin-top:1.2rem}
-.off-kalk-tre{grid-template-columns:1fr 1fr auto}
-@media(max-width:760px){.off-kalk-tre{grid-template-columns:1fr}}
+.off-kalk-tva{grid-template-columns:1fr 1fr}
+@media(max-width:760px){.off-kalk-tva{grid-template-columns:1fr}}
 @media(max-width:620px){.off-kalk-falt{grid-template-columns:1fr}.off-block .facts-table>div{grid-template-columns:1fr}}
 .off-svar{background:var(--green);color:#e7ece8;max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)))}
 .off-tva-svar{align-items:start}
