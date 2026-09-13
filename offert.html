@@ -107,13 +107,13 @@
           </dl>
           <div class="off-kalk" id="off-kalk">
             <p class="off-kalk-rubrik">Räkna fram priset per deltagare</p>
-            <p class="off-kalk-text">Ange vad ett dygn kostar hos er per person, inklusive logi, kost och lokaler. Deltagarna bor fyra dygn, måndag till fredag med avslut efter lunch. Handledarna bor fem dygn, söndag till fredag. Uträknaren summerar alla dygn och fördelar dem på deltagarna. Det är den siffran vi vill ha i formuläret.</p>
+            <p class="off-kalk-text">Ange vad ett dygn kostar hos er per person, inklusive logi, kost och lokaler. Deltagarna räknas som fyra dygn måndag till fredag plus en halvdag på fredagen fram till lunch, alltså 4,5 dygn. Handledarna räknas på samma sätt från söndag, alltså 5,5 dygn. Uträknaren summerar alla dygn och fördelar dem på deltagarna. Det är den siffran vi vill ha i formuläret.</p>
             <div class="off-kalk-falt">
               <label>Pris per person och dygn, exklusive moms<input type="text" inputmode="numeric" id="kalk-pris" placeholder="Till exempel 2 400"></label>
               <label>Antal deltagare<select id="kalk-antal"><option value="8">8 deltagare</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></label>
             </div>
             <div class="off-kalk-resultat" id="kalk-resultat" aria-live="polite">
-              <p class="off-kalk-formel">Dygnspris × (deltagare × 4 dygn + 2 handledare × 5 dygn) ÷ deltagare = pris per deltagare</p>
+              <p class="off-kalk-formel">Dygnspris × (deltagare × 4,5 dygn + 2 handledare × 5,5 dygn) ÷ deltagare = pris per deltagare</p>
             </div>
             <table class="off-kalk-tabell" id="kalk-tabell" hidden>
               <caption>Pris per deltagare beroende på gruppstorlek</caption>
@@ -160,6 +160,6 @@
     <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/ugl/">Kursorter</a><a href="/#organisationer">För organisationer</a><a href="/#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="/script.js?v=12"></script>
+  <script src="/script.js?v=13"></script>
 </body>
 </html>

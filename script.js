@@ -265,9 +265,9 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     var p=parseFloat((pris.value||'').replace(/[^\d,.]/g,'').replace(',','.'));
     var n=parseInt(antal.value,10);
     if(!p||p<=0){res.innerHTML=formel;tab.hidden=true;anv.hidden=true;return}
-    var dygn=function(k){return k*4+2*5};
+    var dygn=function(k){return k*4.5+2*5.5};
     var per=p*dygn(n)/n;
-    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+n+' \u00d7 4 dygn + 2 handledare \u00d7 5 dygn = '+dygn(n)+' dygn. '+dygn(n)+' \u00d7 '+kr(p)+' = '+kr(p*dygn(n))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
+    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+n+' \u00d7 4,5 dygn + 2 handledare \u00d7 5,5 dygn = '+dygn(n)+' dygn. '+dygn(n)+' \u00d7 '+kr(p)+' = '+kr(p*dygn(n))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
     var tb=tab.querySelector('tbody');tb.innerHTML='';
     [8,9,10,11,12].forEach(function(k){
       var tr=document.createElement('tr');if(k===n)tr.className='ar-vald';
@@ -275,7 +275,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
       tb.appendChild(tr);
     });
     tab.hidden=false;anv.hidden=false;
-    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (dygnspris '+kr(p)+' per person, 4 dygn deltagare, 5 dygn handledare)';
+    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (dygnspris '+kr(p)+' per person, 4,5 dygn deltagare, 5,5 dygn handledare, halvdag fredag)';
   }
   pris.addEventListener('input',rakna);antal.addEventListener('change',rakna);
   anv.addEventListener('click',function(){
