@@ -945,6 +945,11 @@ body{position:relative}
 
 /* ---------- Handledarna: vagen till certifiering ---------- */
 .facilitators h2{max-width:18ch}
+.facilitators{grid-template-columns:.95fr 1.05fr}
+.facilitators figure{order:2;height:auto;aspect-ratio:1/1;max-height:640px}
+.facilitators figure img{object-position:42% 50%}
+.facilitators>div{order:1}
+@media(max-width:980px){.facilitators figure{order:-1;aspect-ratio:auto;height:60vw;min-height:420px}.facilitators>div{order:0}}
 .hl-steg{list-style:none;padding:0;margin:clamp(1.8rem,2.6vw,2.4rem) 0 0;border-top:1px solid var(--line)}
 .hl-steg li{display:grid;grid-template-columns:5.2rem 5.6rem 1fr;gap:1rem;align-items:baseline;padding:.85rem 0;border-bottom:1px solid var(--line)}
 .hl-steg b{color:var(--green);font:600 1.05rem/1.3 "Libre Franklin",sans-serif;letter-spacing:-.01em}
