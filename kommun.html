@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=85">
+  <link rel="stylesheet" href="/styles.css?v=86">
 </head>
 <body>
   <header class="site-header header-solid">
@@ -88,14 +88,41 @@
           <p class="km-kort-nr">Upplägg 1</p>
           <h3>Kommunen arrangerar</h3>
           <p>Kommunen eller regionen står som arrangör: rekryterar 8 till 12 deltagare, tar emot anmälningar och löser anläggning enligt kravspecifikationen. UGL Sverige levererar kursen med två certifierade handledare och allt material till ett fast pris per kursvecka. Passar när kommunen vill erbjuda UGL till egna chefer och till näringslivet under eget namn.</p>
+          <dl class="km-pris">
+            <div><dt>Handledare</dt><dd><b>90 000 kr</b><span>per kursvecka, två certifierade handledare</span></dd></div>
+            <div><dt>Kursmaterial</dt><dd><b>1 500 kr</b><span>per deltagare</span></dd></div>
+            <div><dt>Boende och konferens</dt><dd><b>Enligt spec</b><span>avtalas med anläggningen. <button type="button" class="km-spec-knapp" id="km-spec-knapp">Visa kravspecifikationen</button></span></dd></div>
+          </dl>
+          <p class="km-pris-not">Riktpriser exklusive moms.</p>
         </article>
         <article>
           <p class="km-kort-nr">Upplägg 2</p>
           <h3>Kommunen öppnar dörrar</h3>
           <p>UGL Sverige arrangerar och tar risken. Kommunen hjälper till med kontakten till anläggningen, marknadsföringen mot det lokala näringslivet och infomötena. Deltagare från kommunen och dess företag får ett rabatterat pris. Passar när kommunen vill få hit kursen utan att administrera den.</p>
+          <dl class="km-pris">
+            <div><dt>Kurspris</dt><dd><b>28 000 till 30 000 kr</b><span>per deltagare, inklusive handledare, kursmaterial, kost och logi</span></dd></div>
+            <div><dt>Rabatt</dt><dd><b>Enligt överenskommelse</b><span>för deltagare från kommunen och dess företag</span></dd></div>
+          </dl>
+          <p class="km-pris-not">Riktpriser exklusive moms. Resa till anläggningen tillkommer.</p>
         </article>
       </div>
-      <p class="km-not">Priser och rabattnivåer bestäms i det första samtalet, utifrån ort, anläggning och hur många kurser per år vi siktar på.</p>
+      <p class="km-not">Slutliga priser och rabattnivåer bestäms i det första samtalet, utifrån ort, anläggning och hur många kurser per år vi siktar på.</p>
+      <dialog class="km-dialog" id="km-spec">
+        <div class="km-dialog-inner">
+          <button type="button" class="km-dialog-stang" id="km-spec-stang" aria-label="Stäng">&#215;</button>
+          <p class="eyebrow">Kravspecifikation för anläggningen</p>
+          <h3>Det här behöver en UGL-vecka.</h3>
+          <dl class="facts-table km-spec-tabell">
+            <div><dt>Tider</dt><dd>Måndag klockan 10.00 (fika före start) till fredag klockan 13.00 efter lunch. Schemalagd tid 08.00 till 21.00 varje dag.</dd></div>
+            <div><dt>Boende</dt><dd>2 handledare i enkelrum söndag till fredag. 8 till 12 deltagare i enkelrum måndag till fredag.</dd></div>
+            <div><dt>Lokaler</dt><dd>En större sal möblerad för samtal, med plats att sitta i ring med upp till 14 personer. Grupprum eller avskilda ytor. Blädderblock som får tejpas på väggarna. Inga andra gäster i kursens lokaler, inga kvällsaktiviteter.</dd></div>
+            <div><dt>Kost</dt><dd>Frukost tisdag till fredag, förmiddagsfika och lunch alla dagar, middag måndag till torsdag (tre rätter torsdag), kvällsfika måndag till torsdag. Ingen alkohol 08.00 till 21.00.</dd></div>
+            <div><dt>Villkor</dt><dd>Minst 8 deltagare. Gemensam avstämning 30 dagar före kursstart, slutligt beslut 15 dagar före. Kalenderdagar.</dd></div>
+            <div><dt>Pris</dt><dd>Per deltagare inklusive kost, logi och lokaler, med handledarnas två platser inräknade. Exklusive moms.</dd></div>
+          </dl>
+          <p class="km-dialog-not">Hela specifikationen, med uträknare för pris per deltagare, finns på <a href="/offert">offertsidan för anläggningar</a>. Den kan skickas direkt till hotellet.</p>
+        </div>
+      </dialog>
     </section>
 
     <section class="section km-process reveal">
@@ -155,6 +182,6 @@
     <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/ugl/">Kursorter</a><a href="/#organisationer">För organisationer</a><a href="/#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="/script.js?v=17"></script>
+  <script src="/script.js?v=18"></script>
 </body>
 </html>

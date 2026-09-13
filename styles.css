@@ -1129,6 +1129,25 @@ body{position:relative}
 .km-tva-kort h3{margin:0 0 .8rem;color:var(--green);font:600 1.35rem/1.25 "Libre Franklin",sans-serif;letter-spacing:-.02em}
 .km-tva-kort p{margin:0;font-size:.98rem;line-height:1.65;color:#4a514e}
 .km-not{margin:1.4rem 0 0;font-size:.9rem;color:#5f6763;max-width:70ch}
+.km-pris{margin:1.4rem 0 0;border-top:1px solid #d9ddd5}
+.km-pris>div{display:grid;grid-template-columns:150px 1fr;gap:1rem;padding:.75rem 0;border-bottom:1px solid #e3e6df}
+.km-pris dt{font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;color:#5f6763;font-weight:600;padding-top:.25rem}
+.km-pris dd{margin:0;display:flex;flex-direction:column;gap:.1rem}
+.km-pris dd b{color:var(--green);font:600 1.1rem/1.3 "Libre Franklin",sans-serif;letter-spacing:-.01em}
+.km-pris dd span{font-size:.88rem;line-height:1.5;color:#5f6763}
+.km-spec-knapp{background:none;border:0;padding:0;font:inherit;font-size:.88rem;color:var(--green);font-weight:600;border-bottom:1px solid var(--brass);cursor:pointer}
+.km-spec-knapp:hover{color:var(--brass)}
+.km-pris-not{margin:.8rem 0 0!important;font-size:.82rem!important;color:#7a827e!important}
+.km-dialog{border:0;padding:0;border-radius:calc(var(--radie) - 4px);max-width:min(720px,92vw);width:100%;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.km-dialog::backdrop{background:rgba(18,61,53,.55)}
+.km-dialog-inner{position:relative;padding:clamp(1.8rem,3vw,2.6rem);background:var(--ivory);max-height:85vh;overflow:auto}
+.km-dialog-inner h3{margin:.5rem 0 1.2rem;color:var(--green);font:600 clamp(1.4rem,2vw,1.8rem)/1.2 "Libre Franklin",sans-serif;letter-spacing:-.02em}
+.km-dialog-stang{position:absolute;top:1rem;right:1rem;width:2.4rem;height:2.4rem;border-radius:50%;border:1px solid #cdd2ca;background:#fff;font-size:1.3rem;line-height:1;cursor:pointer;color:var(--green)}
+.km-spec-tabell>div{grid-template-columns:110px 1fr;padding:.8rem 0}
+.km-spec-tabell dd{font-size:.95rem}
+.km-dialog-not{margin:1.2rem 0 0;font-size:.9rem;color:#5f6763}
+.km-dialog-not a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
+@media(max-width:620px){.km-pris>div{grid-template-columns:1fr;gap:.3rem}}
 .km-steg{list-style:none;padding:0;margin:clamp(2.2rem,3.5vw,3rem) 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.4rem,2.5vw,2.4rem) clamp(1.4rem,2.5vw,2.4rem)}
 .km-steg li{display:flex;flex-direction:column;gap:.35rem;padding-top:1rem;border-top:2px solid var(--green)}
 .km-steg b{color:var(--brass);font-size:.8rem;letter-spacing:.16em;font-weight:600}

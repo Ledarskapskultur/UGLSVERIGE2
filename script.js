@@ -285,6 +285,15 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   });
 })();
 
+/* Kommunsidan: kravspecifikationen som dialogruta */
+(function(){
+  var k=document.getElementById('km-spec-knapp'),d=document.getElementById('km-spec'),st=document.getElementById('km-spec-stang');
+  if(!k||!d)return;
+  k.addEventListener('click',function(){if(d.showModal)d.showModal();else d.setAttribute('open','')});
+  st.addEventListener('click',function(){d.close?d.close():d.removeAttribute('open')});
+  d.addEventListener('click',function(e){if(e.target===d)d.close()});
+})();
+
 /* Nyhetsbrev och webbinarium: skickar till ENDPOINT om den ar satt, annars oppnas ett mejl */
 (function(){
   var ENDPOINT_NYHETSBREV='';
