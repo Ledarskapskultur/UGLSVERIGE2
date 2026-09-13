@@ -144,7 +144,7 @@ body{position:relative}
 .research-kort.ar-vald .research-visa{color:var(--brass)}
 .research-kort.ar-vald .research-visa:after{transform:translateY(2px)}
 .research-kort:focus-visible{outline:2px solid var(--brass);outline-offset:6px}
-.forsk-panel{margin:clamp(2.4rem,4vw,3.4rem) 0 0;padding:clamp(1.8rem,3vw,2.6rem);background:var(--ivory)}
+.forsk-panel{margin:0;padding:clamp(1.8rem,3vw,2.6rem);background:var(--ivory);container-type:inline-size}
 .forsk-panel figcaption{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e;font-weight:600;margin-bottom:1.8rem}
 .forsk-panel>p{margin:1.8rem 0 0;font-size:.93rem;color:#5f6763;font-style:italic}
 .lm-graf{margin:0 auto;max-width:620px}
@@ -162,7 +162,8 @@ body{position:relative}
 .lm-axeltext{fill:#8a918d;font:600 12px/1 'DM Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase}
 .lm-noll{fill:#a5aca8;font:400 13px/1 'DM Sans',sans-serif}
 .lm-minus{fill:#b4713f;font:600 11px/1 'DM Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase}
-.lm-rader{list-style:none;padding:0;margin:2.4rem 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;border-top:1px solid #d8dbd4;padding-top:1.5rem}
+.lm-riktning{fill:#8a918d;font:600 11px/1 'DM Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.lm-rader{list-style:none;padding:0;margin:2.4rem 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;border-top:1px solid #d8dbd4;padding-top:1.5rem}
 .lm-rader li{display:grid;grid-template-columns:12px 1fr;gap:.4rem .8rem;align-items:center}
 .lm-prick{width:12px;height:12px;border-radius:50%;grid-row:1}
 .lm-utv .lm-prick{background:var(--green)}
@@ -170,6 +171,16 @@ body{position:relative}
 .lm-dest .lm-prick{background:#b4713f}
 .lm-rader strong{color:var(--green);font:600 1.02rem/1.2 "Libre Franklin",sans-serif}
 .lm-delar{grid-column:2;font-size:.9rem;line-height:1.55;color:#5f6763}
+.lm-zoner{display:none;list-style:none;padding:0;margin:0}
+@media(max-width:760px){.lm-graf{display:none}
+  .lm-zoner{display:grid;gap:.8rem}
+  .lm-zoner li{display:grid;gap:.25rem;padding:.95rem 1.1rem;background:#fff;border-radius:calc(var(--radie) - 8px);border-left:4px solid var(--zon)}
+  .lm-zoner .lm-stapel{display:block;height:6px;border-radius:3px;background:var(--zon);width:var(--w);margin-bottom:.35rem}
+  .lm-zoner .lm-utv{--zon:var(--green);--w:100%}
+  .lm-zoner .lm-konv{--zon:#7e9a8c;--w:55%}
+  .lm-zoner .lm-dest{--zon:#b4713f;--w:18%}
+  .lm-zoner strong{color:var(--green);font:600 1.02rem/1.2 "Libre Franklin",sans-serif}
+  .lm-zon-sub{font-size:.9rem;color:#5f6763;line-height:1.5}}
 @media(max-width:760px){.lm-rader{grid-template-columns:1fr;gap:1rem}
   .lm-namn{font-size:24px}.lm-sub{font-size:19px}.lm-axeltext{font-size:16px}
   .lm-noll{font-size:17px}.lm-minus{font-size:15px}.lm-punkt{r:13}}
@@ -232,21 +243,20 @@ body{position:relative}
 .takeaway p{font-size:1rem;line-height:1.75;color:#c6d3cd;margin:0}
 @media(max-width:980px){.goal-grid,.takeaway{grid-template-columns:1fr}.takeaway{gap:2rem}}
 
-/* IMGD-diagram i forskningssektionen */
-.imgd{margin:clamp(2.8rem,4.5vw,4rem) 0 0;padding:clamp(2rem,3vw,2.8rem);background:var(--ivory)}
-.imgd figcaption{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:#7a827e;font-weight:600;margin-bottom:2.2rem}
-.imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,2.2vw,2rem);align-items:end}
+/* IMGD-diagram i forskningssektionen (delar panelstil med .forsk-panel) */
+.imgd ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,2.2vw,2rem);align-items:end}
 .imgd li{padding:0;display:flex;flex-direction:column;position:relative}
-.imgd li:before{content:'';display:block;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-bottom:1px solid var(--green)}
-.imgd li:nth-child(1){--h:22px;--o:.2}
-.imgd li:nth-child(2){--h:52px;--o:.4}
-.imgd li:nth-child(3){--h:88px;--o:.65}
+.imgd li:before{content:'';display:block;background:var(--green);height:var(--h);width:100%;margin-bottom:1.4rem;opacity:var(--o);border-radius:2px 2px 0 0}
+.imgd li:nth-child(1){--h:22px;--o:.55}
+.imgd li:nth-child(2){--h:52px;--o:.7}
+.imgd li:nth-child(3){--h:88px;--o:.85}
 .imgd li:nth-child(4){--h:128px;--o:1}
 .imgd b{color:var(--brass);font-size:.78rem;letter-spacing:.16em;margin-bottom:.5rem}
 .imgd strong{color:var(--green);font-size:1.02rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:.5rem}
 .imgd li span{font-size:.93rem;line-height:1.6;color:#5f6763}
-.imgd>p{margin:2rem 0 0;font-size:.93rem;color:#5f6763;font-style:italic}
-@media(max-width:980px){.imgd ol{grid-template-columns:1fr;gap:0}.imgd li{padding:1.2rem 0;border-top:1px solid #d3d7d0}.imgd li:before{height:var(--h)!important;width:120px;margin-bottom:1rem}}
+.imgd li em{display:block;margin-top:auto;padding-top:.7rem;font-style:normal;font-size:.82rem;line-height:1.45;color:var(--green);font-weight:600}
+.imgd li span+em{margin-top:.8rem;border-top:1px solid #d3d7d0}
+@media(max-width:980px){.imgd ol{grid-template-columns:1fr;gap:0}.imgd li{padding:1.2rem 0;border-top:1px solid #d3d7d0}.imgd li:before{height:var(--h)!important;width:120px;margin-bottom:1rem}.imgd li em{margin-top:.6rem}}
 
 /* Redaktionell ton: dampade lankar */
 .organisations .text-link,.facilitators .text-link{display:inline-block;margin-top:.5rem}
@@ -638,7 +648,7 @@ body{position:relative}
 .hero-media,.handledare-kort figure,.kurs-hero figure,.anl-bild{border-radius:var(--radie);overflow:hidden}
 .hero-media{border-radius:0}
 .reason-figure img,.week-band img,.safety figure img,.facilitators figure img,.kort figure img{border-radius:inherit}
-.forsk-panel,.imgd,.f-nod,.kort,.ingar-grid li img{border-radius:calc(var(--radie) - 4px)}
+.forsk-panel,.f-nod,.kort,.ingar-grid li img{border-radius:calc(var(--radie) - 4px)}
 .button,.button-small,.mini,.fchip,.filters button{border-radius:8px}
 .tags span{border-radius:99px}
 
@@ -784,62 +794,77 @@ body{position:relative}
   .spin-pa .sp-bild{opacity:1;transform:none}
 }
 
-/* ---------- Forskningsgrunden: fastnalad sekvens ---------- */
-.forsk-pin{max-width:none;padding:0}
-.fp-spar{position:relative}
-.fp-fast{position:relative;padding:clamp(3.5rem,7vw,6rem) 0}
-.fp-inner{width:100%;max-width:var(--max);margin-inline:auto;padding:0 var(--pad);display:grid;grid-template-columns:.88fr 1.12fr;gap:clamp(2rem,4.5vw,4rem);align-items:center}
-.fp-txt h2{margin:.7rem 0 1.2rem}
-.fp-txt .lead{max-width:46ch;margin-bottom:clamp(1.6rem,3vw,2.2rem)}
-.fp-modeller{list-style:none;padding:0;margin:0;display:grid;gap:2.4rem}
-.fp-modeller li{display:grid;gap:.5rem}
+/* ---------- Forskningsgrunden: flikar (desktop) och dragspel (mobil) ---------- */
+.forsk-pin{max-width:var(--max);margin-inline:auto;padding:var(--space) var(--pad)}
+.fp-inner{display:grid;grid-template-columns:160px minmax(0,1.1fr) minmax(0,.9fr);grid-template-rows:auto auto auto auto;column-gap:clamp(2rem,4vw,3.6rem);row-gap:0;align-items:start}
+.fp-rubrik{grid-column:2;grid-row:1;padding-bottom:clamp(1.6rem,2.6vw,2.2rem)}
+.fp-rubrik h2{margin:.7rem 0 1.2rem}
+.fp-rubrik .lead{max-width:62ch;margin:0}
+.forsk-pin .pin-meny{display:flex;grid-column:1;grid-row:2/4;align-self:start;position:sticky;top:2rem;margin-top:calc(-1*clamp(1.6rem,2.6vw,2.2rem) - .5rem)}
+.fp-flikar{grid-column:2/4;grid-row:1/4;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid}
+.fp-flik{grid-column:1/3;grid-row:1/4;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid;transition:opacity .35s cubic-bezier(.22,.7,.24,1)}
+.fp-flik[hidden]{display:grid!important;visibility:hidden;opacity:0}
+.fp-h3{grid-column:1;grid-row:2;margin:0}
+.fp-body{display:contents}
+.fp-txt{grid-column:1;grid-row:3;padding-bottom:clamp(2rem,3.5vw,3rem)}
+.fp-flik .forsk-panel{grid-column:2;grid-row:1/4;align-self:start;position:sticky;top:2rem;margin:0}
+.forsk-pin .sektion-cta{grid-column:2/4;grid-row:4;border-top:0;padding-top:0;margin-top:clamp(1.2rem,2vw,2rem)}
+.fp-ack{background:none;border:0;padding:0;font:inherit;text-align:left;cursor:default;display:grid;gap:.5rem;color:inherit;width:100%;pointer-events:none}
 .fp-num{color:var(--brass);font-size:.8rem;letter-spacing:.16em;font-weight:600}
-.fp-modeller h3{margin:0;color:var(--green);font:600 clamp(1.3rem,1.9vw,1.7rem)/1.2 "Libre Franklin",sans-serif;letter-spacing:-.02em}
-.fp-modeller p{margin:0;font-size:1rem;line-height:1.7;color:#555d5a;max-width:48ch}
-.fp-take{margin-top:.7rem!important;padding-top:.9rem;border-top:1px solid var(--line);color:var(--green)!important;font-weight:500}
-.fp-steg{display:none;gap:.5rem;margin-top:2rem}
-.fp-punkt{background:none;border:0;padding:.5rem 0 0;font:inherit;cursor:pointer;flex:1;max-width:90px;color:#a5aca8;transition:color .25s}
-.fp-punkt span{font-size:.74rem;letter-spacing:.16em;font-weight:600;display:block;margin-top:.5rem}
-.fp-punkt:before{content:"";display:block;height:2px;background:var(--line);transition:background .35s}
-.fp-punkt.ar-pa{color:var(--green)}
-.fp-punkt.ar-pa:before,.fp-punkt.ar-klar:before{background:var(--brass)}
-.fp-punkt:hover:before{background:var(--sage)}
-.fp-paneler{position:relative}
-.fp-paneler .forsk-panel{margin:0;opacity:0;transition:opacity .6s cubic-bezier(.22,.7,.24,1)}
-.fp-paneler .forsk-panel.ar-pa{opacity:1}
-.fp-txt .sektion-cta{margin-top:2.2rem}
-@media(max-width:980px){.fp-inner{display:flex;flex-direction:column}
-  .fp-paneler{order:-1;position:sticky;top:12px;margin-bottom:2rem;z-index:1}
-  .fp-txt{position:relative;z-index:2}}
+.fp-h3-text{color:var(--green);font:600 clamp(1.3rem,1.9vw,1.7rem)/1.2 "Libre Franklin",sans-serif;letter-spacing:-.02em}
+.fp-txt p{margin:0 0 1rem;font-size:1rem;line-height:1.7;color:#555d5a;max-width:62ch}
+.fp-txt p:last-child{margin-bottom:0}
+.fp-take{margin-top:1.4rem!important;padding-top:1rem;border-top:1px solid var(--line);color:var(--green)!important;font-weight:500}
+.fp-knyt{margin-top:1.2rem!important;color:#555d5a}
+.fp-h3{padding-top:.4rem;padding-bottom:1.1rem}
+@supports not (grid-template-columns:subgrid){
+  .fp-flikar{grid-row:2/4;display:block}
+  .fp-flik{display:grid;grid-template-columns:minmax(0,62ch) minmax(0,1.15fr);grid-template-rows:auto auto;column-gap:clamp(2rem,4vw,3.6rem)}
+  .fp-flik[hidden]{display:none}
+  .fp-h3{grid-row:1}.fp-txt{grid-row:2}.fp-flik .forsk-panel{grid-row:1/3}
+}
+@media(max-width:1200px){.fp-inner{grid-template-columns:140px minmax(0,1.1fr) minmax(0,.9fr)}}
+@media(max-width:980px){
+  .fp-inner{display:block}
+  .fp-rubrik{padding-bottom:1.2rem}
+  .forsk-pin .pin-meny{display:none!important}
+  .fp-flikar{display:block;border-top:1px solid var(--line)}
+  .fp-flik,.fp-flik[hidden]{display:block!important;visibility:visible;opacity:1;border-bottom:1px solid var(--line)}
+  .fp-h3{padding:0}
+  .fp-ack{pointer-events:auto;cursor:pointer;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:1rem;row-gap:.3rem;padding:1.3rem 0;align-items:center}
+  .fp-ack .fp-num{grid-column:1;grid-row:1}
+  .fp-ack .fp-h3-text{grid-column:1;grid-row:2;font-size:1.25rem}
+  .fp-ack:after{content:"";grid-column:2;grid-row:1/3;width:11px;height:11px;border-right:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(45deg);transition:transform .3s cubic-bezier(.22,.7,.24,1);margin-right:.3rem}
+  .fp-ack[aria-expanded="true"]:after{transform:rotate(225deg);margin-top:.4rem}
+  .fp-ack:focus-visible{outline:2px solid var(--brass);outline-offset:4px}
+  .fp-body{display:block;padding:0 0 1.8rem}
+  .fp-body[hidden]{display:none}
+  .fp-txt{padding-bottom:1.6rem}
+  .fp-flik .forsk-panel{position:static;margin:0}
+  .forsk-pin .sektion-cta{margin-top:2.4rem;padding-top:0;border-top:0}
+}
+@media(prefers-reduced-motion:reduce){.fp-flik,.fp-ack:after{transition:none}}
 
-/* med javascript: fastnalad, en modell i taget */
-.fpin-pa .fp-spar{height:calc(100vh + 180vh)}
-.fpin-pa .fp-fast{position:sticky;top:0;height:100vh;padding:0;display:flex;align-items:center;overflow:hidden}
-.fpin-pa .fp-modeller{gap:0;min-height:230px}
-.fpin-pa .fp-modeller li{grid-area:1/1;align-content:start;opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.22,.7,.24,1),transform .5s cubic-bezier(.22,.7,.24,1);pointer-events:none}
-.fpin-pa .fp-modeller li.ar-pa{opacity:1;transform:none;pointer-events:auto}
-.fpin-pa .fp-steg{display:flex}
-.fpin-pa .fp-paneler .forsk-panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center}
-.fpin-pa .fp-paneler{aspect-ratio:4/3;max-height:70vh}
-.fpin-pa .formel{grid-template-columns:1fr;gap:.4rem;max-width:400px}
-.fpin-pa .formel .f-op{justify-self:center;padding:.05rem 0}
-.fpin-pa .formel .f-pil{transform:rotate(90deg)}
-.fpin-pa .f-nod{padding:.7rem .9rem}
-.fpin-pa .f-nod b{font-size:.98rem}
-.fpin-pa .f-nod span{font-size:.86rem;line-height:1.45}
-.fpin-pa .lm-graf{width:100%;max-width:620px;margin-inline:auto}
-.fpin-pa .formel{width:100%}
-.fpin-pa .fp-paneler .forsk-panel>*{flex:none;width:100%}
-.fpin-pa .fp-paneler .forsk-panel{align-items:center}
-.fpin-pa .lm-rader{margin-top:1.4rem;padding-top:1rem;gap:.8rem}
-.fpin-pa .imgd ol{gap:.8rem}
-@media(prefers-reduced-motion:reduce){
-  .fpin-pa .fp-spar{height:auto}
-  .fpin-pa .fp-fast{position:relative;height:auto;padding:4rem 0;display:block}
-  .fpin-pa .fp-modeller{gap:2.4rem;min-height:0}
-  .fpin-pa .fp-modeller li{grid-area:auto;opacity:1;transform:none}
-  .fpin-pa .fp-paneler .forsk-panel{position:relative;inset:auto}
-  .fpin-pa .fp-paneler{aspect-ratio:auto;max-height:none}
+/* Panelerna anpassar sig efter sin egen bredd, inte viewporten */
+@container (max-width:640px){
+  .formel{grid-template-columns:1fr;gap:.45rem;max-width:420px}
+  .formel .f-op{justify-self:center;padding:.05rem 0}
+  .formel .f-pil{transform:rotate(90deg)}
+  .f-nod{padding:.8rem 1rem}
+  .f-nod b{font-size:.98rem}
+  .f-nod span{font-size:.88rem;line-height:1.45}
+  .imgd ol{gap:.8rem}
+  .imgd strong{font-size:.92rem}
+  .imgd li span{font-size:.85rem;line-height:1.5}
+  .imgd li em{font-size:.76rem}
+}
+@container (max-width:560px){
+  .lm-rader{grid-template-columns:1fr;gap:.7rem}
+  .lm-rader li{grid-template-columns:12px auto minmax(0,1fr);align-items:baseline;gap:.35rem .7rem}
+  .lm-delar{grid-column:3}
+}
+@container (max-width:380px){
+  .imgd ol{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}
 }
 
 /* ---------- Meny i fastnalade sektioner ---------- */
@@ -853,20 +878,18 @@ body{position:relative}
 .pm-post.ar-pa{opacity:1;border-left-color:var(--brass)}
 .pm-post.ar-klar{opacity:.55}
 .pm-post:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
-.spin-pa .pin-meny,.pin-pa .pin-meny,.fpin-pa .pin-meny{display:flex}
+.spin-pa .pin-meny,.pin-pa .pin-meny{display:flex}
 .spin-pa .sp-inner{grid-template-columns:210px 1fr 1fr}
 .pin-pa .wp-inner{grid-template-columns:200px 1fr .85fr}
-.fpin-pa .fp-inner{grid-template-columns:190px .9fr 1.15fr}
 .week-pin .pm-namn{color:#fff}
 .week-pin .pm-nr{color:var(--lime)}
 .week-pin .pm-post{border-left-color:rgba(255,255,255,.25)}
 .week-pin .pm-post.ar-pa{border-left-color:var(--lime)}
 @media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:180px 1fr .95fr}
   .pin-pa .wp-inner{grid-template-columns:175px 1fr .8fr}
-  .fpin-pa .fp-inner{grid-template-columns:165px .9fr 1.1fr}
   .pm-namn{font-size:.88rem}}
 @media(max-width:980px){.pin-meny{display:none!important}}
-@media(prefers-reduced-motion:reduce){.pin-meny{display:none!important}}
+@media(prefers-reduced-motion:reduce){.pin-meny:not([role="tablist"]){display:none!important}}
 
 /* ---------- Rubrik over hela sektionen i fastnalade vyer ---------- */
 .pin-rubrik{margin:0 0 clamp(1.6rem,3vw,2.6rem);max-width:22ch}

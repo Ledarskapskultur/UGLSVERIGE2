@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=51">
+  <link rel="stylesheet" href="styles.css?v=52">
 </head>
 <body>
   <header class="site-header">
@@ -193,108 +193,141 @@
     </section>
 
     <section id="grunder" class="forsk-pin reveal">
-      <div class="fp-spar">
-        <div class="fp-fast">
-          <div class="fp-inner">
-            <nav class="pin-meny" aria-label="Modeller">
-              <button type="button" class="pm-post ar-pa" data-hopp="0"><span class="pm-nr">01</span><span class="pm-namn">Ledarskapsmodellen</span></button>
-              <button type="button" class="pm-post" data-hopp="1"><span class="pm-nr">02</span><span class="pm-namn">Gruppens utveckling</span></button>
-              <button type="button" class="pm-post" data-hopp="2"><span class="pm-nr">03</span><span class="pm-namn">Konflikthantering</span></button>
-            </nav>
-            <div class="fp-txt">
-              <p class="eyebrow">05. Forskningsgrunden</p>
-              <h2>Det här vilar UGL på.</h2>
-              <p class="lead">UGL är inte hemsnickrat. Tre etablerade modeller håller ihop veckan, och du får pröva dem på din egen grupp och ditt eget ledarskap.</p>
-              <ol class="fp-modeller">
-                <li data-i="0"><span class="fp-num">01</span><h3>Ledarskapsmodellen</h3><p>Försvarshögskolans modell delar in ledarbeteenden i utvecklande, konventionella och destruktiva. Det handlar inte om vilken sorts ledare du är, utan om vad du gör oftast, och vad du gör när det blir pressat.</p><p class="fp-take">Du får syn på dina egna mönster och vad de gör med människorna omkring dig.</p></li>
-                <li data-i="1"><span class="fp-num">02</span><h3>Gruppens utveckling (IMGD)</h3><p>Susan Wheelans forskning visar att grupper rör sig genom faser: först tillhörighet och trygghet, sedan opposition och konflikt, därefter tillit och struktur, och till sist verkligt arbete. Varje fas behöver olika saker av sin ledare.</p><p class="fp-take">Du lär dig läsa var din grupp faktiskt står, i stället för att dra i fel spak.</p></li>
-                <li data-i="2"><span class="fp-num">03</span><h3>Konflikthantering</h3><p>Thomas Jordans definition är avskalad: någon vill något, någon annan står i vägen, det skaver, och till slut gör någon något åt det. Konflikten börjar långt innan den syns.</p><p class="fp-take">Du lär dig leta efter önskemålet bakom handlingen i stället för att fastna i det som syns.</p></li>
-              </ol>
-              <div class="sektion-cta"><p>Vill du se hur det här ser ut i praktiken?</p><a class="button" href="/kurser">Se kursdatum &#8594;</a></div>
+      <div class="fp-inner">
+        <div class="fp-rubrik">
+          <p class="eyebrow">05. Forskningsgrunden</p>
+          <h2>Det här vilar UGL på.</h2>
+          <p class="lead">Tre modeller håller ihop veckan. Du möter dem inte som föreläsning. Du ser dem hända i din egen grupp, och sedan sätter vi ord på det tillsammans.</p>
+        </div>
+        <div class="pin-meny" role="tablist" aria-label="Modeller" aria-orientation="vertical">
+          <button type="button" role="tab" id="flik-lm" class="pm-post ar-pa" aria-selected="true" aria-controls="panel-lm" data-hopp="0"><span class="pm-nr">01</span><span class="pm-namn">Ledarskapsmodellen</span></button>
+          <button type="button" role="tab" id="flik-imgd" class="pm-post" aria-selected="false" aria-controls="panel-imgd" data-hopp="1" tabindex="-1"><span class="pm-nr">02</span><span class="pm-namn">Gruppens utveckling</span></button>
+          <button type="button" role="tab" id="flik-konflikt" class="pm-post" aria-selected="false" aria-controls="panel-konflikt" data-hopp="2" tabindex="-1"><span class="pm-nr">03</span><span class="pm-namn">Konflikthantering</span></button>
+        </div>
+        <div class="fp-flikar">
+
+          <section class="fp-flik ar-pa" role="tabpanel" id="panel-lm" aria-labelledby="flik-lm" tabindex="0" data-i="0">
+            <h3 class="fp-h3"><button type="button" class="fp-ack" aria-expanded="true" aria-controls="ack-lm"><span class="fp-num">01</span><span class="fp-h3-text">Ledarskapsmodellen (utvecklande ledarskap)</span></button></h3>
+            <div class="fp-body" id="ack-lm">
+              <div class="fp-txt">
+                <p>Försvarshögskolans ledarskapsmodell beskriver tre sätt att agera som ledare: utvecklande, konventionellt och destruktivt. Det är inte tre sorters människor utan tre sorters beteenden, och de flesta av oss använder alla tre. Frågan är vilket som dominerar i vardagen, och vilket som tar över när det blir pressat.</p>
+                <p>Forskningen bakom modellen är tydlig på en punkt: de destruktiva beteendena kostar mest, och de är oftast omedvetna hos den som utför dem.</p>
+                <p class="fp-take">Du får veta hur dina beteenden landar hos andra, inte hur du tror att de landar.</p>
+              </div>
+              <figure class="forsk-panel">
+                <figcaption>Ledarbeteendenas effekt på resultat och utveckling</figcaption>
+                <div class="lm-graf">
+                  <svg viewBox="45 22 630 396" role="img" aria-labelledby="lm-titel lm-beskr">
+                    <title id="lm-titel">Ledarskapsmodellen som graf</title>
+                    <desc id="lm-beskr">Utvecklande ledarskap ligger högst upp till höger med högt organisatoriskt resultat och hög individuell utveckling. Konventionellt ledarskap ligger i mitten. Destruktivt ledarskap ligger nere till vänster, utanför axlarna, och ger minus på båda. Den prickade linjen visar riktning, inte en skala.</desc>
+                    <rect x="60" y="300" width="110" height="76" fill="#f1e5da"></rect>
+                    <line x1="60" y1="300" x2="660" y2="300" class="lm-axel"></line>
+                    <line x1="170" y1="376" x2="170" y2="34" class="lm-axel"></line>
+                    <path d="M660 300 l-9 -5 v10 z" class="lm-pil"></path>
+                    <path d="M170 34 l-5 9 h10 z" class="lm-pil"></path>
+                    <text x="158" y="332" text-anchor="end" class="lm-noll">0</text>
+                    <text x="655" y="326" text-anchor="end" class="lm-axeltext">Organisatoriskt resultat</text>
+                    <text transform="translate(152 62) rotate(-90)" text-anchor="end" class="lm-axeltext">Individuell utveckling</text>
+                    <path d="M112 340 L395 200 L600 80" class="lm-linje"></path>
+                    <text transform="translate(262 262) rotate(-26.3)" text-anchor="middle" class="lm-riktning">Riktning, inte skala</text>
+                    <line x1="112" y1="348" x2="112" y2="384" class="lm-ledare"></line>
+                    <circle cx="600" cy="80" r="10" class="lm-punkt lm-p-utv"></circle>
+                    <circle cx="395" cy="200" r="10" class="lm-punkt lm-p-konv"></circle>
+                    <circle cx="112" cy="340" r="10" class="lm-punkt lm-p-dest"></circle>
+                    <text x="580" y="56" text-anchor="end" class="lm-namn">Utvecklande ledarskap</text>
+                    <text x="580" y="78" text-anchor="end" class="lm-sub">Höga resultat och människor som växer</text>
+                    <text x="416" y="210" class="lm-namn">Konventionellt ledarskap</text>
+                    <text x="416" y="232" class="lm-sub">Fungerar, men driver ingen utveckling</text>
+                    <text x="62" y="402" class="lm-namn">Destruktivt ledarskap</text>
+                  </svg>
+                </div>
+                <ol class="lm-zoner">
+                  <li class="lm-utv"><span class="lm-stapel" aria-hidden="true"></span><strong>Utvecklande ledarskap</strong><span class="lm-zon-sub">Höga resultat och människor som växer</span></li>
+                  <li class="lm-konv"><span class="lm-stapel" aria-hidden="true"></span><strong>Konventionellt ledarskap</strong><span class="lm-zon-sub">Fungerar, men driver ingen utveckling</span></li>
+                  <li class="lm-dest"><span class="lm-stapel" aria-hidden="true"></span><strong>Destruktivt ledarskap</strong><span class="lm-zon-sub">Minus på både resultat och utveckling</span></li>
+                </ol>
+                <ol class="lm-rader">
+                  <li class="lm-utv">
+                    <span class="lm-prick" aria-hidden="true"></span>
+                    <strong>Utvecklande</strong>
+                    <span class="lm-delar">Föredöme · Personlig omtanke · Inspiration och motivation</span>
+                  </li>
+                  <li class="lm-konv">
+                    <span class="lm-prick" aria-hidden="true"></span>
+                    <strong>Konventionellt</strong>
+                    <span class="lm-delar">Krav och belöning · Kontroll · Överkontroll</span>
+                  </li>
+                  <li class="lm-dest">
+                    <span class="lm-prick" aria-hidden="true"></span>
+                    <strong>Destruktivt</strong>
+                    <span class="lm-delar">Orättvist och godtyckligt · Hot och straff · Låt gå</span>
+                  </li>
+                </ol>
+                <p>Utvecklande ledarskap ger både resultat och människor som växer. Konventionellt håller igång verksamheten. Destruktivt kostar på båda axlarna.</p>
+              </figure>
             </div>
-            <div class="fp-paneler">
-      <figure data-i="0" class="forsk-panel ar-pa" id="panel-lm">
-        <figcaption>Ledarbeteendenas effekt på resultat och utveckling</figcaption>
-        <div class="lm-graf">
-          <svg viewBox="45 22 630 396" role="img" aria-labelledby="lm-titel lm-beskr">
-            <title id="lm-titel">Ledarskapsmodellen som graf</title>
-            <desc id="lm-beskr">Utvecklande ledarskap ligger högst upp till höger med högt organisatoriskt resultat och hög individuell utveckling. Konventionellt ledarskap ligger i mitten. Destruktivt ledarskap ligger nere till vänster, utanför axlarna, och ger minus på båda.</desc>
-            <rect x="60" y="300" width="110" height="76" fill="#f1e5da"></rect>
-            <line x1="60" y1="300" x2="660" y2="300" class="lm-axel"></line>
-            <line x1="170" y1="376" x2="170" y2="34" class="lm-axel"></line>
-            <path d="M660 300 l-9 -5 v10 z" class="lm-pil"></path>
-            <path d="M170 34 l-5 9 h10 z" class="lm-pil"></path>
-            <text x="158" y="332" text-anchor="end" class="lm-noll">0</text>
-            <text x="655" y="326" text-anchor="end" class="lm-axeltext">Organisatoriskt resultat</text>
-            <text transform="translate(152 62) rotate(-90)" text-anchor="end" class="lm-axeltext">Individuell utveckling</text>
-            <path d="M112 340 L395 200 L600 80" class="lm-linje"></path>
-            <line x1="112" y1="348" x2="112" y2="384" class="lm-ledare"></line>
-            <circle cx="600" cy="80" r="10" class="lm-punkt lm-p-utv"></circle>
-            <circle cx="395" cy="200" r="10" class="lm-punkt lm-p-konv"></circle>
-            <circle cx="112" cy="340" r="10" class="lm-punkt lm-p-dest"></circle>
-            <text x="580" y="56" text-anchor="end" class="lm-namn">Utvecklande ledarskap</text>
-            <text x="580" y="78" text-anchor="end" class="lm-sub">Höga resultat och människor som växer</text>
-            <text x="416" y="210" class="lm-namn">Konventionellt ledarskap</text>
-            <text x="416" y="232" class="lm-sub">Fungerar, men driver ingen utveckling</text>
-            <text x="62" y="402" class="lm-namn">Destruktivt ledarskap</text>
-          </svg>
-        </div>
-        <ol class="lm-rader">
-          <li class="lm-utv">
-            <span class="lm-prick" aria-hidden="true"></span>
-            <strong>Utvecklande</strong>
-            <span class="lm-delar">Föredöme · Personlig omtanke · Inspiration och motivation</span>
-          </li>
-          <li class="lm-konv">
-            <span class="lm-prick" aria-hidden="true"></span>
-            <strong>Konventionellt</strong>
-            <span class="lm-delar">Krav och belöning · Kontroll · Överkontroll</span>
-          </li>
-          <li class="lm-dest">
-            <span class="lm-prick" aria-hidden="true"></span>
-            <strong>Destruktivt</strong>
-            <span class="lm-delar">Orättvist och godtyckligt · Hot och straff · Låt gå</span>
-          </li>
-        </ol>
-      </figure>
-      <figure data-i="1" class="forsk-panel imgd" id="panel-imgd">
-        <figcaption>Gruppens fyra faser enligt IMGD</figcaption>
-        <ol>
-          <li><b>1</b><strong>Tillhörighet och trygghet</strong><span>Vi är artiga och söker vår plats. Ledaren behövs som tydlig riktning.</span></li>
-          <li><b>2</b><strong>Opposition och konflikt</strong><span>Olikheter kommer upp till ytan. Gruppen behöver få bråka färdigt.</span></li>
-          <li><b>3</b><strong>Tillit och struktur</strong><span>Vi vet var vi har varandra och kommer överens om hur vi arbetar.</span></li>
-          <li><b>4</b><strong>Arbete och produktivitet</strong><span>Nu levererar gruppen på riktigt, och ledaren kan kliva tillbaka.</span></li>
-        </ol>
-        <p>De flesta arbetsgrupper fastnar mellan fas 1 och 2, ofta i åratal.</p>
-      </figure>
-      <figure data-i="2" class="forsk-panel" id="panel-konflikt">
-        <figcaption>Så uppstår en konflikt</figcaption>
-        <div class="formel">
-          <div class="f-nod f-onskemal">
-            <b>Önskemål</b>
-            <span>Någon vill något. Ett mål, ett behov, ett sätt att arbeta på.</span>
-          </div>
-          <span class="f-op" aria-hidden="true">+</span>
-          <div class="f-nod f-block">
-            <b>Blockering</b>
-            <span>Någon eller något står i vägen. Oftast utan att mena det.</span>
-          </div>
-          <span class="f-op" aria-hidden="true">=</span>
-          <div class="f-nod f-frust">
-            <b>Frustration</b>
-            <span>Känslan som väcks när det som är viktigt hindras.</span>
-          </div>
-          <span class="f-op f-pil" aria-hidden="true">&#8594;</span>
-          <div class="f-nod f-handling">
-            <b>Handling</b>
-            <span>Frustrationen tar sig uttryck. Först här syns konflikten utåt.</span>
-          </div>
-        </div>
-        <p>Ingen konflikt utan ett önskemål. Den som hittar önskemålet bakom handlingen har oftast hittat vägen ut.</p>
-      </figure>
+          </section>
+
+          <section class="fp-flik" role="tabpanel" id="panel-imgd" aria-labelledby="flik-imgd" tabindex="0" data-i="1" hidden>
+            <h3 class="fp-h3"><button type="button" class="fp-ack" aria-expanded="false" aria-controls="ack-imgd"><span class="fp-num">02</span><span class="fp-h3-text">Gruppens utveckling enligt IMGD</span></button></h3>
+            <div class="fp-body" id="ack-imgd">
+              <div class="fp-txt">
+                <p>Susan Wheelan följde hundratals arbetsgrupper och såg samma rörelse gång på gång. Först söker vi tillhörighet och trygghet. Sedan prövas gränserna och olikheterna kommer upp. Klarar gruppen den fasen växer tilliten, strukturen sätter sig, och först då kan gruppen arbeta på riktigt.</p>
+                <p>Faserna är ingen trappa man går uppför en gång. Ny medlem, ny chef eller nytt uppdrag kan ta gruppen bakåt. Det som skiljer mogna grupper från andra är inte att de slipper fas 2, utan att de tar sig igenom den snabbare.</p>
+                <p class="fp-take">Du lär dig läsa var din grupp faktiskt står, i stället för att dra i fel spak.</p>
+              </div>
+              <figure class="forsk-panel imgd">
+                <figcaption>Gruppens fyra faser enligt IMGD</figcaption>
+                <ol>
+                  <li><b>1</b><strong>Tillhörighet och trygghet</strong><span>Vi är artiga och söker vår plats.</span><em>Ledaren behöver: ge riktning</em></li>
+                  <li><b>2</b><strong>Opposition och konflikt</strong><span>Olikheter kommer upp till ytan. Gruppen behöver få bråka färdigt.</span><em>Ledaren behöver: stå kvar i obehaget</em></li>
+                  <li><b>3</b><strong>Tillit och struktur</strong><span>Vi vet var vi har varandra och kommer överens om hur vi arbetar.</span><em>Ledaren behöver: dela ansvaret</em></li>
+                  <li><b>4</b><strong>Arbete och produktivitet</strong><span>Nu levererar gruppen på riktigt.</span><em>Ledaren behöver: kliva tillbaka</em></li>
+                </ol>
+                <p>Många arbetsgrupper når aldrig fas 4. De pendlar mellan fas 2 och 3, ofta i åratal.</p>
+              </figure>
             </div>
-          </div>
+          </section>
+
+          <section class="fp-flik" role="tabpanel" id="panel-konflikt" aria-labelledby="flik-konflikt" tabindex="0" data-i="2" hidden>
+            <h3 class="fp-h3"><button type="button" class="fp-ack" aria-expanded="false" aria-controls="ack-konflikt"><span class="fp-num">03</span><span class="fp-h3-text">Konflikthantering enligt Thomas Jordan</span></button></h3>
+            <div class="fp-body" id="ack-konflikt">
+              <div class="fp-txt">
+                <p>Thomas Jordans definition är avskalad. Någon vill något, någon eller något står i vägen, det skaver, och till slut gör någon något åt det. Det vi kallar konflikt är nästan alltid bara sista steget. Den började långt tidigare.</p>
+                <p>Därför leder det sällan någonstans att bemöta handlingen. Hittar du önskemålet bakom den har du något att förhandla om igen.</p>
+                <p class="fp-take">Du lär dig leta efter önskemålet bakom handlingen i stället för att fastna i det som syns.</p>
+                <p class="fp-knyt">Det här är samma sak som fas 2. Grupper som klarar av att ha olika viljor kommer vidare. Grupper som undviker det står stilla.</p>
+              </div>
+              <figure class="forsk-panel">
+                <figcaption>Så uppstår en konflikt</figcaption>
+                <div class="formel">
+                  <div class="f-nod f-onskemal">
+                    <b>Önskemål</b>
+                    <span>Någon vill något. Ett mål, ett behov, ett sätt att arbeta på.</span>
+                  </div>
+                  <span class="f-op" aria-hidden="true">+</span>
+                  <div class="f-nod f-block">
+                    <b>Blockering</b>
+                    <span>Någon eller något står i vägen. Oftast utan att mena det.</span>
+                  </div>
+                  <span class="f-op" aria-hidden="true">=</span>
+                  <div class="f-nod f-frust">
+                    <b>Frustration</b>
+                    <span>Känslan som väcks när det som är viktigt hindras.</span>
+                  </div>
+                  <span class="f-op f-pil" aria-hidden="true">&#8594;</span>
+                  <div class="f-nod f-handling">
+                    <b>Handling</b>
+                    <span>Frustrationen tar sig uttryck. Först här syns konflikten utåt.</span>
+                  </div>
+                </div>
+                <p>Ingen konflikt utan ett önskemål. Den som hittar önskemålet bakom handlingen har oftast hittat vägen ut.</p>
+              </figure>
+            </div>
+          </section>
+
         </div>
+        <div class="sektion-cta"><p>Vill du se hur det här ser ut i praktiken?</p><a class="button" href="/kurser">Se kursdatum &#8594;</a></div>
       </div>
     </section>
 

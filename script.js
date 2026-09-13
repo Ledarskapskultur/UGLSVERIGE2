@@ -181,59 +181,60 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   slaPa();rita();
 })();
 
-/* Forskningsgrunden: fastnalad sekvens */
+/* Forskningsgrunden: flikar pa desktop, dragspel pa mobil. Allt innehall ligger i DOM. */
 (function(){
   const sek=document.querySelector('.forsk-pin');
   if(!sek)return;
-  const spar=sek.querySelector('.fp-spar');
-  const punkter=[...sek.querySelectorAll('.fp-modeller li')];
-  const paneler=[...sek.querySelectorAll('.fp-paneler .forsk-panel')];
-  const knappar=[...sek.querySelectorAll('.pm-post')];
-  const antal=punkter.length;
-  let pa=null,aktiv=-1,obs=null;
-  function sattAktiv(i){
-    if(i===aktiv)return;aktiv=i;
-    punkter.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
-    paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
-    knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
+  const flikar=[...sek.querySelectorAll('[role="tab"]')];
+  const paneler=[...sek.querySelectorAll('.fp-flik')];
+  const ackar=paneler.map(p=>p.querySelector('.fp-ack'));
+  const kroppar=paneler.map(p=>p.querySelector('.fp-body'));
+  let mobil=null,aktiv=0;
+  function valj(i,fokus){
+    aktiv=i;
+    flikar.forEach((f,n)=>{
+      const pa=n===i;
+      f.setAttribute('aria-selected',pa?'true':'false');
+      f.tabIndex=pa?0:-1;
+      f.classList.toggle('ar-pa',pa);
+      f.classList.toggle('ar-klar',n<i);
+    });
+    paneler.forEach((p,n)=>{p.hidden=n!==i;p.classList.toggle('ar-pa',n===i)});
+    if(fokus)flikar[i].focus();
   }
-  function rita(){
-    if(!pa)return;
-    const r=spar.getBoundingClientRect();
-    const total=spar.offsetHeight-window.innerHeight;
-    let p=total>0?(-r.top)/total:0;
-    p=Math.max(0,Math.min(1,p));
-    sattAktiv(Math.max(0,Math.min(antal-1,Math.floor(p*antal+0.001))));
+  function oppna(i,vill){
+    const pa=vill===undefined?ackar[i].getAttribute('aria-expanded')!=='true':vill;
+    ackar[i].setAttribute('aria-expanded',pa?'true':'false');
+    kroppar[i].hidden=!pa;
+    paneler[i].classList.toggle('ar-pa',pa);
   }
-  function slaPa(){
-    const kan=window.innerWidth>980&&window.innerHeight>600&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(kan===pa)return;
-    pa=kan;sek.classList.toggle('fpin-pa',kan);
-    if(obs){obs.disconnect();obs=null}
-    if(kan){aktiv=-1;sattAktiv(0);rita()}
-    else{
-      punkter.forEach(d=>d.classList.remove('ar-pa'));aktiv=-1;
-      paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===0));
-      obs=new IntersectionObserver(poster=>{
-        poster.forEach(po=>{if(po.isIntersecting){
-          const i=punkter.indexOf(po.target);
-          paneler.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
-          knappar.forEach((d,n)=>{d.classList.toggle('ar-pa',n===i);d.classList.toggle('ar-klar',n<i)});
-        }});
-      },{rootMargin:'-40% 0px -45% 0px'});
-      punkter.forEach(d=>obs.observe(d));
+  function lage(){
+    const nu=window.innerWidth<=980;
+    if(nu===mobil)return;
+    mobil=nu;
+    if(mobil){
+      paneler.forEach(p=>{p.hidden=false;p.removeAttribute('tabindex')});
+      ackar.forEach((a,n)=>{a.tabIndex=0;oppna(n,n===aktiv)});
+    }else{
+      ackar.forEach((a,n)=>{a.tabIndex=-1;a.setAttribute('aria-expanded','true');kroppar[n].hidden=false});
+      paneler.forEach(p=>p.tabIndex=0);
+      valj(aktiv,false);
     }
   }
-  knappar.forEach(k=>k.addEventListener('click',()=>{
-    if(!pa)return;
-    const i=+k.getAttribute('data-hopp');
-    const total=spar.offsetHeight-window.innerHeight;
-    window.scrollTo({top:spar.getBoundingClientRect().top+window.scrollY+total*((i+0.5)/antal),behavior:'smooth'});
-  }));
+  flikar.forEach((f,n)=>f.addEventListener('click',()=>valj(n,false)));
+  sek.querySelector('[role="tablist"]').addEventListener('keydown',e=>{
+    const k=e.key;let i=aktiv;
+    if(k==='ArrowDown'||k==='ArrowRight')i=(aktiv+1)%flikar.length;
+    else if(k==='ArrowUp'||k==='ArrowLeft')i=(aktiv-1+flikar.length)%flikar.length;
+    else if(k==='Home')i=0;
+    else if(k==='End')i=flikar.length-1;
+    else return;
+    e.preventDefault();valj(i,true);
+  });
+  ackar.forEach((a,n)=>a.addEventListener('click',()=>{if(mobil){aktiv=n;oppna(n)}}));
   let tick=false;
-  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{rita();tick=false})}},{passive:true});
-  addEventListener('resize',()=>{slaPa();rita()});
-  slaPa();rita();
+  addEventListener('resize',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{lage();tick=false})}});
+  lage();
 })();
 
 /* Tolv mal: dra ihop i sidled */
