@@ -63,6 +63,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   const prickar=[...sek.querySelectorAll('.wh-prick')];
   const dekor=sek.querySelector('.wh-dekor'),arc=sek.querySelector('.wh-arc');
   const nr=sek.querySelector('.wh-nr');
+  const meny=[...sek.querySelectorAll('.pm-post')];
   const OMKRETS=2*Math.PI*128;
   let pa=null,aktiv=-1;
   function sattAktiv(i){
@@ -70,6 +71,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     dagar.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
     prickar.forEach((p,n)=>{p.classList.toggle('ar-pa',n===i);p.classList.toggle('ar-klar',n<i)});
     if(nr)nr.textContent=i+1;
+    meny.forEach((m,n)=>{m.classList.toggle('ar-pa',n===i);m.classList.toggle('ar-klar',n<i)});
   }
   function rita(){
     if(!pa)return;
@@ -90,6 +92,12 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     if(kan){aktiv=-1;sattAktiv(0);rita()}
     else{dagar.forEach(d=>d.classList.remove('ar-pa'));aktiv=-1}
   }
+  meny.forEach(m=>m.addEventListener('click',()=>{
+    if(!pa)return;
+    const i=+m.getAttribute('data-hopp');
+    const total=spar.offsetHeight-window.innerHeight;
+    window.scrollTo({top:spar.getBoundingClientRect().top+window.scrollY+total*((i+0.5)/5),behavior:'smooth'});
+  }));
   let tick=false;
   addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{rita();tick=false})}},{passive:true});
   addEventListener('resize',()=>{slaPa();rita()});
@@ -123,7 +131,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   const spar=sek.querySelector('.sp-spar');
   const punkter=[...sek.querySelectorAll('.sp-punkter li')];
   const bilder=[...sek.querySelectorAll('.sp-bild')];
-  const knappar=[...sek.querySelectorAll('.sp-punkt')];
+  const knappar=[...sek.querySelectorAll('.pm-post')];
   const antal=punkter.length;
   let pa=null,aktiv=-1;
   function sattAktiv(i){
@@ -180,7 +188,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   const spar=sek.querySelector('.fp-spar');
   const punkter=[...sek.querySelectorAll('.fp-modeller li')];
   const paneler=[...sek.querySelectorAll('.fp-paneler .forsk-panel')];
-  const knappar=[...sek.querySelectorAll('.fp-punkt')];
+  const knappar=[...sek.querySelectorAll('.pm-post')];
   const antal=punkter.length;
   let pa=null,aktiv=-1,obs=null;
   function sattAktiv(i){

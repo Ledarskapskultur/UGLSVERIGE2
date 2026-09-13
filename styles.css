@@ -841,3 +841,29 @@ body{position:relative}
   .fpin-pa .fp-paneler .forsk-panel{position:relative;inset:auto}
   .fpin-pa .fp-paneler{aspect-ratio:auto;max-height:none}
 }
+
+/* ---------- Meny i fastnalade sektioner ---------- */
+.pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
+.pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;
+  border-left:2px solid var(--line);display:grid;gap:.15rem;transition:border-color .35s,opacity .35s}
+.pm-nr{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--brass)}
+.pm-namn{font:600 .95rem/1.3 "Libre Franklin",sans-serif;color:var(--green);letter-spacing:-.01em}
+.pm-post{opacity:.38}
+.pm-post:hover{opacity:.72}
+.pm-post.ar-pa{opacity:1;border-left-color:var(--brass)}
+.pm-post.ar-klar{opacity:.55}
+.pm-post:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+.spin-pa .pin-meny,.pin-pa .pin-meny,.fpin-pa .pin-meny{display:flex}
+.spin-pa .sp-inner{grid-template-columns:210px 1fr 1fr}
+.pin-pa .wp-inner{grid-template-columns:200px 1fr .85fr}
+.fpin-pa .fp-inner{grid-template-columns:190px .9fr 1.15fr}
+.week-pin .pm-namn{color:#fff}
+.week-pin .pm-nr{color:var(--lime)}
+.week-pin .pm-post{border-left-color:rgba(255,255,255,.25)}
+.week-pin .pm-post.ar-pa{border-left-color:var(--lime)}
+@media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:180px 1fr .95fr}
+  .pin-pa .wp-inner{grid-template-columns:175px 1fr .8fr}
+  .fpin-pa .fp-inner{grid-template-columns:165px .9fr 1.1fr}
+  .pm-namn{font-size:.88rem}}
+@media(max-width:980px){.pin-meny{display:none!important}}
+@media(prefers-reduced-motion:reduce){.pin-meny{display:none!important}}
