@@ -235,3 +235,14 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   addEventListener('resize',()=>{slaPa();rita()});
   slaPa();rita();
 })();
+
+/* Tolv mal: dra ihop och expandera */
+(function(){
+  const knappar=[...document.querySelectorAll('.mal-topp')];
+  if(!knappar.length)return;
+  knappar.forEach(k=>k.addEventListener('click',()=>{
+    const kort=k.closest('.mal-kort');
+    const oppen=kort.classList.toggle('ar-oppen');
+    k.setAttribute('aria-expanded',oppen?'true':'false');
+  }));
+})();
