@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=79">
+  <link rel="stylesheet" href="/styles.css?v=80">
 </head>
 <body>
   <header class="site-header header-solid">
@@ -107,17 +107,18 @@
           </dl>
           <div class="off-kalk" id="off-kalk">
             <p class="off-kalk-rubrik">Räkna fram priset per deltagare</p>
-            <p class="off-kalk-text">Ange vad ett dygn kostar hos er per person, inklusive logi, kost och lokaler. Deltagarna räknas som 4 nätter (måndag till fredag) plus en halvdag på fredagen fram till lunch. Handledarna räknas som 5 nätter (söndag till fredag) plus samma halvdag. En halvdag räknas som ett halvt dygn. Uträknaren summerar och fördelar allt på deltagarna. Det är den siffran vi vill ha i formuläret.</p>
-            <div class="off-kalk-falt">
-              <label>Pris per person och dygn, exklusive moms<input type="text" inputmode="numeric" id="kalk-pris" placeholder="Till exempel 2 400"></label>
+            <p class="off-kalk-text">Ange vad en vistelse kostar hos er per person, inklusive logi, kost och lokaler. Deltagarna är på plats från måndag förmiddag (fika före kursstart) till fredag lunch, fyra nätter. Handledarna kommer redan söndag till middagen och stannar till fredag lunch, fem nätter. Uträknaren lägger ihop allt och fördelar handledarnas kostnad på deltagarna.</p>
+            <div class="off-kalk-falt off-kalk-tre">
+              <label>Per deltagare, måndag fm-fika till fredag lunch<input type="text" inputmode="numeric" id="kalk-delt" placeholder="Till exempel 9 800"></label>
+              <label>Per handledare, söndag middag till fredag lunch<input type="text" inputmode="numeric" id="kalk-hl" placeholder="Till exempel 12 200"></label>
               <label>Antal deltagare<select id="kalk-antal"><option value="8">8 deltagare</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></label>
             </div>
             <div class="off-kalk-resultat" id="kalk-resultat" aria-live="polite">
-              <p class="off-kalk-formel">Dygnspris × (deltagare × (4 nätter + halvdag) + 2 handledare × (5 nätter + halvdag)) ÷ deltagare = pris per deltagare</p>
+              <p class="off-kalk-formel">(deltagare × pris per deltagare + 2 × pris per handledare) ÷ deltagare = pris per deltagare, exklusive moms</p>
             </div>
             <table class="off-kalk-tabell" id="kalk-tabell" hidden>
               <caption>Pris per deltagare beroende på gruppstorlek</caption>
-              <thead><tr><th>Deltagare</th><th>Dygn totalt</th><th>Summa för veckan</th><th>Per deltagare</th></tr></thead>
+              <thead><tr><th>Deltagare</th><th>Deltagarna</th><th>Handledarna</th><th>Summa för veckan</th><th>Per deltagare</th></tr></thead>
               <tbody></tbody>
             </table>
             <button type="button" class="button button-small" id="kalk-anvand" hidden>Använd i formuläret &#8595;</button>
@@ -160,6 +161,6 @@
     <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/ugl/">Kursorter</a><a href="/#organisationer">För organisationer</a><a href="/#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="/script.js?v=14"></script>
+  <script src="/script.js?v=15"></script>
 </body>
 </html>
