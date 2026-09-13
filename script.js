@@ -237,6 +237,24 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   lage();
 })();
 
+/* Veckan: dag i listan styr bilden till hoger */
+(function(){
+  const sek=document.querySelector('.veckan');
+  if(!sek)return;
+  const dagar=[...sek.querySelectorAll('.vk-dagar li')];
+  const bilder=[...sek.querySelectorAll('.vk-bilder figure')];
+  function valj(i){
+    dagar.forEach((d,n)=>d.classList.toggle('ar-pa',n===i));
+    bilder.forEach((b,n)=>b.classList.toggle('ar-pa',n===i));
+  }
+  dagar.forEach((d,i)=>{
+    const k=d.querySelector('button');
+    k.addEventListener('click',()=>valj(i));
+    k.addEventListener('mouseenter',()=>{if(window.innerWidth>980)valj(i)});
+    k.addEventListener('focus',()=>valj(i));
+  });
+})();
+
 /* Tolv mal: dra ihop i sidled */
 (function(){
   const rutnat=document.querySelector('.goal-grid');

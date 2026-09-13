@@ -883,6 +883,38 @@ body{position:relative}
   .lm-delar{grid-column:3}
 }
 
+/* ---------- Veckan: dagar med bild kopplad till texten ---------- */
+.veckan{background:#fff}
+.vk-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2.5rem,6vw,6rem);align-items:start}
+.vk-txt h2{margin:.7rem 0 1.1rem}
+.vk-txt .lead{max-width:52ch;margin-bottom:clamp(1.6rem,2.6vw,2.4rem)}
+.vk-dagar{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
+.vk-dagar li{border-bottom:1px solid var(--line)}
+.vk-dagar button{display:grid;grid-template-columns:auto 1fr;column-gap:1.2rem;row-gap:.3rem;align-items:baseline;width:100%;background:none;border:0;padding:.95rem .9rem .95rem .9rem;font:inherit;text-align:left;cursor:pointer;color:inherit;border-left:2px solid transparent;transition:border-color .3s,background .3s}
+.vk-dagar b{grid-row:1/3;color:var(--brass);font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;align-self:start;padding-top:.35rem;min-width:3.4rem}
+.vk-dagar strong{color:var(--green);font:600 clamp(1.15rem,1.5vw,1.35rem)/1.25 "Libre Franklin",sans-serif;letter-spacing:-.02em}
+.vk-dagar span{grid-column:2;font-size:.95rem;line-height:1.6;color:#555d5a;max-width:46ch;display:block}
+.vk-dagar li.ar-pa button{border-left-color:var(--brass);background:var(--ivory)}
+.vk-dagar button:hover strong{color:#1d5146}
+.vk-dagar button:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+.vk-txt .actions{margin-top:clamp(1.8rem,3vw,2.4rem)}
+.vk-mobil{display:none;margin:0}
+.vk-bilder{position:sticky;top:2rem;display:grid}
+.vk-bilder figure{grid-area:1/1;margin:0;opacity:0;transition:opacity .6s cubic-bezier(.22,.7,.24,1)}
+.vk-bilder figure.ar-pa{opacity:1}
+.vk-bilder img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--radie);display:block}
+.vk-bilder figcaption{margin-top:1rem;font-size:.95rem;line-height:1.6;color:#555d5a;font-style:italic;max-width:46ch}
+.vk-bilder figcaption b{display:inline-block;margin-right:.7rem;color:var(--brass);font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;font-style:normal}
+@media(max-width:980px){
+  .vk-inner{grid-template-columns:1fr}
+  .vk-bilder{display:none}
+  .vk-dagar button{cursor:default;border-left:0;padding-left:0}
+  .vk-dagar li.ar-pa button{border-left-color:transparent}
+  .vk-mobil{display:block;margin:0 0 1.2rem}
+  .vk-mobil img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:calc(var(--radie) - 4px);display:block}
+}
+@media(prefers-reduced-motion:reduce){.vk-bilder figure{transition:none}}
+
 /* ---------- Meny i fastnalade sektioner ---------- */
 .pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
 .pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;

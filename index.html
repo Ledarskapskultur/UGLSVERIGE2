@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=61">
+  <link rel="stylesheet" href="styles.css?v=62">
 </head>
 <body>
   <header class="site-header">
@@ -73,50 +73,27 @@
       </div>
     </section>
 
-    <section id="veckan" class="week-pin reveal">
-      <div class="wp-spar">
-        <div class="wp-fast">
-          <div class="wp-bg" data-parallax>
-            <img src="assets/ugl-grupp.webp" alt="" loading="lazy">
-            <span class="wp-scrim" aria-hidden="true"></span>
-          </div>
-          <div class="wp-inner">
-            <nav class="pin-meny" aria-label="Veckans dagar">
-              <button type="button" class="pm-post ar-pa" data-hopp="0"><span class="pm-nr">Dag 1</span><span class="pm-namn">Ni börjar på samma ruta</span></button>
-              <button type="button" class="pm-post" data-hopp="1"><span class="pm-nr">Dag 2</span><span class="pm-namn">Gruppen hittar sin form</span></button>
-              <button type="button" class="pm-post" data-hopp="2"><span class="pm-nr">Dag 3</span><span class="pm-namn">Samtalen går på djupet</span></button>
-              <button type="button" class="pm-post" data-hopp="3"><span class="pm-nr">Dag 4</span><span class="pm-namn">Tilliten bär</span></button>
-              <button type="button" class="pm-post" data-hopp="4"><span class="pm-nr">Dag 5</span><span class="pm-namn">Du formulerar din plan</span></button>
-            </nav>
-            <div class="wp-txt">
-              <p class="eyebrow">02. Veckans båge</p>
-              <h2>Fem dagar, en rörelse.</h2>
-              <p class="lead">En UGL-vecka följer samma bana som varje grupp gör, fast komprimerad. Det som annars tar ett halvår på en arbetsplats hinner hända på fem dagar, och ni är med när det händer.</p>
-              <ol class="wp-dagar">
-              <li data-dag="1"><b>Dag 1</b><strong>Ni börjar på samma ruta</strong><span>Ingen känner någon sedan tidigare. Ni kommer överens om hur ni vill ha det under veckan, och handledarna håller ramarna.</span></li>
-              <li data-dag="2"><b>Dag 2</b><strong>Gruppen hittar sin form</strong><span>Ni märker hur olika ni fungerar. Vem tar plats, vem väntar in, och vad gör det med arbetet?</span></li>
-              <li data-dag="3"><b>Dag 3</b><strong>Samtalen går på djupet</strong><span>Ni tränar på att ge och ta emot feedback. Det sker i lugn takt, med handledarna nära.</span></li>
-              <li data-dag="4"><b>Dag 4</b><strong>Tilliten bär</strong><span>När mer är sagt blir samarbetet enklare. Här märks skillnaden mot en vanlig arbetsgrupp.</span></li>
-              <li data-dag="5"><b>Dag 5</b><strong>Du formulerar din plan</strong><span>Ni summerar veckan och du sätter ord på vad du tar med dig hem.</span></li>
-              </ol>
-              <p class="wp-not">Exakt vilka uppgifter ni möter berättar vi inte i förväg, och det är med flit. Du bestämmer själv hur mycket du delar med dig av, och två certifierade handledare finns med hela veckan.</p>
-              <div class="actions"><a class="button button-light" href="/kurser">Se kursdatum &#8594;</a><a class="text-link text-link-ljus" href="#utbyte">Vad du får med dig</a></div>
-            </div>
-            <div class="wp-hjul" aria-hidden="true">
-              <svg viewBox="0 0 320 320">
-                <g class="wh-dekor"><circle cx="160" cy="160" r="150"></circle></g>
-                <circle class="wh-spar" cx="160" cy="160" r="128"></circle>
-                <circle class="wh-arc" cx="160" cy="160" r="128"></circle>
-              <circle class="wh-prick" data-i="0" cx="160.0" cy="32.0" r="7"></circle>
-              <circle class="wh-prick" data-i="1" cx="281.7" cy="120.4" r="7"></circle>
-              <circle class="wh-prick" data-i="2" cx="235.2" cy="263.6" r="7"></circle>
-              <circle class="wh-prick" data-i="3" cx="84.8" cy="263.6" r="7"></circle>
-              <circle class="wh-prick" data-i="4" cx="38.3" cy="120.4" r="7"></circle>
-                <text class="wh-nr" x="160" y="172">1</text>
-                <text class="wh-lbl" x="160" y="204">av fem dagar</text>
-              </svg>
-            </div>
-          </div>
+    <section id="veckan" class="section veckan reveal">
+      <div class="vk-inner">
+        <div class="vk-txt">
+          <p class="eyebrow">02. Veckan dag för dag</p>
+          <h2>Så ser fem dagar på UGL ut.</h2>
+          <p class="lead">Ni börjar som främlingar och slutar som en grupp som vågar säga som det är. Varje dag bygger på den förra, och två certifierade handledare är med hela vägen.</p>
+          <ol class="vk-dagar">
+            <li class="ar-pa" data-bild="0"><button type="button"><b>Dag 1</b><strong>Ni börjar på samma ruta</strong><span>Ingen känner någon sedan tidigare. Ni kommer överens om hur ni vill ha det under veckan, och handledarna håller ramarna.</span></button><figure class="vk-mobil"><img src="assets/ugl-grupp.webp" alt="Deltagare i ring i en ljus kurslokal, första dagen" loading="lazy"></figure></li>
+            <li data-bild="1"><button type="button"><b>Dag 2</b><strong>Gruppen hittar sin form</strong><span>Ni märker hur olika ni fungerar. Vem tar plats, vem väntar in, och vad gör det med arbetet?</span></button><figure class="vk-mobil"><img src="assets/ugl-oppenhet.webp" alt="Fem deltagare runt ett bord med en gemensam skiss" loading="lazy"></figure></li>
+            <li data-bild="2"><button type="button"><b>Dag 3</b><strong>Samtalen går på djupet</strong><span>Ni tränar på att ge och ta emot feedback, till människor ni träffade i måndags. Det sker i lugn takt, med handledarna nära.</span></button><figure class="vk-mobil"><img src="assets/ugl-feedback.webp" alt="Deltagare som ger varandra feedback" loading="lazy"></figure></li>
+            <li data-bild="3"><button type="button"><b>Dag 4</b><strong>Tilliten bär</strong><span>När mer är sagt blir samarbetet enklare. Här märks skillnaden mot en vanlig arbetsgrupp.</span></button><figure class="vk-mobil"><img src="assets/ugl-samtal.webp" alt="Fyra deltagare lyssnar uppmärksamt på varandra" loading="lazy"></figure></li>
+            <li data-bild="4"><button type="button"><b>Dag 5</b><strong>Du formulerar din plan</strong><span>Ni summerar veckan och du sätter ord på vad du tar med dig hem.</span></button><figure class="vk-mobil"><img src="assets/ugl-tid.webp" alt="Deltagare i samtal framför ett blädderblock" loading="lazy"></figure></li>
+          </ol>
+          <div class="actions"><a class="button" href="/kurser">Se kursdatum &#8594;</a><a class="text-link" href="#utbyte">Vad du får med dig</a></div>
+        </div>
+        <div class="vk-bilder" aria-hidden="true">
+          <figure class="ar-pa"><img src="assets/ugl-grupp.webp" alt="" loading="lazy"><figcaption><b>Dag 1</b>Ringen är det första ni gör tillsammans. Ingen vet ännu vem som brukar ta ordet.</figcaption></figure>
+          <figure><img src="assets/ugl-oppenhet.webp" alt="" loading="lazy"><figcaption><b>Dag 2</b>Första uppgiften med en gemensam lösning. Här syns olikheterna.</figcaption></figure>
+          <figure><img src="assets/ugl-feedback.webp" alt="" loading="lazy"><figcaption><b>Dag 3</b>Feedback, en i taget, med tid att ta emot den.</figcaption></figure>
+          <figure><img src="assets/ugl-samtal.webp" alt="" loading="lazy"><figcaption><b>Dag 4</b>Samtalen behöver inte längre handledarna för att hålla.</figcaption></figure>
+          <figure><img src="assets/ugl-tid.webp" alt="" loading="lazy"><figcaption><b>Dag 5</b>Din plan, i dina ord, innan ni skiljs åt.</figcaption></figure>
         </div>
       </div>
     </section>
