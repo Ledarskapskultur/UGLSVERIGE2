@@ -294,6 +294,35 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   d.addEventListener('click',function(e){if(e.target===d)d.close()});
 })();
 
+/* Foretagssidan: fyller i foretagets uppgifter fran ?f= och raknar kalkylen */
+(function(){
+  var kalk=document.getElementById('ft-kalk');if(!kalk)return;
+  var nyckel=new URLSearchParams(location.search).get('f'),F=(window.UGL_FORETAG||{})[nyckel];
+  if(F){
+    document.querySelectorAll('[data-f]').forEach(function(el){var v=F[el.getAttribute('data-f')];if(v)el.textContent=v});
+    document.querySelectorAll('[data-f-value]').forEach(function(el){var v=F[el.getAttribute('data-f-value')];if(v)el.value=v});
+    if(F.titel)document.title=F.titel;
+  }
+  var HANDLEDARE=90000,MATERIAL=1500,OPPET=29000;
+  var antal=document.getElementById('ft-antal'),dygn=document.getElementById('ft-dygn'),res=document.getElementById('ft-resultat'),tab=document.getElementById('ft-tabell');
+  function tal(el){return parseFloat((el.value||'').replace(/[^\d,.]/g,'').replace(',','.'))||0}
+  function kr(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+' kr'}
+  function rakna(){
+    var n=Math.round(tal(antal)),d=tal(dygn);
+    if(n<8){res.innerHTML='<p class="ft-kalk-svar"><span>Ange minst 8 deltagare, det \u00e4r vad en kurs kr\u00e4ver.</span></p>';tab.hidden=true;return}
+    var kurser=Math.ceil(n/12);
+    var hl=kurser*HANDLEDARE,mat=n*MATERIAL,intern=d?(n*4+kurser*2*5)*d:0,summa=hl+mat+intern,per=summa/n,oppet=n*OPPET;
+    res.innerHTML='<p class="ft-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare i egen regi'+(d?', inklusive intern kostnad f\u00f6r boende och konferens':', exklusive er interna kostnad f\u00f6r boende och konferens')+'. '+n+' deltagare p\u00e5 '+kurser+' kurs'+(kurser>1?'er':'')+' kostar '+kr(summa)+' mot '+kr(oppet)+' p\u00e5 \u00f6ppna kurser. Skillnad: '+kr(oppet-summa)+' per \u00e5r.</span></p>';
+    var rader=[['Handledare, '+kurser+' kurs'+(kurser>1?'er':'')+' \u00d7 90 000 kr',kr(hl),'ing\u00e5r i kurspriset'],['Kursmaterial, '+n+' \u00d7 1 500 kr',kr(mat),'ing\u00e5r i kurspriset'],['Boende och konferens',d?kr(intern)+' (intern kostnad)':'intern kostnad, ej medr\u00e4knad','ing\u00e5r i kurspriset']];
+    var tb=tab.querySelector('tbody');tb.innerHTML='';
+    rader.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td>';tb.appendChild(tr)});
+    var tr=document.createElement('tr');tr.className='ft-summa';tr.innerHTML='<td>Summa f\u00f6r '+n+' deltagare</td><td>'+kr(summa)+'</td><td>'+kr(oppet)+'</td>';tb.appendChild(tr);
+    tr=document.createElement('tr');tr.className='ft-summa';tr.innerHTML='<td>Per deltagare</td><td>'+kr(per)+'</td><td>'+kr(OPPET)+'</td>';tb.appendChild(tr);
+    tab.hidden=false;
+  }
+  antal.addEventListener('input',rakna);dygn.addEventListener('input',rakna);rakna();
+})();
+
 /* Nyhetsbrev och webbinarium: skickar till ENDPOINT om den ar satt, annars oppnas ett mejl */
 (function(){
   var ENDPOINT_NYHETSBREV='';
@@ -320,6 +349,9 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   koppla('nb-form','nb-status',ENDPOINT_NYHETSBREV,'Nyhetsbrev UGL',function(f){
     return ['Anm\u00e4lan till nyhetsbrevet','E-post: '+f.epost.value,'Del av landet: '+(f.region.value||'Spelar ingen roll'),'N\u00e4r: '+(f.period.value||'Spelar ingen roll')];
   },'Tack, v\u00e4lkommen. F\u00f6rsta utskicket kommer inom kort.');
+  koppla('ft-form','ft-status','','UGL i egen regi, boka ett samtal',function(f){
+    return ['Intresse f\u00f6r UGL i egen regi','F\u00f6retag: '+f.organisation.value,'Namn: '+f.namn.value,'Roll: '+(f.roll.value||'-'),'E-post: '+f.epost.value,'Telefon: '+(f.telefon.value||'-'),'Deltagare per \u00e5r: '+(f.per_ar.value||'-'),'\u00d6vrigt: '+(f.text.value||'-'),'Sida: '+location.href];
+  },'Tack, vi h\u00f6r av oss inom tv\u00e5 arbetsdagar f\u00f6r att boka ett samtal.');
   koppla('km-form','km-status','','UGL p\u00e5 v\u00e5r ort, boka ett samtal',function(f){
     return ['Intresse f\u00f6r UGL p\u00e5 orten','Kommun eller region: '+f.organisation.value,'Namn: '+f.namn.value,'Roll: '+(f.roll.value||'-'),'Ort: '+f.ort.value,'E-post: '+f.epost.value,'Telefon: '+(f.telefon.value||'-'),'Om orten: '+(f.text.value||'-')];
   },'Tack, vi h\u00f6r av oss inom tv\u00e5 arbetsdagar f\u00f6r att boka ett samtal.');

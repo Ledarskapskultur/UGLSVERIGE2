@@ -1158,6 +1158,27 @@ body{position:relative}
 .km-om a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
 @media(max-width:980px){.km-tre,.km-tva-kort,.km-steg{grid-template-columns:1fr}.km-vision .off-tva{grid-template-columns:1fr}.km-vision .off-tva figure{order:-1}}
 
+/* ---------- Foretagssida: UGL i egen regi ---------- */
+.ft-hero h1{max-width:20ch}
+.ft-hero .lead{max-width:66ch}
+.ft-varfor .off-tva h2{max-width:22ch}
+.ft-kalkyl .section-head .lead{max-width:62ch;margin-top:1.2rem}
+.ft-kalk{margin-top:clamp(2rem,3vw,2.6rem);background:#fff;border-radius:calc(var(--radie) - 4px);padding:clamp(1.4rem,2.2vw,2rem);border-left:3px solid var(--brass);max-width:900px}
+.ft-valfritt{text-transform:none;letter-spacing:0;font-weight:500;color:#8a918d}
+.ft-kalk-resultat{margin-top:1.2rem}
+.ft-kalk-svar{margin:0;display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center}
+.ft-kalk-svar b{font:600 clamp(2rem,3vw,2.6rem)/1 "Libre Franklin",sans-serif;letter-spacing:-.04em;color:var(--green)}
+.ft-kalk-svar span{font-size:.95rem;line-height:1.5;color:#4a514e}
+.ft-kalk-not{margin:1rem 0 0;font-size:.82rem;color:#7a827e;line-height:1.5}
+.ft-hur .off-tva{align-items:start}
+.ft-hur h2{max-width:none}
+.ft-lista span span{font-size:inherit;color:inherit}
+.ft-om .off-tva{align-items:start}
+.ft-om h2{font-size:clamp(1.6rem,2.4vw,2.2rem)}
+.ft-om a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
+#ft-tabell tr.ft-summa td{font-weight:600;color:var(--green);border-top:2px solid #cdd2ca}
+@media(max-width:980px){.ft-hero h1{max-width:none}}
+
 /* ---------- Meny i fastnalade sektioner ---------- */
 .pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
 .pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;

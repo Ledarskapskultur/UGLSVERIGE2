@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="UGL i egen regi för företag med många medarbetare och egen anläggning: Sveriges mest använda ledarskapsutbildning till en bråkdel av kurspriset.">
+  <title>UGL i egen regi | UGL Sverige</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=87">
+</head>
+<body>
+  <header class="site-header header-solid">
+    <a class="brand" href="/" aria-label="UGL Sverige, startsida">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><g id="people"></g></svg>
+      <span class="brand-type"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span>
+    </a>
+    <button class="menu-button" aria-label="Öppna meny" aria-expanded="false">Meny</button>
+    <nav class="nav" aria-label="Huvudmeny">
+      <a href="/#om">Om UGL</a><a href="/#veckan">Veckan</a><a href="/ugl/">Kursorter</a><a href="/#grunder">Forskning</a><a href="/#fragor">Frågor</a>
+      <a class="button button-small" href="#samtal">Boka ett samtal</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="page-hero off-hero ft-hero">
+      <p class="eyebrow">Ett förslag till <span data-f="namn">ert företag</span></p>
+      <h1>UGL i egen regi, på <span data-f="anlaggning">er egen anläggning</span>.</h1>
+      <p class="lead"><span data-f="namn">Ni</span> har det som andra arbetsgivare saknar när de vill köra ledarskapsutbildning: många medarbetare att utbilda och en egen anläggning att göra det på. Det gör UGL, Sveriges mest använda ledarskapsutbildning, till en av de billigaste kompetensinsatser ni kan göra. Den största kostnaden i en UGL-vecka är boende och konferens, och den har ni redan.</p>
+      <ul class="facts-siffror off-siffror">
+        <li><b>28<i>till</i>30</b><span>tusen kronor: öppet kurspris per deltagare</span></li>
+        <li><b>från 9</b><span>tusen kronor per deltagare i egen regi</span></li>
+        <li><b>8<i>till</i>12</b><span>deltagare per kurs</span></li>
+        <li><b>5</b><span>dagar med två certifierade handledare</span></li>
+      </ul>
+    </section>
+
+    <section class="section ft-varfor reveal">
+      <div class="off-tva">
+        <div>
+          <p class="eyebrow">Varför det blir billigt</p>
+          <h2>Ni betalar för det ni inte har. Resten äger ni redan.</h2>
+          <p>Ett öppet UGL-pris på 28 000 till 30 000 kronor per deltagare består av tre delar: handledare, kursmaterial och fem dagars kost, logi och konferens på en kursgård. Den sista delen är den största, och för <span data-f="namn">ert företag</span> är den en intern kostnad på <span data-f="anlaggning">er anläggning</span>, ofta under veckor när beläggningen ändå är låg.</p>
+          <p>Kvar att köpa är handledarna och materialet. Två certifierade handledare kostar 90 000 kronor för veckan oavsett gruppstorlek, och materialet 1 500 kronor per deltagare. Med tolv deltagare blir det 9 000 kronor per person. Sedan kan samma vecka köras igen, med nästa grupp chefer.</p>
+        </div>
+        <figure><img src="/assets/ugl-oppenhet.webp" alt="Fem deltagare runt ett bord med en gemensam skiss" loading="lazy" width="1400" height="1050"></figure>
+      </div>
+    </section>
+
+    <section class="section facts ft-kalkyl reveal">
+      <div class="section-head"><p class="eyebrow">Kalkyl</p><h2>Vad kostar det för <span data-f="namn">ert företag</span>?</h2><p class="lead">Ange hur många chefer eller medarbetare som ska gå under ett år, och vad ett dygn kostar internt på <span data-f="anlaggning">er anläggning</span> om ni vill räkna med det. Kalkylen visar kostnaden per deltagare och totalt, jämfört med öppna kurser.</p></div>
+      <div class="ft-kalk" id="ft-kalk">
+        <div class="off-kalk-falt off-kalk-tva">
+          <label>Deltagare per år<input type="text" inputmode="numeric" id="ft-antal" value="24"></label>
+          <label>Intern kostnad per person och dygn <span class="ft-valfritt">(valfritt)</span><input type="text" inputmode="numeric" id="ft-dygn" placeholder="Till exempel 900"></label>
+        </div>
+        <div class="ft-kalk-resultat" id="ft-resultat"></div>
+        <table class="off-kalk-tabell" id="ft-tabell">
+          <caption>Så fördelas kostnaden</caption>
+          <thead><tr><th>Post</th><th>Egen regi</th><th>Öppna kurser</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="ft-kalk-not">Handledare 90 000 kr per kursvecka. Kursmaterial 1 500 kr per deltagare. Kurser beräknas med 12 deltagare, den sista kursen med resten (minst 8). Deltagare bor 4 nätter, handledare 5. Alla belopp exklusive moms. Öppet kurspris räknat som 29 000 kr.</p>
+      </div>
+    </section>
+
+    <section class="section ft-hur reveal">
+      <div class="off-tva">
+        <div>
+          <p class="eyebrow">Så fungerar det i ett stort företag</p>
+          <h2>Grupper som inte känner varandra, från ett företag som gör det.</h2>
+          <p>UGL bygger på att deltagarna inte känner varandra sedan tidigare. Det är därför feedbacken blir ärlig. I ett företag med <span data-f="anstallda">många medarbetare</span> fördelade på <span data-f="enheter">flera enheter</span> går det utmärkt att sätta ihop grupper där ingen träffat någon annan förut: en butikschef från norr, en lagerledare från syd, en avdelningschef från huvudkontoret. Vi hjälper till med att sätta grupperna.</p>
+          <p>Det ger en bonus som öppna kurser inte kan ge: chefer från olika delar av <span data-f="namn">företaget</span> som lärt känna varandra på riktigt under en vecka, och som sedan har varandra när något skaver i vardagen. Forskningen från Karolinska Institutet och Försvarshögskolan visar att effekten av UGL håller i sig hos dem som får stöd på jobbet efteråt. Det stödet bygger ni in från början.</p>
+        </div>
+        <ol class="km-lista ft-lista">
+          <li><b>Handledare och material</b><span>Två handledare certifierade av Försvarshögskolan, allt kursmaterial och ramarna för veckan. Det är vår del.</span></li>
+          <li><b>Anläggning och deltagare</b><span>Fem dagar på <span data-f="anlaggning">er anläggning</span> enligt en kort kravspecifikation (enkelrum, en sal för ring med 14 personer, grupprum, måltider). Deltagare från olika enheter så att ingen känner någon.</span></li>
+          <li><b>Ett schema för året</b><span>Två, fyra eller sex veckor per år, planerade när anläggningen har plats. Varje vecka fylls med 8 till 12 chefer eller nyckelpersoner.</span></li>
+          <li><b>Uppföljning</b><span>En gemensam återträff per grupp efter tre månader, och en modell för hur närmaste chef följer upp den personliga planen. Det är det som gör att effekten stannar.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section facts ft-om reveal">
+      <div class="off-tva">
+        <div>
+          <h2>Vad är UGL?</h2>
+          <p>UGL, Utveckling av grupp och ledare, är Sveriges mest använda ledarskapsutbildning. Under fem sammanhängande dagar lär sig 8 till 12 deltagare som inte känner varandra hur grupper utvecklas, hur de själva fungerar tillsammans med andra och hur de kan leda utifrån det. Konceptet ägs av Försvarshögskolan, som certifierar alla handledare. <a href="/">Läs mer om UGL, veckan och forskningen bakom.</a></p>
+        </div>
+        <div>
+          <h2>Vad chefer kan efteråt</h2>
+          <p>De tar konflikter i tid, leder gruppen utifrån var den är och vet hur de själva landar hos andra. Karolinska Institutet och Försvarshögskolan följde chefer och deras medarbetare upp till två år efter kursen: medarbetarna skattade cheferna som mer utvecklande ledare, och nivån låg kvar. <a href="/#organisationer">Läs mer om effekten.</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="samtal" class="section off-svar reveal">
+      <div class="off-tva off-tva-svar">
+        <div class="off-txt">
+          <p class="eyebrow">Boka ett första samtal</p>
+          <h2>En timme, så vet ni om det passar.</h2>
+          <p class="lead">Vi går igenom <span data-f="anlaggning">anläggningen</span>, hur många som ska gå och vilket schema som passar året. Inget är bestämt förrän vi pratat.</p>
+          <div class="off-kontakt">
+            <p><b>Carl-Fredrik Zetterman</b><span>UGL Sverige</span></p>
+            <p><a href="mailto:kontakt@uglsverige.se">kontakt@uglsverige.se</a><span>070-145 62 51</span></p>
+            <p><span>Mälarparksvägen 11, 723 56 Västerås</span></p>
+          </div>
+        </div>
+        <form class="off-form booking-form" id="ft-form" novalidate>
+          <div class="field"><label for="ft-org">Företag</label><input id="ft-org" name="organisation" type="text" required autocomplete="organization" data-f-value="namn"></div>
+          <div class="field"><label for="ft-namn">Namn</label><input id="ft-namn" name="namn" type="text" required autocomplete="name"></div>
+          <div class="field"><label for="ft-roll">Roll</label><input id="ft-roll" name="roll" type="text" placeholder="Till exempel HR-chef" autocomplete="organization-title"></div>
+          <div class="field"><label for="ft-epost">E-post</label><input id="ft-epost" name="epost" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="ft-tel">Telefon</label><input id="ft-tel" name="telefon" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="ft-per-ar">Ungefär hur många ska gå per år?</label><input id="ft-per-ar" name="per_ar" type="text" inputmode="numeric" placeholder="Till exempel 24"></div>
+          <div class="field field-wide"><label for="ft-text">Något mer vi bör veta <span>(valfritt)</span></label><textarea id="ft-text" name="text" rows="4" placeholder="Vilken anläggning, vilka roller som ska gå, när på året det passar"></textarea></div>
+          <div class="field field-wide nb-rad"><button class="button button-light" type="submit">Boka ett samtal &#8594;</button><p class="form-note">Vi hör av oss inom två arbetsdagar.</p></div>
+          <p class="form-status" id="ft-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><g class="footer-people"></g></svg><span class="brand-type"><strong>UGL</strong><b>SVERIGE</b><small>Utveckling * Grupp * Ledare</small></span></div>
+    <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/ugl/">Kursorter</a><a href="/#organisationer">För organisationer</a><a href="/#kontakt">Kontakt</a></div>
+    <p>© 2026 UGL Sverige</p>
+  </footer>
+  <script src="/foretag-data.js?v=1"></script>
+  <script src="/script.js?v=19"></script>
+</body>
+</html>
