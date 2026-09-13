@@ -364,7 +364,7 @@
     }
     if(eget)t+=eget+'\n\n';
     t+='Kort om vad UGL är:\n';
-    t+='UGL är Försvarshögskolans ledarskapskoncept och har använts som grundläggande ledarskapsutbildning sedan 1981. Veckan genomförs på internat med 8 till 12 deltagare som inte känner varandra sedan tidigare, och leds av två handledare utbildade av Försvarshögskolan. Innehållet vilar på Försvarshögskolans ledarskapsmodell, forskning om gruppers utveckling och etablerade modeller för konflikthantering.\n\n';
+    t+='UGL är Försvarshögskolans ledarskapskoncept och har använts som grundläggande ledarskapsutbildning sedan 1981. Veckan genomförs på kursgård med boende och 8 till 12 deltagare som inte känner varandra sedan tidigare, och leds av två handledare utbildade av Försvarshögskolan. Innehållet vilar på Försvarshögskolans ledarskapsmodell, forskning om gruppers utveckling och etablerade modeller för konflikthantering.\n\n';
     t+='Insatsen är fem sammanhängande dagar och kostnaden ovan. Jag kommer hem med en personlig utvecklingsplan som jag gärna går igenom med dig efteråt, så att du ser vad veckan gav.\n\n';
     t+='Vad säger du?\n\n';
     t+=namn+(roll?'\n'+roll:'')+(org?'\n'+org:'');

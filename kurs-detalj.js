@@ -90,7 +90,7 @@
   (function(){
     var url=location.href;
     var rubrik='UGL vecka '+k.vecka+' på '+k.anlaggning+', '+k.ort;
-    var sammanfattning=rubrik+', '+k.period+'. Fem sammanhängande dagar på internat med två handledare utbildade av Försvarshögskolan.';
+    var sammanfattning=rubrik+', '+k.period+'. Fem sammanhängande dagar på kursgård med två handledare utbildade av Försvarshögskolan.';
     document.getElementById('dela-linkedin').href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url);
     document.getElementById('dela-facebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);
     document.getElementById('dela-mail').href='mailto:?subject='+encodeURIComponent(rubrik)+'&body='+encodeURIComponent(sammanfattning+'\n\n'+url);
@@ -99,7 +99,7 @@
         'Hej,\n\nJag har hittat en UGL-kurs som jag skulle vilja gå.\n\n'+
         rubrik+'\nDatum: '+k.period+'\n'+
         (k.total?'Totalpris: '+kr(k.total)+' exkl. moms\n':'')+
-        '\nUGL är Försvarshögskolans ledarskapskoncept: fem sammanhängande dagar på internat i en grupp där ingen känner varandra sedan tidigare. Fokus ligger på självinsikt, kommunikation, feedback, konflikthantering och hur grupper utvecklas.\n\n'+
+        '\nUGL är Försvarshögskolans ledarskapskoncept: fem sammanhängande dagar på kursgård i en grupp där ingen känner varandra sedan tidigare. Fokus ligger på självinsikt, kommunikation, feedback, konflikthantering och hur grupper utvecklas.\n\n'+
         'All information om veckan finns här:\n'+url+'\n\nVad säger du?\n');
     var kvitto=document.getElementById('dela-kvitto');
     document.getElementById('dela-kopiera').addEventListener('click',function(){
