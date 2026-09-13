@@ -794,21 +794,21 @@ body{position:relative}
   .spin-pa .sp-bild{opacity:1;transform:none}
 }
 
-/* ---------- Forskningsgrunden: flikar (desktop) och dragspel (mobil) ---------- */
+/* ---------- Forskningsgrunden: rubrikdel + forskningsdel med flikar (desktop) och dragspel (mobil) ---------- */
 .forsk-pin{max-width:var(--max);margin-inline:auto;padding:var(--space) var(--pad)}
-.fp-inner{display:grid;grid-template-columns:160px minmax(0,1.1fr) minmax(0,.9fr);grid-template-rows:auto auto auto auto;column-gap:clamp(2rem,4vw,3.6rem);row-gap:0;align-items:start}
-.fp-rubrik{grid-column:2;grid-row:1;padding-bottom:clamp(1.6rem,2.6vw,2.2rem)}
-.fp-rubrik h2{margin:.7rem 0 1.2rem}
+.fp-inner{display:grid;grid-template-columns:160px minmax(0,1.1fr) minmax(0,.9fr);grid-template-rows:auto auto auto;column-gap:clamp(2rem,4vw,3.6rem);row-gap:0;align-items:start}
+.fp-rubrik{grid-column:1/-1;grid-row:1;margin-bottom:clamp(2.6rem,4.5vw,4.2rem);padding-bottom:clamp(2.2rem,3.5vw,3.2rem);border-bottom:1px solid var(--line)}
+.fp-rubrik h2{margin:.7rem 0 1.2rem;max-width:none}
 .fp-rubrik .lead{max-width:62ch;margin:0}
-.forsk-pin .pin-meny{display:flex;grid-column:1;grid-row:2/4;align-self:start;position:sticky;top:2rem;margin-top:calc(-1*clamp(1.6rem,2.6vw,2.2rem) - .5rem)}
-.fp-flikar{grid-column:2/4;grid-row:1/4;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid}
-.fp-flik{grid-column:1/3;grid-row:1/4;display:grid;grid-template-columns:subgrid;grid-template-rows:subgrid;transition:opacity .35s cubic-bezier(.22,.7,.24,1)}
+.forsk-pin .pin-meny{display:flex;grid-column:1;grid-row:2;align-self:start;position:sticky;top:2rem;margin-top:.15rem}
+.fp-flikar{grid-column:2/4;grid-row:2;display:grid;grid-template-columns:subgrid;grid-template-rows:auto}
+.fp-flik{grid-column:1/3;grid-row:1;display:grid;grid-template-columns:subgrid;grid-template-rows:auto 1fr;column-gap:inherit;align-items:start;transition:opacity .35s cubic-bezier(.22,.7,.24,1)}
 .fp-flik[hidden]{display:grid!important;visibility:hidden;opacity:0}
-.fp-h3{grid-column:1;grid-row:2;margin:0}
+.fp-h3{grid-column:1;grid-row:1;margin:0;padding:0 0 1.1rem}
 .fp-body{display:contents}
-.fp-txt{grid-column:1;grid-row:3;padding-bottom:clamp(2rem,3.5vw,3rem)}
-.fp-flik .forsk-panel{grid-column:2;grid-row:1/4;align-self:start;position:sticky;top:2rem;margin:0}
-.forsk-pin .sektion-cta{grid-column:2/4;grid-row:4;border-top:0;padding-top:0;margin-top:clamp(1.2rem,2vw,2rem)}
+.fp-txt{grid-column:1;grid-row:2;padding-bottom:clamp(2rem,3.5vw,3rem)}
+.fp-flik .forsk-panel{grid-column:2;grid-row:1/3;align-self:start;position:sticky;top:2rem;margin:0}
+.forsk-pin .sektion-cta{grid-column:2/4;grid-row:3;border-top:0;padding-top:0;margin-top:clamp(1.2rem,2vw,2rem)}
 .fp-ack{background:none;border:0;padding:0;font:inherit;text-align:left;cursor:default;display:grid;gap:.5rem;color:inherit;width:100%;pointer-events:none}
 .fp-num{color:var(--brass);font-size:.8rem;letter-spacing:.16em;font-weight:600}
 .fp-h3-text{color:var(--green);font:600 clamp(1.3rem,1.9vw,1.7rem)/1.2 "Libre Franklin",sans-serif;letter-spacing:-.02em}
@@ -816,19 +816,17 @@ body{position:relative}
 .fp-txt p:last-child{margin-bottom:0}
 .fp-take{margin-top:1.4rem!important;padding-top:1rem;border-top:1px solid var(--line);color:var(--green)!important;font-weight:500}
 .fp-knyt{margin-top:1.2rem!important;color:#555d5a}
-.fp-h3{padding-top:.4rem;padding-bottom:1.1rem}
 @supports not (grid-template-columns:subgrid){
-  .fp-flikar{grid-row:2/4;display:block}
-  .fp-flik{display:grid;grid-template-columns:minmax(0,62ch) minmax(0,1.15fr);grid-template-rows:auto auto;column-gap:clamp(2rem,4vw,3.6rem)}
-  .fp-flik[hidden]{display:none}
-  .fp-h3{grid-row:1}.fp-txt{grid-row:2}.fp-flik .forsk-panel{grid-row:1/3}
+  .fp-flikar{display:block}
+  .fp-flik{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);column-gap:clamp(2rem,4vw,3.6rem)}
+  .fp-flik[hidden]{display:none!important}
 }
 @media(max-width:1200px){.fp-inner{grid-template-columns:140px minmax(0,1.1fr) minmax(0,.9fr)}}
 @media(max-width:980px){
   .fp-inner{display:block}
-  .fp-rubrik{padding-bottom:1.2rem}
+  .fp-rubrik{margin-bottom:1.6rem;padding-bottom:1.6rem}
   .forsk-pin .pin-meny{display:none!important}
-  .fp-flikar{display:block;border-top:1px solid var(--line)}
+  .fp-flikar{display:block}
   .fp-flik,.fp-flik[hidden]{display:block!important;visibility:visible;opacity:1;border-bottom:1px solid var(--line)}
   .fp-h3{padding:0}
   .fp-ack{pointer-events:auto;cursor:pointer;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:1rem;row-gap:.3rem;padding:1.3rem 0;align-items:center}
