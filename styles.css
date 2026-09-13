@@ -1177,7 +1177,11 @@ body{position:relative}
 .ft-om h2{font-size:clamp(1.6rem,2.4vw,2.2rem)}
 .ft-om a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
 #ft-tabell tr.ft-summa td{font-weight:600;color:var(--green);border-top:2px solid #cdd2ca}
-.ft-not{max-width:var(--max);margin:0 auto;padding:0 var(--pad) clamp(3rem,5vw,4.5rem)}
+.ft-oppna .off-tva{align-items:start}
+.ft-oppna h2{max-width:none}
+.ft-oppna .km-lista li{border-top-color:#cdd2ca}
+.ft-oppna .km-lista li:last-child{border-bottom-color:#cdd2ca}
+.ft-not{max-width:var(--max);margin:0 auto;padding:clamp(2.4rem,4vw,3.6rem) var(--pad) clamp(3rem,5vw,4.5rem)}
 .ft-not-rubrik{margin:0 0 .4rem;color:var(--brass);font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600}
 .ft-not p:last-child{margin:0;font-size:.97rem;line-height:1.65;color:#4a514e;max-width:72ch;padding:1.2rem 1.4rem;background:var(--ivory);border-left:3px solid var(--brass);border-radius:calc(var(--radie) - 8px)}
 .ft-not a{color:var(--green);font-weight:600;border-bottom:1px solid var(--brass)}
