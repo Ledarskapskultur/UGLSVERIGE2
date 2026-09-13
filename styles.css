@@ -931,13 +931,13 @@ body{position:relative}
 .pm-post.ar-klar{opacity:.55}
 .pm-post:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
 .spin-pa .pin-meny,.pin-pa .pin-meny{display:flex}
-.spin-pa .sp-inner{grid-template-columns:210px 1fr 1fr}
+.spin-pa .sp-inner{grid-template-columns:180px .8fr 1.2fr}
 .pin-pa .wp-inner{grid-template-columns:200px 1fr .85fr}
 .week-pin .pm-namn{color:#fff}
 .week-pin .pm-nr{color:var(--lime)}
 .week-pin .pm-post{border-left-color:rgba(255,255,255,.25)}
 .week-pin .pm-post.ar-pa{border-left-color:var(--lime)}
-@media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:180px 1fr .95fr}
+@media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:170px .9fr 1.1fr}
   .pin-pa .wp-inner{grid-template-columns:175px 1fr .8fr}
   .pm-namn{font-size:.88rem}}
 @media(max-width:980px){.pin-meny{display:none!important}}
@@ -945,14 +945,21 @@ body{position:relative}
 
 /* ---------- Rubrik over hela sektionen i fastnalade vyer ---------- */
 .pin-rubrik{margin:0 0 clamp(1.6rem,3vw,2.6rem);max-width:22ch}
-.spin-pa .sp-inner{grid-template-columns:210px 1fr 1fr;grid-template-rows:auto minmax(0,1fr);align-items:start;row-gap:0}
+.spin-pa .sp-inner{grid-template-columns:180px .8fr 1.2fr;grid-template-rows:auto minmax(0,1fr);align-items:center;row-gap:0;column-gap:clamp(2.5rem,4vw,4rem)}
 .spin-pa .pin-rubrik{grid-column:1/-1;grid-row:1;max-width:none;font-size:clamp(2rem,3.4vw,3.6rem)}
 .spin-pa .pin-meny{grid-column:1;grid-row:2;align-self:start;padding-top:.4rem}
 .spin-pa .sp-txt{grid-column:2;grid-row:2}
 .spin-pa .sp-bilder{grid-column:3;grid-row:2}
 .spin-pa .sp-punkter{min-height:0;margin-top:1.2rem}
+.spin-pa .sp-punkter h3{font-size:clamp(1.6rem,2.4vw,2.3rem)}
+.spin-pa .sp-punkter p{font-size:clamp(1.05rem,1.25vw,1.22rem);line-height:1.7;max-width:44ch}
+.spin-pa .sp-txt .eyebrow{margin-bottom:.9rem}
+.spin-pa .sp-bilder{aspect-ratio:5/4;max-height:calc(100vh - 15rem)}
+.spin-pa .pin-rubrik{margin-bottom:clamp(1.4rem,2.6vw,2.2rem)}
+.spin-pa .pin-meny{align-self:center;padding-top:0}
+.spin-pa .sp-txt{align-self:center}
 @media(max-width:980px){.pin-rubrik{order:-2}}
-@media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:180px 1fr 1fr}}
+@media(max-width:1200px){.spin-pa .sp-inner{grid-template-columns:170px .9fr 1.1fr}}
 @media(max-width:760px){.pin-rubrik br{display:none}}
 
 /* ---------- Tolv mal: dras ihop i sidled ---------- */
