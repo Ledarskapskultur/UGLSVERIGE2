@@ -702,12 +702,17 @@ body{position:relative}
 .cta-band h2,.org-band h2{color:#fff;font-size:clamp(2rem,3.4vw,3.4rem);margin:.8rem 0 1.1rem}
 .cta-band .eyebrow,.org-band .eyebrow{color:var(--lime)}
 .cta-band .lead,.org-band .lead{color:#cfdbd5;max-width:56ch;margin-bottom:2rem}
+.org-band .lead{font-size:clamp(1.05rem,1.35vw,1.2rem)}
 .cta-band .actions,.org-band .actions{gap:1rem}
-.ob-inner{position:relative;max-width:var(--max);margin-inline:auto;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2.5rem,6vw,6rem);align-items:center}
+.ob-inner{position:relative;max-width:var(--max);margin-inline:auto;display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(2.5rem,6vw,6rem);align-items:start}
 .org-band .org-points article{border-top:1px solid rgba(255,255,255,.25);padding:1.2rem 0}
 .org-band .org-points h3{color:#fff;margin:.4rem 0 .3rem}
 .org-band .org-points p{color:#cfdbd5;margin:0;font-size:.97rem}
 .org-band .org-points span{color:var(--lime)}
+.org-band .org-points h3{font-size:1.2rem;line-height:1.3;max-width:36ch}
+.org-band .org-points .op-vardag{color:#a9bcb4;font-style:italic;font-size:.93rem;line-height:1.55;margin:0 0 .6rem}
+.org-band .org-points .op-kalla{margin:1.4rem 0 0;font-size:.78rem;color:#9fb2aa}
+.org-band .ob-txt{align-self:start;position:sticky;top:2rem}
 .text-link-ljus{color:#fff;border-color:var(--lime)}
 .text-link-ljus:hover{color:var(--lime)}
 .sektion-cta{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-top:clamp(2.4rem,4vw,3.4rem);padding-top:clamp(1.8rem,3vw,2.4rem);border-top:1px solid var(--line)}
