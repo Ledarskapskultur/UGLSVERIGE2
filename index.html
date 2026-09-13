@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=49">
+  <link rel="stylesheet" href="styles.css?v=50">
 </head>
 <body>
   <header class="site-header">
@@ -123,36 +123,42 @@
 
     <section id="utbyte" class="section outcomes reveal">
       <div class="section-head"><p class="eyebrow">03. Det här kan du efter veckan</p><h2>Tolv mål, tre riktningar.</h2><p class="lead">UGL har tolv fastställda utvecklingsmål. De pekar åt tre håll: inåt mot dig själv, utåt mot mötet med andra, och uppåt mot gruppen som helhet.</p></div>
-      <div class="goal-grid">
+      <div class="goal-grid" data-oppen="0">
         <article class="mal-kort ar-oppen">
-          <span>01</span>
-          <h3><button type="button" class="mal-topp" aria-expanded="true" aria-controls="mal-0"><span>Dig själv</span><span class="mal-ikon" aria-hidden="true"></span></button></h3>
-          <div class="mal-kropp" id="mal-0"><div><ul>
-            <li>Se drivkrafterna bakom det du faktiskt gör</li>
-            <li>Förstå hur känslor styr dig och andra</li>
-            <li>Se hur dina värderingar färgar dina relationer</li>
-            <li>Arbeta med reflektion som en vana, inte en engångsövning</li>
-          </ul></div></div>
+          <button type="button" class="mal-topp" aria-expanded="true" aria-controls="mal-0" data-mal="0"><span class="mal-nr">01</span><span class="mal-rub">Dig själv</span><span class="mal-ikon" aria-hidden="true"></span></button>
+          <div class="mal-kropp" id="mal-0"><div class="mal-innehall">
+            <ul>
+              <li>Se drivkrafterna bakom det du faktiskt gör</li>
+              <li>Förstå hur känslor styr dig och andra</li>
+              <li>Se hur dina värderingar färgar dina relationer</li>
+              <li>Arbeta med reflektion som en vana, inte en engångsövning</li>
+            </ul>
+            <figure class="mal-bild"><img src="assets/ugl-tid.webp" alt="Deltagare i samtal framför ett blädderblock om personlig utveckling" loading="lazy"></figure>
+          </div></div>
         </article>
-        <article class="mal-kort ar-oppen">
-          <span>02</span>
-          <h3><button type="button" class="mal-topp" aria-expanded="true" aria-controls="mal-1"><span>Mötet med andra</span><span class="mal-ikon" aria-hidden="true"></span></button></h3>
-          <div class="mal-kropp" id="mal-1"><div><ul>
-            <li>Kommunicera direkt och klart, även när det är obekvämt</li>
-            <li>Ge feedback som går att ta emot</li>
-            <li>Ta emot feedback utan att gå i försvar</li>
-            <li>Gå in i konflikter i stället för runt dem</li>
-          </ul></div></div>
+        <article class="mal-kort">
+          <button type="button" class="mal-topp" aria-expanded="false" aria-controls="mal-1" data-mal="1"><span class="mal-nr">02</span><span class="mal-rub">Mötet med andra</span><span class="mal-ikon" aria-hidden="true"></span></button>
+          <div class="mal-kropp" id="mal-1"><div class="mal-innehall">
+            <ul>
+              <li>Kommunicera direkt och klart, även när det är obekvämt</li>
+              <li>Ge feedback som går att ta emot</li>
+              <li>Ta emot feedback utan att gå i försvar</li>
+              <li>Gå in i konflikter i stället för runt dem</li>
+            </ul>
+            <figure class="mal-bild"><img src="assets/ugl-feedback.webp" alt="Deltagare som ger varandra feedback i en ring" loading="lazy"></figure>
+          </div></div>
         </article>
-        <article class="mal-kort ar-oppen">
-          <span>03</span>
-          <h3><button type="button" class="mal-topp" aria-expanded="true" aria-controls="mal-2"><span>Gruppen</span><span class="mal-ikon" aria-hidden="true"></span></button></h3>
-          <div class="mal-kropp" id="mal-2"><div><ul>
-            <li>Läsa vilket stadium din grupp befinner sig i</li>
-            <li>Se hur roller och normer styr arbetet</li>
-            <li>Förstå vad olika ledarstilar gör med gruppens utveckling</li>
-            <li>Fatta beslut som gruppen faktiskt står bakom</li>
-          </ul></div></div>
+        <article class="mal-kort">
+          <button type="button" class="mal-topp" aria-expanded="false" aria-controls="mal-2" data-mal="2"><span class="mal-nr">03</span><span class="mal-rub">Gruppen</span><span class="mal-ikon" aria-hidden="true"></span></button>
+          <div class="mal-kropp" id="mal-2"><div class="mal-innehall">
+            <ul>
+              <li>Läsa vilket stadium din grupp befinner sig i</li>
+              <li>Se hur roller och normer styr arbetet</li>
+              <li>Förstå vad olika ledarstilar gör med gruppens utveckling</li>
+              <li>Fatta beslut som gruppen faktiskt står bakom</li>
+            </ul>
+            <figure class="mal-bild"><img src="assets/ugl-grupp.webp" alt="Grupp som arbetar tillsammans i en ljus kurslokal" loading="lazy"></figure>
+          </div></div>
         </article>
       </div>
       <div class="takeaway">
@@ -369,6 +375,6 @@
     <div class="footer-links"><a href="#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="#organisationer">För organisationer</a><a href="#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=9"></script>
 </body>
 </html>

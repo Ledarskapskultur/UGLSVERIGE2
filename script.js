@@ -236,13 +236,22 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   slaPa();rita();
 })();
 
-/* Tolv mal: dra ihop och expandera */
+/* Tolv mal: dra ihop i sidled */
 (function(){
-  const knappar=[...document.querySelectorAll('.mal-topp')];
-  if(!knappar.length)return;
-  knappar.forEach(k=>k.addEventListener('click',()=>{
-    const kort=k.closest('.mal-kort');
-    const oppen=kort.classList.toggle('ar-oppen');
-    k.setAttribute('aria-expanded',oppen?'true':'false');
+  const rutnat=document.querySelector('.goal-grid');
+  if(!rutnat)return;
+  const kort=[...rutnat.querySelectorAll('.mal-kort')];
+  const knappar=[...rutnat.querySelectorAll('.mal-topp')];
+  function oppna(i){
+    rutnat.setAttribute('data-oppen',i);
+    kort.forEach((k,n)=>k.classList.toggle('ar-oppen',n===i));
+    knappar.forEach((k,n)=>k.setAttribute('aria-expanded',n===i?'true':'false'));
+  }
+  knappar.forEach((k,i)=>k.addEventListener('click',()=>{
+    if(window.innerWidth<=980){
+      const kortet=kort[i];const oppen=kortet.classList.toggle('ar-oppen');
+      k.setAttribute('aria-expanded',oppen?'true':'false');return;
+    }
+    oppna(i);
   }));
 })();
