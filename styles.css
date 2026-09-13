@@ -1047,6 +1047,32 @@ body{position:relative}
 .ort-ortlista span{font-size:.95rem;color:#5f6763;line-height:1.5}
 @media(max-width:980px){.ort-kurs{grid-template-columns:1fr 1fr}.ort-kurs .button{grid-column:1/-1;justify-self:start}.ort-tva{grid-template-columns:1fr}.ort-ortlista{grid-template-columns:1fr}}
 
+/* ---------- Offertsida for anlaggningar ---------- */
+.off-hero h1{font-family:"Libre Franklin",sans-serif;letter-spacing:-.045em;max-width:16ch}
+.off-hero .lead{max-width:64ch}
+.off-siffror{margin-top:clamp(2rem,3.5vw,3rem)}
+.off-tva{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2.5rem,6vw,6rem);align-items:center}
+.off-tva h2{font-size:clamp(1.8rem,2.8vw,2.6rem);margin:.7rem 0 1.2rem;max-width:20ch}
+.off-tva p{font-size:1.02rem;line-height:1.7;color:#4a514e;max-width:56ch}
+.off-tva figure{margin:0;border-radius:var(--radie);overflow:hidden;aspect-ratio:4/3}
+.off-tva figure img{width:100%;height:100%;object-fit:cover;display:block}
+.off-krav .section-head .lead{max-width:60ch;margin-top:1.2rem}
+.off-layout{grid-template-columns:1fr 1fr;margin-top:clamp(2.2rem,3.5vw,3rem)}
+.off-svar{background:var(--green);color:#e7ece8;max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)))}
+.off-tva-svar{align-items:start}
+.off-svar .eyebrow{color:var(--lime)}
+.off-svar h2{color:#fff;max-width:none}
+.off-svar .lead,.off-svar p{color:#cfdbd5}
+.off-not{font-size:.95rem!important;color:#a9bcb4!important;max-width:44ch}
+.off-kontakt{margin-top:2rem;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,.2)}
+.off-kontakt p{margin:0 0 .4rem;display:flex;gap:.8rem;flex-wrap:wrap;font-size:.95rem;color:#cfdbd5}
+.off-kontakt b{color:#fff;font-weight:600}
+.off-kontakt a{color:#fff;border-bottom:1px solid var(--lime)}
+.off-form{padding-top:.4rem}
+.off-form textarea{width:100%;padding:.9rem 1rem;border-radius:calc(var(--radie) - 8px);border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font:inherit;resize:vertical}
+.off-form textarea:focus{outline:2px solid var(--lime);outline-offset:2px}
+@media(max-width:980px){.off-tva{grid-template-columns:1fr}.off-layout{grid-template-columns:1fr}.off-form{grid-template-columns:1fr}.off-hero h1{max-width:none}}
+
 /* ---------- Meny i fastnalade sektioner ---------- */
 .pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
 .pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;
