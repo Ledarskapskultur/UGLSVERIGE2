@@ -919,6 +919,30 @@ body{position:relative}
 }
 @media(prefers-reduced-motion:reduce){.vk-bilder figure{transition:none}}
 
+/* ---------- Roster, FAQ och extra CTA ---------- */
+.roster{background:var(--ivory);max-width:none;padding-left:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)));padding-right:max(var(--pad),calc((100vw - var(--max))/2 + var(--pad)))}
+.roster .section-head .lead{margin-top:1.5rem;max-width:52ch}
+.roster-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.2rem,2vw,1.8rem);margin-top:clamp(2.6rem,4vw,3.6rem)}
+.roster-grid figure{margin:0;background:#fff;border-radius:calc(var(--radie) - 4px);padding:clamp(1.8rem,2.6vw,2.4rem);display:flex;flex-direction:column;gap:1.4rem}
+.roster-grid blockquote{margin:0;font:500 clamp(1.25rem,1.7vw,1.5rem)/1.4 "Libre Franklin",sans-serif;letter-spacing:-.02em;color:var(--green)}
+.roster-grid blockquote:before{content:"\201C";display:block;color:var(--brass);font-size:2.2rem;line-height:.6;margin-bottom:.6rem}
+.roster-grid figcaption{margin-top:auto;font-size:.88rem;color:#5f6763}
+.roster-grid figcaption b{color:var(--green);font-weight:600}
+.roster-grid figcaption span:before{content:", "}
+.roster .demo-note{margin-top:1.4rem}
+.sektion-cta-morkt{max-width:calc(var(--max) - 2*var(--pad));margin-left:auto;margin-right:auto;border-top-color:rgba(255,255,255,.2)}
+.sektion-cta-morkt p{color:#fff}
+.faq-inner{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(2.5rem,6vw,6rem);align-items:start}
+.faq-txt{position:sticky;top:2rem}
+.faq-txt h2{margin:.7rem 0 1.1rem}
+.faq-txt .lead{max-width:40ch;margin-bottom:1.8rem}
+.faq-lista{margin-top:0;max-width:none}
+.faq-lista details{border-top:1px solid var(--line)}
+.faq-lista details:last-child{border-bottom:1px solid var(--line)}
+.faq-lista summary{font:600 clamp(1.05rem,1.3vw,1.2rem)/1.35 "Libre Franklin",sans-serif;letter-spacing:-.01em;padding:1.2rem 0}
+.faq-lista p{font-size:1rem;line-height:1.7;color:#555d5a;max-width:60ch;padding-bottom:1.4rem}
+@media(max-width:980px){.roster-grid{grid-template-columns:1fr}.faq-inner{grid-template-columns:1fr;gap:2rem}.faq-txt{position:static}}
+
 /* ---------- Meny i fastnalade sektioner ---------- */
 .pin-meny{display:none;flex-direction:column;gap:.2rem;align-self:center}
 .pm-post{background:none;border:0;padding:.6rem 0 .6rem .9rem;font:inherit;text-align:left;cursor:pointer;
