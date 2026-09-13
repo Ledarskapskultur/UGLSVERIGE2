@@ -100,8 +100,8 @@ body{position:relative}
 .terapi-fraga{margin:0 0 .5rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:var(--brass);font-weight:600}
 .terapi-svar{margin:0;font-size:1rem;line-height:1.7;color:#555d5a}
 .terapi-svar strong{color:var(--green);font-weight:600}
-.safety{align-items:start}
-.safety figure{position:sticky;top:2rem;height:auto;aspect-ratio:4/5;max-height:760px}
+.safety{align-items:center}
+.safety figure{position:static;height:auto;aspect-ratio:4/5;max-height:760px}
 .safety .check-list li{padding:1.15rem 0;align-items:baseline;gap:1.5rem}
 .safety .check-list strong{font-size:1.02rem}
 .safety .check-list span{font-size:.98rem;line-height:1.65;color:#5a625e}
