@@ -47,6 +47,9 @@ body{position:relative}
 .hero-copy .eyebrow{color:#fff;margin-bottom:1.5rem}
 .hero-copy h1{color:#fff;margin-bottom:1.7rem;max-width:14ch}
 .hero-copy .lead{color:rgba(255,255,255,.88);max-width:640px;margin-bottom:2.4rem}
+.hero-bevis{list-style:none;padding:1.4rem 0 0;margin:2.2rem 0 0;border-top:1px solid rgba(255,255,255,.22);display:flex;flex-wrap:wrap;gap:.6rem 2rem;font-size:.82rem;letter-spacing:.02em;color:rgba(255,255,255,.82)}
+.hero-bevis li{display:flex;align-items:center;gap:.55rem}
+.hero-bevis li:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime);flex:none}
 .hero .button{background:var(--brass);border-color:var(--brass);color:var(--green)}
 .hero .button:hover{background:#c9ab72;border-color:#c9ab72}
 .hero .text-link{color:#fff;border-bottom-color:rgba(255,255,255,.5)}
@@ -679,6 +682,7 @@ body{position:relative}
 .laddad .hero-copy>*:nth-child(2){transition-delay:.22s}
 .laddad .hero-copy>*:nth-child(3){transition-delay:.32s}
 .laddad .hero-copy>*:nth-child(4){transition-delay:.42s}
+.laddad .hero-copy>*:nth-child(5){transition-delay:.52s}
 .laddad .hero-stat{transition-delay:.5s}
 .research-kort,.kort,.forsk-panel,.f-nod{transition:transform .25s cubic-bezier(.22,.7,.24,1),box-shadow .25s,border-color .25s,opacity .18s}
 .f-nod:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(18,61,53,.07)}
