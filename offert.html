@@ -107,17 +107,17 @@
           </dl>
           <div class="off-kalk" id="off-kalk">
             <p class="off-kalk-rubrik">Räkna fram priset per deltagare</p>
-            <p class="off-kalk-text">Ange vad en person kostar hos er för veckan, inklusive kost, logi och lokaler. Uträknaren lägger på handledarnas två platser och fördelar dem på deltagarna. Det är den siffran vi vill ha i formuläret.</p>
+            <p class="off-kalk-text">Ange vad ett dygn kostar hos er per person, inklusive logi, kost och lokaler. Deltagarna bor fyra dygn, måndag till fredag med avslut efter lunch. Handledarna bor fem dygn, söndag till fredag. Uträknaren summerar alla dygn och fördelar dem på deltagarna. Det är den siffran vi vill ha i formuläret.</p>
             <div class="off-kalk-falt">
-              <label>Pris per person och vecka, exklusive moms<input type="text" inputmode="numeric" id="kalk-pris" placeholder="Till exempel 9 500"></label>
+              <label>Pris per person och dygn, exklusive moms<input type="text" inputmode="numeric" id="kalk-pris" placeholder="Till exempel 2 400"></label>
               <label>Antal deltagare<select id="kalk-antal"><option value="8">8 deltagare</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></label>
             </div>
             <div class="off-kalk-resultat" id="kalk-resultat" aria-live="polite">
-              <p class="off-kalk-formel">Pris per person × (deltagare + 2 handledare) ÷ deltagare = pris per deltagare</p>
+              <p class="off-kalk-formel">Dygnspris × (deltagare × 4 dygn + 2 handledare × 5 dygn) ÷ deltagare = pris per deltagare</p>
             </div>
             <table class="off-kalk-tabell" id="kalk-tabell" hidden>
               <caption>Pris per deltagare beroende på gruppstorlek</caption>
-              <thead><tr><th>Deltagare</th><th>Personer totalt</th><th>Summa för veckan</th><th>Per deltagare</th></tr></thead>
+              <thead><tr><th>Deltagare</th><th>Dygn totalt</th><th>Summa för veckan</th><th>Per deltagare</th></tr></thead>
               <tbody></tbody>
             </table>
             <button type="button" class="button button-small" id="kalk-anvand" hidden>Använd i formuläret &#8595;</button>
@@ -160,6 +160,6 @@
     <div class="footer-links"><a href="/#om">Om UGL</a><a href="/kurser">Kursdatum</a><a href="/ugl/">Kursorter</a><a href="/#organisationer">För organisationer</a><a href="/#kontakt">Kontakt</a></div>
     <p>© 2026 UGL Sverige</p>
   </footer>
-  <script src="/script.js?v=11"></script>
+  <script src="/script.js?v=12"></script>
 </body>
 </html>

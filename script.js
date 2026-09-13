@@ -265,16 +265,17 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
     var p=parseFloat((pris.value||'').replace(/[^\d,.]/g,'').replace(',','.'));
     var n=parseInt(antal.value,10);
     if(!p||p<=0){res.innerHTML=formel;tab.hidden=true;anv.hidden=true;return}
-    var per=p*(n+2)/n;
-    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+kr(p)+' \u00d7 '+(n+2)+' personer = '+kr(p*(n+2))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
+    var dygn=function(k){return k*4+2*5};
+    var per=p*dygn(n)/n;
+    res.innerHTML='<p class="off-kalk-svar"><b>'+kr(per)+'</b><span>per deltagare exklusive moms vid '+n+' deltagare. '+n+' \u00d7 4 dygn + 2 handledare \u00d7 5 dygn = '+dygn(n)+' dygn. '+dygn(n)+' \u00d7 '+kr(p)+' = '+kr(p*dygn(n))+' f\u00f6r veckan, delat p\u00e5 '+n+'.</span></p>';
     var tb=tab.querySelector('tbody');tb.innerHTML='';
     [8,9,10,11,12].forEach(function(k){
       var tr=document.createElement('tr');if(k===n)tr.className='ar-vald';
-      tr.innerHTML='<td>'+k+'</td><td>'+(k+2)+'</td><td>'+kr(p*(k+2))+'</td><td>'+kr(p*(k+2)/k)+'</td>';
+      tr.innerHTML='<td>'+k+'</td><td>'+dygn(k)+'</td><td>'+kr(p*dygn(k))+'</td><td>'+kr(p*dygn(k)/k)+'</td>';
       tb.appendChild(tr);
     });
     tab.hidden=false;anv.hidden=false;
-    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (grundpris '+kr(p)+' per person)';
+    anv.dataset.varde=kr(per)+' per deltagare vid '+n+' deltagare (dygnspris '+kr(p)+' per person, 4 dygn deltagare, 5 dygn handledare)';
   }
   pris.addEventListener('input',rakna);antal.addEventListener('change',rakna);
   anv.addEventListener('click',function(){
