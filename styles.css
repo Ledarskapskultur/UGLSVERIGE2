@@ -275,7 +275,7 @@ body{position:relative}
 /* Redaktionell ton: dampade lankar */
 .organisations .text-link,.facilitators .text-link{display:inline-block;margin-top:.5rem}
 
-.outcomes .lead{color:#c6d3cd}
+.outcomes .lead{color:#c6d3cd;max-width:70ch;font-size:clamp(1.05rem,1.35vw,1.2rem);line-height:1.65;margin-top:1.4rem}
 
 .final-cta .demo-note{color:#9fb3ab;flex-basis:100%;margin-top:1.4rem}
 .final-cta{flex-wrap:wrap}
