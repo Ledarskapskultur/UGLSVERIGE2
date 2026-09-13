@@ -255,6 +255,37 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add(
   });
 })();
 
+/* Nyhetsbrev och webbinarium: skickar till ENDPOINT om den ar satt, annars oppnas ett mejl */
+(function(){
+  var ENDPOINT_NYHETSBREV='';
+  var ENDPOINT_WEBINAR='';
+  var MOTTAGARE='kontakt@uglsverige.se';
+  function koppla(id,statusId,endpoint,amne,radFn,tack){
+    var f=document.getElementById(id);if(!f)return;
+    var st=document.getElementById(statusId);
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!f.checkValidity()){f.reportValidity();return}
+      var rader=radFn(f);
+      if(endpoint){
+        st.textContent='Skickar\u2026';
+        fetch(endpoint,{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}})
+          .then(function(r){st.textContent=r.ok?tack:'N\u00e5got gick fel. Mejla '+MOTTAGARE+'.';if(r.ok)f.reset()})
+          .catch(function(){st.textContent='N\u00e5got gick fel. Mejla '+MOTTAGARE+'.'});
+      }else{
+        window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent(amne)+'&body='+encodeURIComponent(rader.join('\n'));
+        st.textContent='E-postprogrammet \u00f6ppnas med uppgifterna ifyllda. Skicka mejlet s\u00e5 \u00e4r det klart.';
+      }
+    });
+  }
+  koppla('nb-form','nb-status',ENDPOINT_NYHETSBREV,'Nyhetsbrev UGL',function(f){
+    return ['Anm\u00e4lan till nyhetsbrevet','E-post: '+f.epost.value,'Del av landet: '+(f.region.value||'Spelar ingen roll'),'N\u00e4r: '+(f.period.value||'Spelar ingen roll')];
+  },'Tack, v\u00e4lkommen. F\u00f6rsta utskicket kommer inom kort.');
+  koppla('wb-form','wb-status',ENDPOINT_WEBINAR,'Plats p\u00e5 webbinarium om UGL',function(f){
+    return ['Bokning av plats p\u00e5 webbinarium','Namn: '+f.namn.value,'E-post: '+f.epost.value,'Organisation: '+(f.organisation.value||'-'),'Roll: '+f.roll.value];
+  },'Tack, platsen \u00e4r bokad. Datum och l\u00e4nk kommer per mejl.');
+})();
+
 /* Tolv mal: dra ihop i sidled */
 (function(){
   const rutnat=document.querySelector('.goal-grid');
