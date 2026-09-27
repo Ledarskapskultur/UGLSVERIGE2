@@ -1,0 +1,336 @@
+/* Kurssidan: varm palett i linje med uglsverige.vercel.app. Laddas efter styles.css och skriver bara over farger. */
+:root{--green:#321C04;--ivory:#F6E4CF;--brass:#9C7A4A;--sage:#D9C4AA;--charcoal:#2B2724;--line:#E3CFB4;--white:#FFF9F2;--lime:#F6E4CF}
+body{background:#FFF9F2}
+:root{--green:#321C04;--ivory:#F6E4CF;--brass:#9C7A4A;--sage:#D9C4AA;--charcoal:#2B2724;--line:#E3CFB4;--white:#FFF9F2}
+body{background:#FFF9F2}
+.lead{color:#4A3A2A}
+.site-header{background:#FFF9F2}
+.brand-type small{color:#5A4632}
+.button{color:#FFF9F2}
+.button:hover{background:#2B2724}
+.hero-image figcaption{background:#FFF9F2}
+.outcomes{color:#F6E4CF}
+.outcomes h2,.outcomes .eyebrow,.outcomes h3{color:#FFF9F2}
+.days li:before{border:8px solid #FFF9F2}
+.days span{color:#6B5844}
+.check-list li{border-top:1px solid #D9C4AA}
+.filters button{background:#FFF9F2}
+.demo-note{color:#7A6650}
+.org-points article{border-top:1px solid #D9C4AA}
+.final-cta{color:#FFF9F2}
+.final-cta h2,.final-cta .eyebrow{color:#FFF9F2}
+.button-outline{border-color:#FFF9F2}
+footer>p{color:#7A6650}
+@media(max-width:980px){.nav{background:#FFF9F2}}
+.facilitators{background:#FFF9F2}
+.reason-row .reason-body p{color:#4E3E2E}
+.outcome-grid-two p{color:#EBD3B6}
+.site-header .brand-type{color:#FFF9F2}
+.site-header .nav a:not(.button){color:#FFF9F2}
+.site-header .menu-button{color:#FFF9F2}
+.hero-copy{color:#FFF9F2}
+.hero-copy .eyebrow{color:#FFF9F2}
+.hero-copy h1{color:#FFF9F2}
+.hero .button:hover{background:#B89A62;border-color:#B89A62}
+.hero .text-link{color:#FFF9F2}
+.hero-stat{color:#FFF9F2}
+@media(max-width:980px){.site-header{background:#FFF9F2}.site-header .brand-type small{color:#5A4632}}
+/* Hero: uttryck enligt referens (serif-rubrik, limegron accent) */
+:root{--lime:#F6E4CF}
+.hero .button:hover{background:#FFF9F2;border-color:#FFF9F2}
+.site-header .nav a.button:hover{background:#FFF9F2;border-color:#FFF9F2}
+.safety-note{color:#5A4632}
+.terapi{background:#FFF9F2}
+.terapi-svar{color:#4E3E2E}
+.safety .check-list span{color:#5A4632}
+.pull-quote figcaption{color:#7A6650}
+.section-cta span{color:#5A4632}
+.outcomes .section-cta span{color:#EBD3B6}
+.button-light:hover{background:#FFF9F2;border-color:#FFF9F2}
+.research-grid p{color:#4E3E2E}
+.research-note{color:#5A4632}
+.research-kort p{color:#4E3E2E}
+.research-kort .research-visa{color:#8A7660}
+.forsk-panel figcaption{color:#7A6650}
+.forsk-panel>p{color:#5A4632}
+.lm-axel{stroke:#C9B08F}
+.lm-pil{fill:#C9B08F}
+.lm-linje{stroke:#D9C4AA}
+.lm-p-konv{fill:#A08868}
+.lm-p-dest{fill:#8B5A2B}
+.lm-axeltext{fill:#8A7660}
+.lm-noll{fill:#A5927C}
+.lm-minus{fill:#8B5A2B}
+.lm-riktning{fill:#8A7660}
+.lm-konv .lm-prick{background:#A08868}
+.lm-dest .lm-prick{background:#8B5A2B}
+.lm-delar{color:#5A4632}
+@media(max-width:760px){.lm-zoner li{background:#FFF9F2}.lm-zoner .lm-konv{--zon:#A08868}.lm-zoner .lm-dest{--zon:#8B5A2B}.lm-zon-sub{color:#5A4632}}
+.f-nod{background:#FFF9F2}
+.f-nod span{color:#5A4632}
+.f-handling{border-top-color:#8B5A2B}
+.f-op{color:#A5927C}
+.facts-siffror{border-top:1px solid #D9C4AA;border-bottom:1px solid #D9C4AA}
+.facts-siffror span{color:#5A4632}
+.facts-why li{border-top:1px solid #D9C4AA;color:#4E3E2E}
+.facts-table{border-top:1px solid #D9C4AA}
+.facts-table dt{color:#5A4632}
+.week-note{color:#5A4632}
+.goal-grid li{color:#E3CFB4}
+.takeaway p{color:#EBD3B6}
+.imgd li span{color:#5A4632}
+.imgd li span+em{border-top:1px solid #D9C4AA}
+@media(max-width:980px){.imgd li{border-top:1px solid #D9C4AA}}
+.outcomes .lead{color:#EBD3B6}
+.final-cta .demo-note{color:#D9C4AA}
+/* ---- Bokningssidan ---- */
+.site-header.header-solid{background:#FFF9F2}
+.page-hero-link{color:#5A4632}
+.course-filters label{color:#7A6650}
+.course-filters select{background:#FFF9F2}
+.kursraknare{color:#7A6650}
+.cl-date span,.cl-place span,.cl-people span,.cl-price span{color:#6B5844}
+.badge{color:#6B5844}
+.button-outline-dark:hover{color:#FFF9F2}
+.steps li{background:#FFF9F2}
+.steps span{color:#5A4632}
+.booking{color:#F6E4CF}
+.booking h2,.booking .eyebrow{color:#FFF9F2}
+.booking .lead{color:#EBD3B6}
+.booking-assure p{color:#EBD3B6}
+.booking-assure strong{color:#FFF9F2}
+.field label{color:#D9C4AA}
+.field label span{color:#C9B08F}
+.field input,.field select,.field textarea{color:#FFF9F2}
+.field select option{color:#321C04}
+.consent label{color:#EBD3B6}
+.form-note{color:#D9C4AA}
+.practical-grid article{background:#FFF9F2}
+.practical-grid p{color:#4E3E2E}
+.site-header.header-solid .brand-type small{color:#5A4632}
+.site-header.header-solid .nav a.button{color:#FFF9F2}
+.site-header.header-solid .nav a.button:hover{background:#2B2724;border-color:#2B2724}
+.button-row:hover{color:#FFF9F2}
+.browse-intro p{color:#5A4632}
+.browse-assure span{color:#FFF9F2}
+.browse-filters select{background:#FFF9F2}
+.chip{background:#FFF9F2;color:#4A3A2A}
+.chip.is-on{background:#EBD3B6}
+.rensa{color:#7A6650}
+.kursraknare{color:#5A4632}
+.sortera{color:#7A6650}
+.sortera select{background:#FFF9F2}
+.kort{background:#FFF9F2}
+.kort figcaption{background:#FFF9F2}
+.kort-rad{color:#4A3A2A}
+.kort-hl{color:#6B5844}
+.kort-pris span{color:#6B5844}
+.jamfor{color:#5A4632}
+.jamfor input{accent-color:#321C04}
+.compare-bar{color:#F6E4CF}
+.cb-count b{color:#FFF9F2}
+.cb-text{color:#D9C4AA}
+.cb-stang{color:#EBD3B6}
+.compare-panel{background:rgba(43,39,36,.6)}
+.cp-inner{background:#FFF9F2}
+.cp-head button{color:#5A4632}
+.cp-table th{color:#7A6650}
+.brodsmula{color:#7A6650}
+.kurs-meta{color:#4A3A2A}
+.kurs-bild figcaption{color:#F6E4CF}
+.kurs-flikar a{color:#5A4632}
+.kurs-block p{color:#4E3E2E}
+.ingar-grid li{color:#4A3A2A}
+.handledare-lista div span{color:#6B5844}
+.handledare-not,.handledare-tom{color:#6B5844!important}
+.kp-box{background:#FFF9F2}
+.kp-eyebrow{color:#7A6650}
+.kp-label{color:#5A4632}
+.kp-ingar{color:#6B5844}
+.kp-split>div{color:#5A4632}
+.kp-liten{color:#7A6650}
+.kp-hjalp p{color:#5A4632}
+.bf-varfor p{color:#5A4632}
+.bf-varfor dl>div{color:#5A4632}
+.bf-noavg{color:#7A6650!important}
+.kort figcaption.mark{color:#FFF9F2}
+.kort figcaption.mark-pris{color:#FFF9F2}
+/* ---- Sidton: varm off-white i stallet for kritvitt ---- */
+.sida-ton{background:#F6E4CF}
+.sida-ton .site-header{background:#F6E4CF;border-bottom-color:#E3CFB4}
+.sida-ton .kort,.sida-ton .browse-filters,.sida-ton .kp-box,.sida-ton .handledare-lista article,
+.sida-ton .browse-filters select,.sida-ton .sortera select,.sida-ton .chip,.sida-ton .field input,
+.sida-ton footer{background:#FFF9F2}
+.sida-ton .kort,.sida-ton .browse-filters,.sida-ton .handledare-lista article{border-color:#E3CFB4}
+.sida-ton .bf-varfor dl{background:#F6E4CF}
+.sida-ton .kp-hjalp{background:#EBD3B6}
+.sida-ton .hl-init{background:#EBD3B6}
+.sida-ton .kurs-flikar,.sida-ton .kurs-block,.sida-ton .fragor details,
+.sida-ton .kp-split,.sida-ton .kp-lank,.sida-ton .kp-split .kp-tot,.sida-ton .bf-quick,
+.sida-ton .bf-varfor,.sida-ton .results-bar{border-color:#E3CFB4}
+.sida-ton footer{border-top:1px solid #E3CFB4}
+.pris-info{background:#EBD3B6;color:#4A3A2A}
+.pris-info:before{color:#FFF9F2}
+.sida-ton .pris-info{background:#FFF9F2;border:1px solid #E3CFB4}
+.guide-steg{color:#8A7660}
+.guide-steg li+li:before{background:#D9C4AA}
+.guide-steg b{background:#EBD3B6;color:#7A6650}
+.guide-steg .is-pa b{color:#FFF9F2}
+.guide-kort{background:#FFF9F2;border:1px solid #E3CFB4}
+.guide-nr{color:#8A7660}
+.guide-hjalp{color:#6B5844}
+.guide-val button{background:#FFF9F2}
+.guide-val button:hover{background:#FFF9F2}
+.guide-val span{color:#6B5844}
+.guide-bak,.guide-hoppa{color:#7A6650}
+.gs-chip{background:#FFF9F2;border:1px solid #E3CFB4}
+.gs-andra{color:#7A6650}
+.kort-moms{color:#8A7660!important}
+.kort-split>div{color:#5A4632}
+.kp-moms{color:#8A7660}
+.ort-falt span{color:#7A6650}
+.ort-falt input{background:#FFF9F2}
+.ort-skip{color:#7A6650}
+.hl-roll{color:#6B5844}
+.hl-text{color:#4E3E2E}
+/* Intresselista */
+.cb-knapp{color:#FFF9F2}
+.ip-ingress{color:#5A4632}
+.ip-rubrik{color:#7A6650}
+.ip-lista span{color:#5A4632}
+.ip-bort{color:#9A8670}
+.ip-form .field label{color:#7A6650}
+.ip-form .field label span{color:#9A8670}
+.ip-form input{background:#FFF9F2}
+.ip-form .consent label{color:#5A4632}
+.ip-form .consent input{accent-color:#321C04}
+/* Dela kursen */
+.kp-dela{background:#FFF9F2}
+.kp-dela-rubrik{color:#7A6650}
+.dela-knapp{background:#FFF9F2}
+.dela-knapp:hover{color:#FFF9F2}
+.vinst-val input{accent-color:#321C04}
+.vinst-val span{color:#5A4632}
+.ip-form textarea{background:#FFF9F2}
+.ch-forhand{color:#4A3A2A}
+.dela-urval>span:first-child{color:#6B5844}
+.anl-beskrivning{color:#5A4632}
+/* ---------- Bildbanor med text ovanpa ---------- */
+.cta-band,.org-band{color:#FFF9F2}
+.cta-band h2,.org-band h2{color:#FFF9F2}
+.cta-band .lead,.org-band .lead{color:#EBD3B6}
+.org-band .org-points h3{color:#FFF9F2}
+.org-band .org-points p{color:#EBD3B6}
+.org-band .org-points .op-formagor span{color:#F6E4CF}
+.text-link-ljus{color:#FFF9F2}
+/* ---------- Veckan: fastnalad sekvens ---------- */
+.week-pin{color:#F6E4CF}
+.wp-txt h2{color:#FFF9F2}
+.wp-txt .lead{color:#EBD3B6}
+.wp-dagar strong{color:#FFF9F2}
+.wp-dagar span{color:#EBD3B6}
+.wp-not{color:#D9C4AA}
+.wh-nr{fill:#FFF9F2}
+.wh-lbl{fill:#D9C4AA}
+.sp-punkter p{color:#4E3E2E}
+.sp-punkt{color:#A5927C}
+.fp-txt p{color:#4E3E2E}
+.fp-knyt{color:#4E3E2E}
+.vk-dagar{border-top:1px solid #D9C4AA}
+.vk-dagar li{border-bottom:1px solid #E3CFB4}
+.vk-dagar span{color:#4E3E2E}
+.vk-dagar li.ar-pa button{background:#FFF9F2}
+.vk-dagar button:hover strong{color:#2B2724}
+.vk-bilder figcaption{color:#4E3E2E}
+.roster-grid figure{background:#FFF9F2}
+.roster-grid figcaption{color:#5A4632}
+.sektion-cta-morkt p{color:#FFF9F2}
+.faq-lista p{color:#4E3E2E}
+.hl-steg li>span:last-child{color:#4E3E2E}
+.hl-intro{color:#4E3E2E}
+.hl-efter{color:#4E3E2E}
+.webinar{background:#FFF9F2}
+.wb-not{color:#5A4632}
+.wb-form .field label{color:#5A4632}
+.wb-form .field label span{color:#8A7660}
+.wb-form .field input,.wb-form .field select{border:1px solid #D9C4AA}
+.wb-form .form-note{color:#5A4632}
+.wb-form .button-light{color:#FFF9F2}
+.wb-form .button-light:hover{background:#2B2724;border-color:#2B2724}
+.faq-lista details{border-top-color:#D9C4AA}
+.faq-lista details:last-child{border-bottom-color:#D9C4AA}
+/* ---------- SEO: H1-rad och definitionsblock ---------- */
+.h1-liten{color:#FFF9F2}
+.definition p{color:#4A3A2A}
+.op-kalla a{color:#EBD3B6}
+.ort-intro{color:#4A3A2A}
+.ort-kurs>span{color:#5A4632}
+.ort-not{color:#7A6650}
+.ort-fler{color:#4A3A2A}
+.ort-tva p{color:#4A3A2A}
+.ort-anlaggningar{border-top:1px solid #D9C4AA}
+.ort-anlaggningar li{border-bottom:1px solid #E3CFB4}
+.ort-anlaggningar span{color:#5A4632}
+.ort-faq details{border-top-color:#D9C4AA}
+.ort-faq details:last-child{border-bottom:1px solid #D9C4AA}
+.ort-andra-not{color:#5A4632}
+.ort-ortlista span{color:#5A4632}
+.off-tva p{color:#4A3A2A}
+.off-kalk{background:#FFF9F2}
+.off-kalk-text{color:#4A3A2A}
+.off-kalk-falt label{color:#5A4632}
+.off-kalk-falt input,.off-kalk-falt select{border:1px solid #D9C4AA}
+.off-kalk-formel{color:#7A6650}
+.off-kalk-svar span{color:#4A3A2A}
+.off-kalk-tabell caption{color:#5A4632}
+.off-kalk-tabell th,.off-kalk-tabell td{border-bottom:1px solid #E3CFB4}
+.off-kalk-tabell th{color:#7A6650}
+.off-varfor-not{background:#FFF9F2}
+.off-varfor-not p{color:#4A3A2A}
+.off-svar{color:#F6E4CF}
+.off-svar h2{color:#FFF9F2}
+.off-svar .lead,.off-svar p{color:#EBD3B6}
+.off-not{color:#D9C4AA!important}
+.off-kontakt p{color:#EBD3B6}
+.off-kontakt b{color:#FFF9F2}
+.off-kontakt a{color:#FFF9F2}
+.off-form textarea{color:#FFF9F2}
+.km-tre article{background:#FFF9F2}
+.km-tre p{color:#4A3A2A}
+.km-lista span{color:#4A3A2A}
+.km-tva-kort article{background:#FFF9F2}
+.km-tva-kort p{color:#4A3A2A}
+.km-not{color:#5A4632}
+.km-pris{border-top:1px solid #E3CFB4}
+.km-pris>div{border-bottom:1px solid #E3CFB4}
+.km-pris dt{color:#5A4632}
+.km-pris dd span{color:#5A4632}
+.km-pris-not{color:#7A6650!important}
+.km-dialog-stang{border:1px solid #D9C4AA;background:#FFF9F2}
+.km-dialog-not{color:#5A4632}
+.km-steg span{color:#4A3A2A}
+.ft-hero-bild{color:#FFF9F2}
+.ft-hero-bild h1,.ft-hero-bild .lead{color:#FFF9F2}
+.ft-hero-bild .facts-siffror b{color:#FFF9F2}
+.ft-kalk{background:#FFF9F2}
+.ft-valfritt{color:#8A7660}
+.ft-kalk-svar span{color:#4A3A2A}
+.ft-kalk-not{color:#7A6650}
+#ft-tabell tr.ft-summa td{border-top:2px solid #D9C4AA}
+.ft-oppna .km-lista li{border-top-color:#D9C4AA}
+.ft-oppna .km-lista li:last-child{border-bottom-color:#D9C4AA}
+.ft-not p:last-child{color:#4A3A2A}
+.week-pin .pm-namn{color:#FFF9F2}
+.mal-rub{color:#FFF9F2}
+.mal-innehall li{color:#E3CFB4}
+/* Logotypens figurer i samma palett (farger satts annars i script.js) */
+.brand-mark g:nth-child(1) circle{fill:#321C04}.brand-mark g:nth-child(1) path{stroke:#321C04}
+.brand-mark g:nth-child(2) circle{fill:#D9C4AA}.brand-mark g:nth-child(2) path{stroke:#D9C4AA}
+.brand-mark g:nth-child(3) circle{fill:#FFF9F2}.brand-mark g:nth-child(3) path{stroke:#FFF9F2}
+.brand-mark g:nth-child(4) circle{fill:#321C04}.brand-mark g:nth-child(4) path{stroke:#321C04}
+.brand-mark g:nth-child(5) circle{fill:#9C7A4A}.brand-mark g:nth-child(5) path{stroke:#9C7A4A}
+.brand-mark g:nth-child(6) circle{fill:#D9C4AA}.brand-mark g:nth-child(6) path{stroke:#D9C4AA}
+.brand-mark g:nth-child(7) circle{fill:#321C04}.brand-mark g:nth-child(7) path{stroke:#321C04}
+.brand-mark g:nth-child(8) circle{fill:#FFF9F2}.brand-mark g:nth-child(8) path{stroke:#FFF9F2}
+.brand-mark g:nth-child(9) circle{fill:#9C7A4A}.brand-mark g:nth-child(9) path{stroke:#9C7A4A}
+.brand-mark g:nth-child(10) circle{fill:#321C04}.brand-mark g:nth-child(10) path{stroke:#321C04}
