@@ -1,4 +1,7 @@
 (function(){
+  var ENDPOINT='https://nepnzqvxnkxvyyfdymui.supabase.co/functions/v1/ugl-forfragan';
+  var MOTTAGARE='kontakt@uglsverige.se';
+  var MAX_VALDA=3;
   var MANADER=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
   var BILDER=['ugl-grupp.webp','ugl-samtal.webp','ugl-tid.webp','ugl-feedback.webp','ugl-oppenhet.webp','ugl-upplevelse.webp','ugl-handledare.webp','ugl-hero.webp'];
   var REGIONER={'Stockholm':'Stockholm','Lidingö':'Stockholm','Täby':'Stockholm','Värmdö':'Stockholm','Nacka Strand, Stockholm':'Stockholm',
@@ -115,7 +118,7 @@
             ? '<dl class="kort-split"><div><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div></dl>'
             : '<dl class="kort-split"><div><dt>Kurs</dt><dd>'+kr(k.kurspris)+'</dd></div><div><dt>Kost och logi</dt><dd>'+kr(k.logi)+'</dd></div></dl>');
       var hl=k.handledare.length?k.handledare.join('<br>'):'Handledare meddelas senare';
-      var vald=valda.indexOf(k.id)>-1;
+      var vald=valda.indexOf(k.id)>-1,bevakad=bevakade.indexOf(k.id)>-1,fullt=!bevakad&&bevakade.length>=MAX_VALDA;
       return '<li class="kort rad-oppna'+(k.ledig?'':' is-full')+'" tabindex="0" data-lank="'+lank(k)+'">'+
         '<figure><img src="'+k.bild+'" alt="'+(k.egenBild?k.anlaggning+', '+k.ort:'Deltagare under en UGL-vecka')+'" loading="lazy">'+
           (k.ledig?mark:'<figcaption>Fullbokad</figcaption>')+'</figure>'+
@@ -129,7 +132,8 @@
         '<div class="kort-pris">'+pris+'</div>'+
         '<div class="kort-val">'+
           '<label class="jamfor"><input type="checkbox" data-jamfor="'+k.id+'"'+(vald?' checked':'')+'> Jämför</label>'+
-          '<label class="jamfor"><input type="checkbox" data-bevaka="'+k.id+'"'+(bevakade.indexOf(k.id)>-1?' checked':'')+'> Välj</label>'+
+          '<label class="jamfor"><input type="checkbox" data-bevaka="'+k.id+'"'+(bevakad?' checked':'')+(fullt?' disabled':'')+'> '+(bevakad?'Vald':(fullt?'Max tre valda':'Välj veckan'))+'</label>'+
+          '<button type="button" class="button-outline-dark kort-chef" data-chef="'+k.id+'">Skicka till chefen</button>'+
           '<a class="button button-small" href="'+lank(k)+'">Se kursen &#8594;</a>'+
         '</div>'+
       '</li>';
@@ -151,8 +155,15 @@
     lista.querySelectorAll('[data-bevaka]').forEach(function(c){
       c.addEventListener('change',function(){
         var id=+c.getAttribute('data-bevaka'),i=bevakade.indexOf(id);
-        if(c.checked&&i<0)bevakade.push(id); else if(!c.checked&&i>-1)bevakade.splice(i,1);
-        ritaBar();
+        if(c.checked&&i<0){if(bevakade.length>=MAX_VALDA){c.checked=false;return}bevakade.push(id)}
+        else if(!c.checked&&i>-1)bevakade.splice(i,1);
+        ritaBar();rita();
+      })});
+    lista.querySelectorAll('[data-chef]').forEach(function(b){
+      b.addEventListener('click',function(){
+        var id=+b.getAttribute('data-chef');
+        if(bevakade.indexOf(id)<0){if(bevakade.length>=MAX_VALDA)bevakade.shift();bevakade.push(id)}
+        ritaBar();rita();ritaChef('chef');
       })});
     lista.querySelectorAll('[data-jamfor]').forEach(function(c){
       c.addEventListener('change',function(){
@@ -167,7 +178,7 @@
     $('cb-antal').textContent=valda.length;
     $('cb-iantal').textContent=bevakade.length;
     $('cb-jamfor').hidden=$('cb-oppna').hidden=valda.length===0;
-    $('cb-intresse').hidden=$('cb-iopna').hidden=$('cb-chef').hidden=bevakade.length===0;
+    $('cb-intresse').hidden=$('cb-iopna').hidden=$('cb-chef').hidden=$('cb-tips').hidden=bevakade.length===0;
     bar.hidden=valda.length===0&&bevakade.length===0;
   }
   function kursMedId(id){return kurser.filter(function(k){return k.id===id})[0]}
@@ -251,10 +262,14 @@
              '\n\nBevakade kurser:\n'+rader.join('\n');
     if(ENDPOINT){
       $('ip-status').textContent='Skickar…';
-      var d=new FormData(f);d.append('kurser',rader.join(' | '));
-      fetch(ENDPOINT,{method:'POST',body:d,headers:{Accept:'application/json'}})
-        .then(function(r){$('ip-status').textContent=r.ok?'Tack, vi hör av oss när det är dags.':'Något gick fel. Mejla oss på '+MOTTAGARE+'.';if(r.ok){f.reset();bevakade=[];ritaBar();rita()}})
-        .catch(function(){$('ip-status').textContent='Något gick fel. Mejla oss på '+MOTTAGARE+'.'});
+      posta({typ:'intresse',kurser:bevakade.map(function(id){return kursData(kursMedId(id))}),
+        namn:$('ip-namn').value.trim(),epost:$('ip-epost').value.trim(),telefon:$('ip-telefon').value.trim(),samtycke:true})
+        .then(function(r){
+          if(!r.ok){$('ip-status').textContent='Något gick fel. Mejla oss på '+MOTTAGARE+'.';return}
+          if(!r.mejl){window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Intresselista UGL, '+bevakade.length+' kurser')+'&body='+encodeURIComponent(text)}
+          $('ip-status').textContent='Tack, du står på listan. Vi hör av oss när det är dags.';
+          f.reset();bevakade=[];ritaBar();rita();
+        });
     }else{
       window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Intresselista UGL, '+bevakade.length+' kurser')+'&body='+encodeURIComponent(text);
       $('ip-status').textContent='Ditt e-postprogram öppnas med anmälan ifylld. Skicka mejlet så har vi den.';
@@ -265,8 +280,13 @@
   rita();ritaBar();
 
 
-  var ENDPOINT='';
-  var MOTTAGARE='kontakt@uglsverige.se';
+  function kursData(k){return {vecka:k.vecka,anlaggning:k.anlaggning,ort:k.ort,period:k.period,total:k.total||0,lank:location.origin+'/'+lank(k)}}
+  function posta(body){
+    body.kalla=location.hostname;
+    return fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,mejl:!!j.mejl,error:j.error}})})
+      .catch(function(){return {ok:false,mejl:false,error:'Ingen kontakt med servern'}});
+  }
 
   // ---- Mini behovsanalys ----
   var PERIODTEXT={'0':'Inom 3 månader','1':'Om 4 till 6 månader','2':'Om 7 till 12 månader','x':'Alla datum'};
@@ -370,38 +390,73 @@
     t+=namn+(roll?'\n'+roll:'')+(org?'\n'+org:'');
     return t;
   }
-  function ritaChef(){
+  function tipsText(){
+    var namn=$('ch-namn').value.trim()||'[ditt namn]';
+    var till=$('ch-chefnamn').value.trim();
+    var eget=$('ch-eget').value.trim();
+    var kurser2=bevakade.map(kursMedId);
+    var t='Hej'+(till?' '+till:'')+',\n\n';
+    t+='Jag tänkte på dig när '+(kurser2.length>1?'de här veckorna':'den här veckan')+' dök upp. UGL, Utveckling av Grupp och Ledare, är en femdagarskurs på kursgård i grupputveckling och ledarskap:\n\n';
+    kurser2.forEach(function(k){
+      t+='• Vecka '+k.vecka+', '+k.period+'\n  '+k.anlaggning+', '+k.ort+(k.total?', '+kr(k.total)+' exkl. moms':'')+'\n';
+      t+='  '+location.origin+'/kurs?k='+k.datum+'-'+slug(k.anlaggning)+'\n\n';
+    });
+    if(eget)t+=eget+'\n\n';
+    t+='Läs mer och boka på '+location.origin+'/kurser\n\nHälsningar\n'+namn;
+    return t;
+  }
+  var laget='chef';
+  function brevText(){return laget==='chef'?chefText():tipsText()}
+  function amneText(){return laget==='chef'?'UGL-kurs jag vill gå'+(bevakade.length>1?', '+bevakade.length+' alternativ':''):'Tips: UGL, Utveckling av Grupp och Ledare'}
+  function visaFlik(f){
+    laget=f;
+    document.querySelectorAll('.ch-flik').forEach(function(b){b.classList.toggle('is-active',b.getAttribute('data-flik')===f)});
+    document.querySelectorAll('#chefpanel [data-visa]').forEach(function(el){el.hidden=el.getAttribute('data-visa')!==f});
+    $('ch-rubrik').textContent=f==='chef'?'Skicka kursen till din chef':'Tipsa någon om kursen';
+    $('ch-chefnamn-etikett').textContent=f==='chef'?'Chefens namn':'Mottagarens namn';
+    $('ch-chefmail-etikett').textContent=f==='chef'?'Chefens e-post':'Mottagarens e-post';
+    $('ch-chefnamn').required=f==='chef';
+    $('ch-eget-etikett').innerHTML=f==='chef'?'Egen motivering <span>Valfritt, läggs sist i mejlet</span>':'Personlig hälsning <span>Valfritt</span>';
+    $('ch-skicka').textContent=f==='chef'?'Skicka till chefen':'Skicka tipset';
+    $('ch-status').textContent='';
+    $('ch-forhand').textContent=brevText();
+  }
+  document.querySelectorAll('.ch-flik').forEach(function(b){b.addEventListener('click',function(){visaFlik(b.getAttribute('data-flik'))})});
+  function ritaChef(f){
     $('ch-lista').innerHTML=bevakade.map(function(id){
       var k=kursMedId(id);
       return '<li><strong>Vecka '+k.vecka+'</strong><span>'+k.period+'</span><span>'+k.anlaggning+', '+k.ort+'</span></li>';
     }).join('');
-    $('ch-forhand').textContent=chefText();
+    visaFlik(f||laget);
     ritaUrvalDelning();
     chpanel.hidden=false;
   }
   ['ch-namn','ch-roll','ch-org','ch-chefnamn','ch-eget'].forEach(function(id){
-    $(id).addEventListener('input',function(){$('ch-forhand').textContent=chefText()})});
+    $(id).addEventListener('input',function(){$('ch-forhand').textContent=brevText()})});
   document.querySelectorAll('.vinst-val input').forEach(function(c){
-    c.addEventListener('change',function(){$('ch-forhand').textContent=chefText()})});
-  $('cb-chef').addEventListener('click',ritaChef);
+    c.addEventListener('change',function(){$('ch-forhand').textContent=brevText()})});
+  $('cb-chef').addEventListener('click',function(){ritaChef('chef')});
+  $('cb-tips').addEventListener('click',function(){ritaChef('tips')});
   $('ch-stang').addEventListener('click',function(){chpanel.hidden=true});
   $('ch-form').addEventListener('submit',function(e){
     e.preventDefault();
     var f=$('ch-form');
     if(!f.checkValidity()){f.reportValidity();return}
-    var amne='UGL-kurs jag vill gå'+(bevakade.length>1?', '+bevakade.length+' alternativ':'');
-    var lank='mailto:'+encodeURIComponent($('ch-chefmail').value)+
-      ($('ch-kopia').checked?'?cc='+encodeURIComponent(MOTTAGARE)+'&':'?')+
-      'subject='+encodeURIComponent(amne)+'&body='+encodeURIComponent(chefText());
-    if(ENDPOINT){
-      var d=new FormData(f);
-      d.append('typ','chefsutskick');
-      d.append('kurser',bevakade.map(function(id){var k=kursMedId(id);return 'Vecka '+k.vecka+' '+k.period+' '+k.anlaggning}).join(' | '));
-      d.append('vinster',valdaVinster().join(', '));
-      fetch(ENDPOINT,{method:'POST',body:d,headers:{Accept:'application/json'}}).catch(function(){});
-    }
-    window.location.href=lank;
-    $('ch-status').textContent='Ditt e-postprogram öppnas med mejlet ifyllt. Läs igenom och skicka.';
+    var amne=amneText(),brev=brevText();
+    var mailto='mailto:'+encodeURIComponent($('ch-chefmail').value.trim())+
+      '?cc='+encodeURIComponent($('ch-epost').value.trim()+','+MOTTAGARE)+
+      '&subject='+encodeURIComponent(amne)+'&body='+encodeURIComponent(brev);
+    var skicka=$('ch-skicka');skicka.disabled=true;$('ch-status').textContent='Sparar…';
+    posta({typ:laget,kurser:bevakade.map(function(id){return kursData(kursMedId(id))}),
+      namn:$('ch-namn').value.trim(),epost:$('ch-epost').value.trim(),telefon:$('ch-telefon').value.trim(),
+      organisation:$('ch-org').value.trim(),mottagare_namn:$('ch-chefnamn').value.trim(),mottagare_epost:$('ch-chefmail').value.trim(),
+      motiv:laget==='chef'?valdaVinster():[],meddelande:$('ch-eget').value.trim(),amne:amne,brev:brev,samtycke:true})
+      .then(function(r){
+        skicka.disabled=false;
+        if(!r.ok){$('ch-status').textContent=(r.error||'Något gick fel')+'. Mejla oss på '+MOTTAGARE+'.';return}
+        if(r.mejl){$('ch-status').textContent='Skickat. Du får en kopia till din egen e-post.';}
+        else{window.location.href=mailto;$('ch-status').textContent='Uppgifterna är sparade. Ditt e-postprogram öppnas med mejlet ifyllt, läs igenom och skicka.';}
+      });
   });
 
 
@@ -427,20 +482,20 @@
       navigator.share({title:'UGL-kurser',text:'Kolla de här UGL-veckorna',url:urvalLank()}).catch(function(){})});
   }
   $('cp-chef').addEventListener('click',function(){
-    valda.forEach(function(id){if(bevakade.indexOf(id)<0)bevakade.push(id)});
-    panel.hidden=true;ritaBar();rita();ritaChef();
+    valda.forEach(function(id){if(bevakade.indexOf(id)<0&&bevakade.length<MAX_VALDA)bevakade.push(id)});
+    panel.hidden=true;ritaBar();rita();ritaChef('chef');
   });
   (function(){
     var q=new URLSearchParams(location.search).get('valda');
     if(!q)return;
     q.split(',').forEach(function(n){
       var k=kurser.filter(function(x){return urvalNyckel(x)===n})[0];
-      if(k&&bevakade.indexOf(k.id)<0)bevakade.push(k.id);
+      if(k&&bevakade.indexOf(k.id)<0&&bevakade.length<MAX_VALDA)bevakade.push(k.id);
     });
     if(bevakade.length){fLedig.checked=false;ritaBar();rita()}
   })();
 
-  var form=document.querySelector('.booking-form'),status=document.querySelector('.form-status');
+  var form=document.querySelector('.booking-form'),status=form.querySelector('.form-status')||document.querySelector('.booking .form-status');
   form.addEventListener('submit',function(e){
     e.preventDefault();
     if(!form.checkValidity()){form.reportValidity();return}
@@ -448,9 +503,15 @@
     d.forEach(function(v,k){if(k!=='samtycke')rader.push(k.charAt(0).toUpperCase()+k.slice(1)+': '+v)});
     if(ENDPOINT){
       status.textContent='Skickar…';
-      fetch(ENDPOINT,{method:'POST',body:d,headers:{Accept:'application/json'}})
-        .then(function(r){status.textContent=r.ok?'Tack, din anmälan är skickad. Vi hör av oss inom två arbetsdagar.':'Något gick fel. Mejla oss på '+MOTTAGARE+'.';if(r.ok)form.reset()})
-        .catch(function(){status.textContent='Något gick fel. Mejla oss på '+MOTTAGARE+'.'});
+      var valdKurs=kurser.filter(function(k){return etikett(k)===d.get('kurs')});
+      var extra=[d.get('befattning')?'Befattning: '+d.get('befattning'):'',d.get('fakturering')?'Fakturering: '+d.get('fakturering'):'',d.get('meddelande')||''].filter(Boolean).join('\n');
+      posta({typ:'bokning',kurser:valdKurs.map(kursData),namn:(d.get('fornamn')+' '+d.get('efternamn')).trim(),epost:d.get('epost'),telefon:d.get('telefon'),
+        organisation:d.get('organisation'),meddelande:(valdKurs.length?'':'Vald kurs: '+d.get('kurs')+'\n')+extra,samtycke:true})
+        .then(function(r){
+          if(!r.ok){status.textContent=(r.error||'Något gick fel')+'. Mejla oss på '+MOTTAGARE+'.';return}
+          if(!r.mejl){window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Anmälan UGL: '+(d.get('kurs')||''))+'&body='+encodeURIComponent(rader.join('\n'))}
+          status.textContent='Tack, anmälan är mottagen. Vi hör av oss inom två arbetsdagar.';form.reset();
+        });
     }else{
       window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Anmälan UGL: '+(d.get('kurs')||''))+'&body='+encodeURIComponent(rader.join('\n'));
       status.textContent='Ditt e-postprogram öppnas med anmälan ifylld. Skicka mejlet så har vi den.';

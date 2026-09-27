@@ -334,3 +334,14 @@ footer>p{color:#7A6650}
 .brand-mark g:nth-child(8) circle{fill:#FFF9F2}.brand-mark g:nth-child(8) path{stroke:#FFF9F2}
 .brand-mark g:nth-child(9) circle{fill:#9C7A4A}.brand-mark g:nth-child(9) path{stroke:#9C7A4A}
 .brand-mark g:nth-child(10) circle{fill:#321C04}.brand-mark g:nth-child(10) path{stroke:#321C04}
+
+/* Välj upp till tre, skicka till chef eller tipsa */
+.kort-chef{padding:.6rem .9rem;font-size:.85rem;font-weight:500}
+.jamfor input:disabled{opacity:.45}
+.jamfor:has(input:disabled){color:#9C7A4A;cursor:default}
+.ch-flikar{display:flex;gap:.4rem;margin:-.4rem 0 1.2rem;border-bottom:1px solid #E3CFB4}
+.ch-flik{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:.6rem .9rem;font:inherit;font-weight:600;font-size:.92rem;color:#7A6650;cursor:pointer}
+.ch-flik.is-active{color:#321C04;border-bottom-color:#321C04}
+.ch-flik:hover{color:#321C04}
+#chefpanel [data-visa][hidden]{display:none!important}
+.ch-forhand{white-space:pre-wrap}
