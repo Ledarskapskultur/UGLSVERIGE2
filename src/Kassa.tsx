@@ -10,10 +10,12 @@ const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddela
 export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void }) {
   const [steg, setSteg] = useState<'val' | 'intresse' | 'klart'>('val')
   const [forsta, setForsta] = useState<string | null>(null)
+  const [bortvalda, setBortvalda] = useState<string[]>([])
+  const medtagna = valda.filter((k) => !bortvalda.includes(k.id))
   const [f, setF] = useState({ namn: '', epost: '', telefon: '', samtycke: false })
   const [status, setStatus] = useState<string | null>(null)
   const [skickar, setSkickar] = useState(false)
-  const forstaId = valda.some((k) => k.id === forsta) ? forsta! : valda[0]?.id
+  const forstaId = medtagna.some((k) => k.id === forsta) ? forsta! : medtagna[0]?.id
   const portalLank = PORTAL + '?kurser=' + encodeURIComponent(valda.map((k) => k.nyckel).join(','))
   const field = 'w-full bg-transparent border-b border-[#321C04]/25 focus:border-[#321C04] outline-none py-2.5 text-[#321C04] placeholder:text-[#321C04]/40 text-base transition-colors'
   const label = 'block text-[#321C04]/60 text-[11px] uppercase tracking-[0.2em] font-medium mb-1'
@@ -21,12 +23,12 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra }: { va
 
   const skicka = async (e: FormEvent) => {
     e.preventDefault()
-    if (!valda.length) return setStatus('Välj minst en vecka först.')
+    if (!medtagna.length) return setStatus('Bocka i minst en vecka.')
     if (!f.namn.trim() || !f.epost.includes('@')) return setStatus('Fyll i namn och e-post.')
     if (!f.samtycke) return setStatus('Kryssa i samtycket så att vi får kontakta dig.')
     setSkickar(true)
     setStatus(null)
-    const ordnade = [...valda].sort((a, b) => (a.id === forstaId ? 0 : 1) - (b.id === forstaId ? 0 : 1))
+    const ordnade = [...medtagna].sort((a, b) => (a.id === forstaId ? 0 : 1) - (b.id === forstaId ? 0 : 1))
     const rader = ordnade.map((k, i) => `- ${i === 0 ? 'Förstahandsval' : 'Alternativ'}: Vecka ${k.vecka}, ${k.period}, ${k.anlaggning}, ${k.ort}`)
     const r = await posta({ typ: 'intresse', kurser: ordnade.map((k, i) => ({ ...kursData(k), id: k.nyckel, forstahandsval: i === 0 })), meddelande: rader.join('\n'), namn: f.namn, epost: f.epost, telefon: f.telefon, samtycke: true })
     setSkickar(false)
@@ -91,19 +93,34 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra }: { va
             <p className={eyebrow}>Anmälan</p>
             <h2 className="text-[30px] leading-[1.1] tracking-tight mb-2" style={EM}>Intresseanmälan</h2>
             <p className="text-sm text-[#321C04]/70 mb-5 max-w-[50ch]">Ingen plats är bokad. Vi hör av oss när det närmar sig, eller så fort en plats blir ledig på en vecka du valt.</p>
-            <p className={label}>Vilken vecka är förstahandsval?</p>
+            <p className={label}>Veckor som ingår i anmälan</p>
             <ul className="divide-y divide-[#321C04]/15 border-y border-[#321C04]/15 mb-2">
-              {valda.map((k) => (
-                <li key={k.id}>
-                  <label className="flex items-center gap-3 py-3 cursor-pointer">
-                    <input type="radio" name="forsta" checked={k.id === forstaId} onChange={() => setForsta(k.id)} className="w-4 h-4 accent-[#321C04]" />
-                    <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning}</span></span>
-                    <span className="text-sm shrink-0">{pris(k)}</span>
-                  </label>
-                </li>
-              ))}
+              {valda.map((k) => {
+                const med = !bortvalda.includes(k.id)
+                return (
+                  <li key={k.id}>
+                    <label className={`flex items-center gap-3 py-3 cursor-pointer ${med ? '' : 'opacity-50'}`}>
+                      <input type="checkbox" checked={med} onChange={(e) => setBortvalda((b) => (e.target.checked ? b.filter((x) => x !== k.id) : [...b, k.id]))} className="w-4 h-4 accent-[#321C04]" />
+                      <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning}</span></span>
+                      <span className="text-sm shrink-0">{pris(k)}</span>
+                    </label>
+                  </li>
+                )
+              })}
             </ul>
-            {valda.length > 1 && <p className="text-[13px] text-[#321C04]/60 mb-5">Övriga veckor skickas med som alternativ.</p>}
+            {medtagna.length > 1 && (
+              <div className="mt-4">
+                <p className={label}>Förstahandsval</p>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {medtagna.map((k) => (
+                    <button key={k.id} type="button" onClick={() => setForsta(k.id)} aria-pressed={k.id === forstaId} className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${k.id === forstaId ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'border-[#321C04]/25 hover:border-[#321C04]/60'}`}>
+                      Vecka {k.vecka}, {k.ort}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[13px] text-[#321C04]/60 mt-2">Övriga ibockade veckor skickas med som alternativ.</p>
+              </div>
+            )}
             <div className="grid gap-y-4 mt-4">
               <div><label className={label}>Namn</label><input className={field} value={f.namn} onChange={(e) => setF({ ...f, namn: e.target.value })} autoComplete="name" /></div>
               <div><label className={label}>E-post</label><input type="email" className={field} value={f.epost} onChange={(e) => setF({ ...f, epost: e.target.value })} autoComplete="email" /></div>
