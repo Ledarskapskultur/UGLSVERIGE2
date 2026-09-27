@@ -345,3 +345,34 @@ footer>p{color:#7A6650}
 .ch-flik:hover{color:#321C04}
 #chefpanel [data-visa][hidden]{display:none!important}
 .ch-forhand{white-space:pre-wrap}
+
+/* Panel: valda kursveckor och vem som anmäls */
+.vp-inner{max-width:560px;position:relative;padding-top:2.4rem}
+.vp-stang{position:absolute;top:1.1rem;right:1.2rem;background:none;border:0;font-size:1.15rem;color:#5A4632;cursor:pointer;padding:.3rem .5rem}
+.vp-rubrik{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:clamp(1.7rem,3.2vw,2.1rem);line-height:1.15;color:#321C04;margin:0 0 1.1rem}
+.vp-mellan{margin-top:2.2rem}
+.vp-lista{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.vp-lista li{display:grid;grid-template-columns:1fr auto;grid-template-areas:"titel bort" "detalj bort";align-items:center;column-gap:.8rem;padding:.8rem 1rem;border:1px solid #E3CFB4;border-radius:10px;background:#FFF9F2}
+.vp-titel{grid-area:titel;color:#321C04;font-size:1.02rem}
+.vp-titel b{font-family:"Playfair Display",Georgia,serif;font-weight:600}
+.vp-detalj{grid-area:detalj;font-size:.86rem;color:#7A6650;margin-top:.15rem}
+.vp-bort{grid-area:bort;width:28px;height:28px;border-radius:50%;border:1px solid #B9A084;background:#fff;color:#5A4632;font-size:.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.vp-bort:hover{background:#321C04;color:#fff;border-color:#321C04}
+.vp-andra{display:inline-flex;align-items:center;gap:.45rem;margin:1rem 0 .4rem;background:none;border:0;padding:0;font:inherit;font-weight:500;color:#321C04;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.vp-andra svg{width:16px;height:16px}
+.vp-not{margin:0;font-size:.9rem;color:#7A6650}
+.vp-val{display:grid;gap:.8rem}
+.vp-kort{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:1rem;width:100%;text-align:left;padding:1rem 1.1rem;border:1px solid #D9C4AA;border-radius:10px;background:#fff;color:#321C04;font:inherit;cursor:pointer;text-decoration:none;transition:.15s}
+.vp-kort svg{width:36px;height:36px;color:#5A4632}
+.vp-kort b{display:block;font-family:"Playfair Display",Georgia,serif;font-weight:600;font-size:1.15rem;line-height:1.2}
+.vp-kort small{display:block;font-size:.86rem;color:#7A6650;margin-top:.2rem;line-height:1.4}
+.vp-kort i{font-style:normal;font-size:1.6rem;line-height:1;color:#5A4632}
+.vp-kort:hover{border-color:#321C04;background:#FFF9F2}
+.vp-kort.is-primar{border:1.5px solid #321C04;background:#F6E4CF}
+.ip-radio{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;flex:1;cursor:pointer;margin:0}
+.ip-radio input{width:18px;height:18px;accent-color:#321C04;flex:none}
+.ip-pris{margin-left:auto;font-weight:500;color:#321C04}
+.ip-not{margin:-1.2rem 0 1.6rem;font-size:.88rem;color:#7A6650}
+.ip-bort{background:none;border:1px solid #B9A084;border-radius:50%;width:26px;height:26px;color:#5A4632;cursor:pointer;font-size:.75rem}
+.ip-knappar{display:flex;gap:.8rem;flex-wrap:wrap}.ip-form .ip-knappar .button-outline-dark{width:auto;flex:0 0 auto}.ip-form .ip-knappar .button{width:auto;flex:1}
+@media (max-width:640px){.vp-inner{max-height:92vh}.vp-kort{grid-template-columns:36px 1fr auto}.vp-kort svg{width:30px;height:30px}}

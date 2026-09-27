@@ -427,3 +427,8 @@
 .ny-kontakt .mini{margin:1rem 0 0}
 .ny-kontakt input,.ny-kontakt select{background:#fff}
 @media(max-width:620px){.tidslinje li{grid-template-columns:32px 1fr}.tl-dat{grid-column:2;text-align:left}}
+/* Urval fran kurssidan */
+.pf-urval .pf-check{display:flex;align-items:center;gap:.5rem;text-transform:none;letter-spacing:0;font-weight:500;font-size:.94rem;color:var(--green);padding:.6rem 0}
+.pf-check input{width:17px;height:17px;accent-color:var(--green)}
+.kv-rad.kv-urval{border-color:var(--green);background:#f4f7f5}
+.kv-tagg{display:inline-block;margin-left:.4rem;padding:.1rem .5rem;border-radius:999px;background:var(--green);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle}

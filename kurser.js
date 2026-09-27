@@ -67,7 +67,7 @@
   var lista=$('kurslista'),raknare=$('kursraknare'),fTid=$('filter-tid'),fRegion=$('filter-region'),
       fOrt=$('filter-ort'),fPris=$('filter-pris'),fLedig=$('filter-ledig'),fSort=$('filter-sort'),
       merKnapp=$('visa-fler'),select=$('kurs'),bar=$('valbar'),panel=$('jamforpanel'),
-      ipanel=$('intressepanel'),chpanel=$('chefpanel'),visade=6,valda=[],bevakade=[];
+      ipanel=$('intressepanel'),chpanel=$('chefpanel'),vpanel=$('valpanel'),visade=6,valda=[],bevakade=[],forsta=null;
 
   function fyll(el,varden,etikett){varden.forEach(function(v){
     el.insertAdjacentHTML('beforeend','<option value="'+v[0]+'">'+v[1]+'</option>')})}
@@ -178,25 +178,58 @@
     $('cb-antal').textContent=valda.length;
     $('cb-iantal').textContent=bevakade.length;
     $('cb-jamfor').hidden=$('cb-oppna').hidden=valda.length===0;
-    $('cb-intresse').hidden=$('cb-iopna').hidden=$('cb-chef').hidden=$('cb-tips').hidden=bevakade.length===0;
+    $('cb-intresse').hidden=$('cb-vidare').hidden=$('cb-chef').hidden=$('cb-tips').hidden=bevakade.length===0;
     bar.hidden=valda.length===0&&bevakade.length===0;
   }
   function kursMedId(id){return kurser.filter(function(k){return k.id===id})[0]}
+  function taBort(id){
+    var i=bevakade.indexOf(id);if(i>-1)bevakade.splice(i,1);
+    if(forsta===id)forsta=null;
+    ritaBar();rita();
+  }
+  function prisText(k){return k.total?kr(k.total)+' exkl. moms':'Pris meddelas'}
+  /* Steg 1: valda veckor och vem som anmäls */
+  function ritaVal(){
+    $('vp-lista').innerHTML=bevakade.map(function(id){
+      var k=kursMedId(id);
+      return '<li><span class="vp-titel"><b>Vecka '+k.vecka+'</b> &middot; '+k.ort+'</span>'+
+             '<span class="vp-detalj">'+k.period+' &middot; '+k.anlaggning+' &middot; '+prisText(k)+'</span>'+
+             '<button type="button" class="vp-bort" data-bort="'+id+'" aria-label="Ta bort vecka '+k.vecka+'">&#10005;</button></li>';
+    }).join('');
+    $('vp-lista').querySelectorAll('[data-bort]').forEach(function(b){
+      b.addEventListener('click',function(){
+        taBort(+b.getAttribute('data-bort'));
+        if(bevakade.length)ritaVal(); else vpanel.hidden=true;
+      })});
+    $('vp-medarb').href='/portal?kurser='+encodeURIComponent(bevakade.map(function(id){return urvalNyckel(kursMedId(id))}).join(','));
+    try{localStorage.setItem('ugl-urval',JSON.stringify(bevakade.map(function(id){return urvalNyckel(kursMedId(id))})))}catch(e){}
+    ipanel.hidden=true;chpanel.hidden=true;panel.hidden=true;
+    vpanel.hidden=false;
+  }
+  $('cb-vidare').addEventListener('click',ritaVal);
+  $('vp-stang').addEventListener('click',function(){vpanel.hidden=true});
+  $('vp-andra').addEventListener('click',function(){vpanel.hidden=true;$('kurslista').scrollIntoView({behavior:'smooth',block:'start'})});
+  $('vp-sjalv').addEventListener('click',function(){vpanel.hidden=true;ritaIntresse()});
+  /* Steg 2a: intresseanmälan med förstahandsval */
   function ritaIntresse(){
+    if(forsta===null||bevakade.indexOf(forsta)<0)forsta=bevakade[0];
     $('ip-lista').innerHTML=bevakade.map(function(id){
       var k=kursMedId(id);
-      return '<li><strong>Vecka '+k.vecka+'</strong><span>'+k.period+'</span><span>'+k.anlaggning+', '+k.ort+'</span>'+
+      return '<li><label class="ip-radio"><input type="radio" name="forsta" value="'+id+'"'+(id===forsta?' checked':'')+'>'+
+             '<strong>Vecka '+k.vecka+'</strong><span>'+k.period+'</span><span>'+k.anlaggning+', '+k.ort+'</span><span class="ip-pris">'+prisText(k)+'</span></label>'+
              '<button type="button" class="ip-bort" data-bort="'+id+'" aria-label="Ta bort">&#10005;</button></li>';
     }).join('');
+    $('ip-not').hidden=bevakade.length<2;
+    $('ip-lista').querySelectorAll('input[name=forsta]').forEach(function(r){
+      r.addEventListener('change',function(){forsta=+r.value})});
     $('ip-lista').querySelectorAll('[data-bort]').forEach(function(b){
       b.addEventListener('click',function(){
-        var id=+b.getAttribute('data-bort'),i=bevakade.indexOf(id);
-        if(i>-1)bevakade.splice(i,1);
-        ritaBar();rita();
+        taBort(+b.getAttribute('data-bort'));
         if(bevakade.length){ritaIntresse()}else{ipanel.hidden=true}
       })});
     ipanel.hidden=false;
   }
+  $('ip-tillbaka').addEventListener('click',function(){ipanel.hidden=true;ritaVal()});
 
   function ritaJamfor(){
     var v=valda.map(function(id){return kurser.filter(function(k){return k.id===id})[0]});
@@ -248,27 +281,28 @@
   });
   $('cb-oppna').addEventListener('click',ritaJamfor);
   $('cp-stang').addEventListener('click',function(){panel.hidden=true});
-  $('cb-iopna').addEventListener('click',ritaIntresse);
   $('ip-stang').addEventListener('click',function(){ipanel.hidden=true});
-  $('cb-rensa').addEventListener('click',function(){valda=[];bevakade=[];ritaBar();rita();panel.hidden=true;ipanel.hidden=true;chpanel.hidden=true});
+  $('cb-rensa').addEventListener('click',function(){valda=[];bevakade=[];forsta=null;ritaBar();rita();panel.hidden=true;ipanel.hidden=true;chpanel.hidden=true;vpanel.hidden=true});
   $('ip-form').addEventListener('submit',function(e){
     e.preventDefault();
     var f=$('ip-form');
     if(!f.checkValidity()){f.reportValidity();return}
-    var rader=bevakade.map(function(id){var k=kursMedId(id);
-      return '- Vecka '+k.vecka+', '+k.period+', '+k.anlaggning+', '+k.ort});
-    var text='Intresseanmälan UGL\n\nNamn: '+$('ip-namn').value+'\nE-post: '+$('ip-epost').value+
+    var ordnade=bevakade.slice().sort(function(a,b){return (a===forsta?0:1)-(b===forsta?0:1)});
+    var rader=ordnade.map(function(id,i){var k=kursMedId(id);
+      return '- '+(i===0?'Förstahandsval: ':'Alternativ: ')+'Vecka '+k.vecka+', '+k.period+', '+k.anlaggning+', '+k.ort});
+    var text='Intresseanmälan UGL (ingen plats bokad)\n\nNamn: '+$('ip-namn').value+'\nE-post: '+$('ip-epost').value+
              ($('ip-telefon').value?'\nTelefon: '+$('ip-telefon').value:'')+
-             '\n\nBevakade kurser:\n'+rader.join('\n');
+             '\n\nValda veckor:\n'+rader.join('\n');
     if(ENDPOINT){
       $('ip-status').textContent='Skickar…';
-      posta({typ:'intresse',kurser:bevakade.map(function(id){return kursData(kursMedId(id))}),
+      posta({typ:'intresse',kurser:ordnade.map(function(id,i){var d=kursData(kursMedId(id));d.forstahandsval=i===0;d.id=urvalNyckel(kursMedId(id));return d}),
+        meddelande:rader.join('\n'),
         namn:$('ip-namn').value.trim(),epost:$('ip-epost').value.trim(),telefon:$('ip-telefon').value.trim(),samtycke:true})
         .then(function(r){
           if(!r.ok){$('ip-status').textContent='Något gick fel. Mejla oss på '+MOTTAGARE+'.';return}
           if(!r.mejl){window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Intresselista UGL, '+bevakade.length+' kurser')+'&body='+encodeURIComponent(text)}
-          $('ip-status').textContent='Tack, du står på listan. Vi hör av oss när det är dags.';
-          f.reset();bevakade=[];ritaBar();rita();
+          $('ip-status').textContent='Tack, intresseanmälan är mottagen. Ingen plats är bokad, vi hör av oss.';
+          f.reset();bevakade=[];forsta=null;ritaBar();rita();
         });
     }else{
       window.location.href='mailto:'+MOTTAGARE+'?subject='+encodeURIComponent('Intresselista UGL, '+bevakade.length+' kurser')+'&body='+encodeURIComponent(text);

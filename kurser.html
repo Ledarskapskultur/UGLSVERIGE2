@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Franklin:wght@500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=51">
-  <link rel="stylesheet" href="kurser-tema.css?v=2">
+  <link rel="stylesheet" href="kurser-tema.css?v=3">
 </head>
 <body class="sida-ton">
   <header class="site-header header-solid">
@@ -161,8 +161,8 @@
         <span class="cb-count" id="cb-jamfor" hidden><b id="cb-antal">0</b> valda att jämföra</span>
         <button type="button" class="cb-knapp" id="cb-oppna" hidden>Jämför &#8594;</button>
         <span class="cb-count" id="cb-intresse" hidden><b id="cb-iantal">0</b> av 3 veckor valda</span>
-        <button type="button" class="cb-knapp" id="cb-iopna" hidden>Intresselista &#8594;</button>
-        <button type="button" class="button button-light" id="cb-chef" hidden>Skicka till chefen &#8594;</button>
+        <button type="button" class="button button-light" id="cb-vidare" hidden>Gå vidare &#8594;</button>
+        <button type="button" class="cb-knapp" id="cb-chef" hidden>Skicka till chefen</button>
         <button type="button" class="cb-knapp" id="cb-tips" hidden>Tipsa någon</button>
         <button type="button" class="cb-stang" id="cb-rensa" aria-label="Rensa valda">&#10005;</button>
       </div>
@@ -175,18 +175,45 @@
         </div>
       </div>
 
+      <div class="compare-panel" id="valpanel" hidden>
+        <div class="cp-inner vp-inner">
+          <button type="button" class="vp-stang" id="vp-stang" aria-label="Stäng">&#10005;</button>
+          <p class="ip-rubrik">Valda kursveckor</p>
+          <h3 class="vp-rubrik">Valda kursveckor</h3>
+          <ul class="vp-lista" id="vp-lista"></ul>
+          <button type="button" class="vp-andra" id="vp-andra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Ändra urval</button>
+          <p class="vp-not">Välj förstahandsval i nästa steg. Inga platser är bokade.</p>
+
+          <p class="ip-rubrik vp-mellan">Anmälan</p>
+          <h3 class="vp-rubrik">Vem anmäler du?</h3>
+          <div class="vp-val">
+            <button type="button" class="vp-kort is-primar" id="vp-sjalv">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+              <span><b>Mig själv</b><small>Ange förstahandsval och skicka en intresseanmälan.</small></span>
+              <i aria-hidden="true">&#8250;</i>
+            </button>
+            <a class="vp-kort" id="vp-medarb" href="/portal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="3"/><path d="M15.5 14.5A5.5 5.5 0 0 1 22 20"/></svg>
+              <span><b>En medarbetare</b><small>Fortsätt till arbetsgivarportalen med ditt urval.</small></span>
+              <i aria-hidden="true">&#8250;</i>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div class="compare-panel" id="intressepanel" hidden>
         <div class="cp-inner">
-          <div class="cp-head"><h3>Ställ dig på intresselistan</h3><button type="button" id="ip-stang" aria-label="Stäng">&#10005;</button></div>
-          <p class="ip-ingress">Vi hör av oss när det närmar sig, eller så fort en plats blir ledig på en vecka du valt. Ingen bokning, inget åtagande.</p>
-          <p class="ip-rubrik">Dina valda kurser</p>
-          <ul class="ip-lista" id="ip-lista"></ul>
+          <div class="cp-head"><h3>Intresseanmälan</h3><button type="button" id="ip-stang" aria-label="Stäng">&#10005;</button></div>
+          <p class="ip-ingress">Ingen plats är bokad. Vi hör av oss när det närmar sig, eller så fort en plats blir ledig på en vecka du valt. Inget åtagande.</p>
+          <p class="ip-rubrik">Vilken vecka är förstahandsval?</p>
+          <ul class="ip-lista ip-forsta" id="ip-lista"></ul>
+          <p class="ip-not" id="ip-not" hidden>Övriga veckor skickas med som alternativ.</p>
           <form class="ip-form" id="ip-form" novalidate>
             <div class="field"><label for="ip-namn">Namn</label><input id="ip-namn" name="namn" autocomplete="name" required></div>
             <div class="field"><label for="ip-epost">E-post</label><input id="ip-epost" name="epost" type="email" autocomplete="email" required></div>
             <div class="field field-wide"><label for="ip-telefon">Telefon <span>Valfritt</span></label><input id="ip-telefon" name="telefon" type="tel" autocomplete="tel"></div>
             <div class="field field-wide consent"><label><input type="checkbox" id="ip-samtycke" required> <span>Jag godkänner att mina uppgifter används för att kontakta mig om de valda kurserna.</span></label></div>
-            <div class="field field-wide"><button class="button" type="submit">Skicka intresseanmälan</button></div>
+            <div class="field field-wide ip-knappar"><button type="button" class="button-outline-dark" id="ip-tillbaka">&#8592; Tillbaka</button><button class="button" type="submit">Skicka intresseanmälan</button></div>
             <p class="form-status" id="ip-status" role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -316,6 +343,6 @@
   <script src="kurser-data.js"></script>
   <script src="anlaggningar.js"></script>
   <script src="orter.js"></script>
-  <script src="kurser.js?v=3"></script>
+  <script src="kurser.js?v=4"></script>
 </body>
 </html>

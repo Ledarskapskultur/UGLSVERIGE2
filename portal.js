@@ -17,6 +17,19 @@
   }).sort(function(a,b){return a.start-b.start});
   function kurs(n){return kurser.filter(function(k){return k.nyckel===n})[0]}
 
+  /* ---------- Urval fran kurssidan (?kurser=nyckel,nyckel) ---------- */
+  /* Sparas i webblasaren sa att det foljer med aven om besokaren maste logga in forst. */
+  function lasUrval(){try{return JSON.parse(localStorage.getItem('ugl-portal-urval')||'[]').filter(kurs)}catch(e){return []}}
+  function sparaUrval(a){try{if(a.length)localStorage.setItem('ugl-portal-urval',JSON.stringify(a));else localStorage.removeItem('ugl-portal-urval')}catch(e){}}
+  (function(){
+    var q=new URLSearchParams(location.search).get('kurser');
+    if(!q)return;
+    var a=q.split(',').map(function(x){return x.trim()}).filter(kurs).slice(0,3);
+    if(a.length)sparaUrval(a);
+    try{history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
+  })();
+  var urvalNytt=lasUrval().length>0;
+
   /* ---------- Demokund ---------- */
   var STATUS={utkast:['Utkast','st-utkast'],forfragan:['Förfrågan skickad','st-forfragan'],
               bekraftad:['Bekräftad','st-bekraftad'],genomford:['Genomförd','st-genomford']};
@@ -173,7 +186,10 @@
 
   function vyPlanering(){
     var utan=S.medarbetare.filter(function(m){return !S.plan.some(function(p){return p.mid===m.id})});
-    var h='<div class="vy-head"><div><h1>Planera kurs</h1><p class="lead">Välj medarbetare, välj vecka. Portalen varnar om två kollegor hamnar på samma kurs.</p></div></div>';
+    var urval=lasUrval();
+    var h='<div class="vy-head"><div><h1>Planera kurs</h1><p class="lead">'+(urval.length
+      ?'Urvalet från kurssidan är med: '+urval.length+(urval.length===1?' vecka':' veckor')+'. Koppla en medarbetare till varje vecka som ska bokas.'
+      :'Välj medarbetare, välj vecka. Portalen varnar om två kollegor hamnar på samma kurs.')+'</p></div></div>';
     h+='<div class="plan-layout"><div class="panel"><h2>1. Vem ska gå?</h2><div class="valj-lista" id="valj-medarb">'+
       S.medarbetare.map(function(m){
         var p=S.plan.filter(function(x){return x.mid===m.id})[0];
@@ -186,7 +202,9 @@
 
     h+='<div class="panel"><div class="panel-head"><h2>2. Vilken vecka?</h2><span class="pf" id="plan-filter-etikett"></span></div>'+
       '<div class="plan-filter"><label>Från månad<select id="plan-manad"><option value="">Alla</option></select></label>'+
-      '<label>Ort<select id="plan-ort"><option value="">Alla</option></select></label></div>'+
+      '<label>Ort<select id="plan-ort"><option value="">Alla</option></select></label>'+
+      (urval.length?'<label class="pf-urval"><span>Urval</span><span class="pf-check"><input type="checkbox" id="plan-urval" checked> Bara mitt urval ('+urval.length+')</span></label>':'')+
+      '</div>'+
       '<div class="kurs-val" id="kurs-val"></div></div></div>';
     return h;
   }
@@ -194,17 +212,19 @@
   function ritaKursval(){
     var lista=$('kurs-val');if(!lista)return;
     var m=$('plan-manad').value,o=$('plan-ort').value;
+    var urval=lasUrval(),baraUrval=$('plan-urval')&&$('plan-urval').checked;
     var upptagna=S.plan.map(function(p){return p.nyckel});
     var f=kurser.filter(function(k){
+      if(baraUrval&&urval.indexOf(k.nyckel)<0)return false;
       if(!k.ledig)return false;
       if(m&&(k.start.getFullYear()+'-'+String(k.start.getMonth()+1).padStart(2,'0'))!==m)return false;
       if(o&&k.ort!==o)return false;
       return true;
     }).slice(0,24);
     lista.innerHTML=f.map(function(k){
-      var krock=upptagna.indexOf(k.nyckel)>-1;
-      return '<div class="kv-rad'+(krock?' kv-krock':'')+'">'+
-        '<div><b>Vecka '+k.vecka+'</b><small>'+k.period+'</small></div>'+
+      var krock=upptagna.indexOf(k.nyckel)>-1,iUrval=urval.indexOf(k.nyckel)>-1;
+      return '<div class="kv-rad'+(krock?' kv-krock':'')+(iUrval?' kv-urval':'')+'">'+
+        '<div><b>Vecka '+k.vecka+(iUrval?' <span class="kv-tagg">Från kurssidan</span>':'')+'</b><small>'+k.period+'</small></div>'+
         '<div><b>'+k.anlaggning+'</b><small>'+k.ort+'</small></div>'+
         '<div><b>'+(k.total?kr(k.total):'Pris meddelas')+'</b><small>exkl. moms</small></div>'+
         '<div>'+(krock?'<span class="kv-varn">Kollega redan bokad</span>':'')+
@@ -409,6 +429,7 @@
         .forEach(function(o){$('plan-ort').insertAdjacentHTML('beforeend','<option value="'+o+'">'+o+'</option>')});
       $('plan-manad').addEventListener('change',ritaKursval);
       $('plan-ort').addEventListener('change',ritaKursval);
+      if($('plan-urval'))$('plan-urval').addEventListener('change',ritaKursval);
       ritaKursval();
     }
     if($('ny-medarb'))$('ny-medarb').addEventListener('click',function(){
@@ -488,7 +509,8 @@
     $('anv-namn').textContent=S.anv.namn;
     $('anv-roll').textContent=S.anv.roll;
     $('anv-init').textContent=init(S.anv.namn);
-    rita('oversikt');
+    if(urvalNytt){urvalNytt=false;rita('planering');toast('Ditt urval från kurssidan är med. Koppla en medarbetare till varje vecka.')}
+    else rita('oversikt');
   });
   $('logga-ut').addEventListener('click',function(){$('app').hidden=true;$('login').hidden=false;$('hjalp-knapp').hidden=true});
   $('hjalp-knapp').addEventListener('click',function(){rita('support')});
