@@ -85,7 +85,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
           <div className="flex gap-6">
             {(['chef', 'tips'] as const).map((t) => (
               <button key={t} type="button" onClick={() => setFlik(t)} className={`pb-4 text-sm md:text-base font-medium border-b-2 -mb-px transition-colors ${flik === t ? 'border-[#321C04] text-[#321C04]' : 'border-transparent text-[#321C04]/50 hover:text-[#321C04]'}`}>
-                {t === 'chef' ? 'Skicka till chefen' : 'Tipsa en kollega'}
+                {t === 'chef' ? 'Tipsa min chef' : 'Tipsa en kollega'}
               </button>
             ))}
           </div>
@@ -127,6 +127,9 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
               </ul>
             ) : (
               <p className="mt-2 text-[#321C04]/60 text-sm">Ingen vecka vald ännu. Stäng rutan och välj upp till tre veckor i listan.</p>
+            )}
+            {valda.length > 0 && valda.length < MAX_VALDA && (
+              <p className="mt-2 text-[#321C04]/60 text-sm">Vill du tipsa om fler veckor? Stäng rutan och välj fler i listan, högst tre.</p>
             )}
           </div>
 

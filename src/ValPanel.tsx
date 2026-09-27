@@ -75,7 +75,7 @@ export default function ValPanel({ valda, toggle, onClose, onChef }: { valda: Ku
                 <span><span className="block text-[19px] leading-tight" style={EM}>En medarbetare</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Fortsätt till arbetsgivarportalen med ditt urval.</span></span>
                 <ChevronRight size={20} />
               </a>
-              <button type="button" onClick={onChef} className="text-sm text-[#321C04]/70 underline underline-offset-4 decoration-[#321C04]/30 hover:text-[#321C04]">Behöver chefen godkänna först? Skicka veckorna till chefen.</button>
+              <button type="button" onClick={onChef} className="text-sm text-[#321C04]/70 underline underline-offset-4 decoration-[#321C04]/30 hover:text-[#321C04]">Vill du hellre tipsa chefen eller en kollega om veckorna? Tipsa om UGL.</button>
             </div>
           </>
         )}

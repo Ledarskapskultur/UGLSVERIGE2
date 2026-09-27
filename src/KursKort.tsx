@@ -1,8 +1,8 @@
-import { ArrowRight, Calendar, Check, MapPin, Send, Users } from 'lucide-react'
+import { ArrowRight, Calendar, Check, MapPin, Users } from 'lucide-react'
 import { kr, type Kurs } from './kursdata'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 
-export default function KursKort({ k, vald, fullt, onToggle, onChef, badge }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onChef: () => void; badge: string | null }) {
+export default function KursKort({ k, vald, fullt, onToggle, badge }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; badge: string | null }) {
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
@@ -60,16 +60,6 @@ export default function KursKort({ k, vald, fullt, onToggle, onChef, badge }: { 
           }`}
         >
           {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
-        </button>
-        <button
-          type="button"
-          onClick={onChef}
-          disabled={!k.ledig || (fullt && !vald)}
-          className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-            vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'
-          }`}
-        >
-          <Send size={14} /> Skicka till chefen
         </button>
         <a
           href={k.lank}

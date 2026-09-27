@@ -109,7 +109,7 @@ export default function KurserPage() {
             </div>
             <p className="text-[#321C04] text-base sm:text-[17px] lg:text-lg leading-[1.5] max-w-[60ch]">
               De flesta bokar tre till sex månader i förväg, och populära veckor fylls tidigt. Välj när och var, markera upp till tre
-              veckor som passar, och boka direkt eller skicka ett färdigt förslag till chefen. De flesta som går UGL har fått kursen
+              veckor som passar, och gå vidare till anmälan eller tipsa chefen eller en kollega om UGL. De flesta som går UGL har fått kursen
               godkänd av sin chef, och vi skriver förslaget: pris, innehåll och vad veckan ger organisationen.
             </p>
           </div>
@@ -193,7 +193,7 @@ export default function KurserPage() {
           {/* Kort */}
           <div className="mt-8 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} onToggle={() => toggle(k.id)} onChef={() => { if (!valda.includes(k.id) && !fullt) toggle(k.id); setDela('chef') }} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -271,7 +271,7 @@ export default function KurserPage() {
             <div className="flex gap-2 shrink-0">
               <button type="button" onClick={() => setVal(true)} className="inline-flex items-center justify-center gap-2 bg-[#F6E4CF] text-[#2B2724] text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#FFF9F2] transition-colors">Gå vidare <ArrowRight size={15} /></button>
               <button type="button" onClick={() => setDela('chef')} className="inline-flex items-center justify-center gap-2 border border-[#F6E4CF]/40 text-[#FFF9F2] text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#F6E4CF]/10 transition-colors">
-                <Send size={15} /> Skicka till chefen
+                <Send size={15} /> Tipsa om UGL
               </button>
             </div>
           </div>
