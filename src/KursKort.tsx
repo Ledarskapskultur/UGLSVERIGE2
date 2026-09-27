@@ -6,11 +6,11 @@ export default function KursKort({ k, vald, fullt, onToggle, badge }: { k: Kurs;
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
-      className={`rounded-3xl border p-4 md:p-5 grid gap-5 md:gap-8 items-center transition-colors md:grid-cols-[220px_minmax(0,1.4fr)_minmax(0,1fr)_auto] ${
+      className={`rounded-3xl border p-4 md:p-5 grid gap-5 md:gap-6 items-center transition-colors md:grid-cols-[150px_minmax(0,1fr)_180px] ${
         vald ? 'bg-[#321C04] border-[#321C04] text-[#FFF9F2]' : 'bg-[#FFF9F2] border-[#D9C4AA] text-[#321C04]'
       }`}
     >
-      <div className="relative aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden bg-[#2B2724]">
+      <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-2xl overflow-hidden bg-[#2B2724]">
         <img src={k.bild} alt="" loading="lazy" className="w-full h-full object-cover" />
         {(badge || !k.ledig) && (
           <span className={`absolute top-3 left-3 text-[11px] uppercase tracking-[0.18em] font-medium px-3 py-1.5 rounded-full ${k.ledig ? 'bg-[#321C04] text-[#F6E4CF]' : 'bg-[#FFF9F2] text-[#321C04]'}`}>
@@ -20,20 +20,21 @@ export default function KursKort({ k, vald, fullt, onToggle, badge }: { k: Kurs;
       </div>
 
       <div>
-        <h3 className="text-3xl md:text-[34px] leading-none tracking-tight" style={EM}>Vecka {k.vecka}</h3>
-        <ul className={`mt-4 flex flex-col gap-2 text-[15px] ${muted}`}>
+        <h3 className="text-3xl md:text-[30px] leading-none tracking-tight" style={EM}>Vecka {k.vecka}</h3>
+        <ul className={`mt-3 flex flex-col gap-1.5 text-[14px] ${muted}`}>
           <li className="flex items-start gap-2.5"><Calendar size={16} className="shrink-0 mt-0.5" />{k.period}</li>
           <li className="flex items-start gap-2.5"><MapPin size={16} className="shrink-0 mt-0.5" />{k.anlaggning}, {k.ort}</li>
           <li className="flex items-start gap-2.5"><Users size={16} className="shrink-0 mt-0.5" /><span>{k.handledare.length ? k.handledare.join(', ') : 'Handledare meddelas senare'}</span></li>
         </ul>
       </div>
 
-      <div className={`md:border-l md:pl-8 ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]'}`}>
+      <div className={`md:border-l md:pl-6 flex flex-col gap-4 ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]'}`}>
+        <div>
         {k.total ? (
           <>
-            <p className="text-2xl font-medium tracking-tight">{kr(k.total)}</p>
+            <p className="text-2xl font-medium tracking-tight whitespace-nowrap">{kr(k.total)}</p>
             <p className={`text-xs ${muted}`}>exkl. moms</p>
-            <dl className={`mt-3 pt-3 border-t text-sm ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]/70'} ${muted}`}>
+            <dl className={`mt-2 pt-2 border-t text-[13px] ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]/70'} ${muted}`}>
               {k.samlat ? (
                 <div className="flex justify-between gap-3"><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div>
               ) : (
@@ -47,9 +48,9 @@ export default function KursKort({ k, vald, fullt, onToggle, badge }: { k: Kurs;
         ) : (
           <p className="text-base">Pris meddelas</p>
         )}
-      </div>
+        </div>
 
-      <div className="flex flex-row md:flex-col gap-3 md:items-stretch md:min-w-[190px]">
+      <div className="flex flex-row md:flex-col gap-3 md:items-stretch">
         <button
           type="button"
           onClick={onToggle}
@@ -72,6 +73,7 @@ export default function KursKort({ k, vald, fullt, onToggle, badge }: { k: Kurs;
           Se kursen
           <ArrowRight size={15} />
         </a>
+      </div>
       </div>
     </article>
   )

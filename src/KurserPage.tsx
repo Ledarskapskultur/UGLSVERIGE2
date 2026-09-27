@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
-import { ArrowRight, Check, Send, X } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import Anmalan from './Anmalan'
-import ValPanel from './ValPanel'
+import Kassa from './Kassa'
 import { MAX_VALDA } from './forfragan'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -41,7 +41,7 @@ export default function KurserPage() {
   const [visade, setVisade] = useState(6)
   const [valda, setValda] = useState<string[]>([])
   const [dela, setDela] = useState<null | 'chef' | 'tips'>(null)
-  const [val, setVal] = useState(false)
+  const [kassa, setKassa] = useState(false)
 
   const regioner = useMemo(() => (kurser ? [...new Set(kurser.map((k) => k.region))].sort((a, b) => a.localeCompare(b, 'sv')) : []), [kurser])
 
@@ -190,8 +190,10 @@ export default function KurserPage() {
             )}
           </div>
 
-          {/* Kort */}
-          <div className="mt-8 flex flex-col gap-4 md:gap-5">
+          {/* Kort + kassa */}
+          <div id="kurslista" className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8 lg:items-start">
+          <div>
+          <div className="flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
               <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
@@ -202,12 +204,6 @@ export default function KurserPage() {
             </p>
           )}
           <div className="mt-10 flex flex-wrap items-center gap-6">
-            {valda.length > 0 && (
-              <button type="button" onClick={() => setVal(true)} className="inline-flex items-center gap-2 bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] transition-colors">
-                Gå vidare med {valda.length} {valda.length === 1 ? 'vald vecka' : 'valda veckor'}
-                <ArrowRight size={16} />
-              </button>
-            )}
             {lista.length > visade && (
               <button type="button" onClick={() => setVisade((v) => v + 6)} className="inline-flex items-center gap-2 border border-[#321C04]/40 text-[#321C04] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#321C04] hover:text-[#FFF9F2] transition-colors">
                 Visa fler
@@ -217,6 +213,11 @@ export default function KurserPage() {
             <p className="text-[#321C04]/60 text-sm max-w-[60ch]">
               Alla priser anges exklusive moms. Kurserna i Jönköping har ett samlat pris där allt ingår.
             </p>
+          </div>
+          </div>
+          <aside className="hidden lg:block lg:sticky lg:top-6">
+            <Kassa valda={valdaKurser} toggle={toggle} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+          </aside>
           </div>
         </div>
       </section>
@@ -255,30 +256,24 @@ export default function KurserPage() {
 
       <Footer />
 
-      {/* Valda veckor, fast list */}
-      {valda.length > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 px-4 pb-4 pointer-events-none">
-          <div className="pointer-events-auto max-w-6xl mx-auto bg-[#2B2724] text-[#FFF9F2] rounded-2xl shadow-[0_-8px_40px_rgba(43,39,36,0.35)] px-4 py-3 md:px-6 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
-            <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
-              <span className="text-[#F6E4CF]/60 text-xs uppercase tracking-[0.2em] font-medium mr-1">{valda.length} av {MAX_VALDA}</span>
-              {valdaKurser.map((k) => (
-                <span key={k.id} className="inline-flex items-center gap-2 bg-[#F6E4CF]/10 border border-[#F6E4CF]/20 rounded-full pl-3 pr-1.5 py-1 text-sm">
-                  Vecka {k.vecka}, {k.ort}
-                  <button type="button" onClick={() => toggle(k.id)} aria-label="Ta bort" className="w-5 h-5 rounded-full hover:bg-[#F6E4CF]/20 flex items-center justify-center"><X size={12} /></button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <button type="button" onClick={() => setVal(true)} className="inline-flex items-center justify-center gap-2 bg-[#F6E4CF] text-[#2B2724] text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#FFF9F2] transition-colors">Gå vidare <ArrowRight size={15} /></button>
-              <button type="button" onClick={() => setDela('chef')} className="inline-flex items-center justify-center gap-2 border border-[#F6E4CF]/40 text-[#FFF9F2] text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#F6E4CF]/10 transition-colors">
-                <Send size={15} /> Tipsa om UGL
-              </button>
-            </div>
+      {/* Kassa på mobil: knapp och utfällbar panel */}
+      {valda.length > 0 && !kassa && (
+        <div className="lg:hidden fixed bottom-4 inset-x-4 z-40 flex justify-center">
+          <button type="button" onClick={() => setKassa(true)} className="inline-flex items-center gap-3 bg-[#2B2724] text-[#FFF9F2] text-sm font-medium pl-5 pr-4 py-3 rounded-full shadow-[0_8px_30px_rgba(43,39,36,0.35)]">
+            <span className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.2em]">{valda.length} av {MAX_VALDA}</span>
+            Valda veckor <ArrowRight size={15} />
+          </button>
+        </div>
+      )}
+      {kassa && (
+        <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
+          <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
+            <Kassa valda={valdaKurser} toggle={toggle} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}
 
-      {val && <ValPanel valda={valdaKurser} toggle={toggle} onClose={() => setVal(false)} onChef={() => { setVal(false); setDela('chef') }} />}
       {dela && <DelaModal flik={dela} setFlik={setDela} valda={valdaKurser} onClose={() => setDela(null)} />}
     </>
   )
