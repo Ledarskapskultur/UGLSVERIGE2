@@ -26,7 +26,13 @@ const HERO_VIDEO = BAS + 'hero-3247036.mp4'
 const HERO_BILD = BAS + 'ugl-grupp.webp'
 const BILD_CTA = BAS + 'ugl-feedback.webp'
 const BILD_PROBLEM = BAS + 'ugl-oppenhet.webp'
-const NARA_KM = 220 // veckor inom det har avstandet raknas som "nara"
+const NARA_KM = 220
+const MAN = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december']
+// Kort datumform for hero-korten: "5-9 oktober", eller "28 sep-2 okt" over ett manadsskifte.
+function kortPeriod(a: Date, b: Date) {
+  if (a.getMonth() === b.getMonth()) return `${a.getDate()}-${b.getDate()} ${MAN[a.getMonth()]}`
+  return `${a.getDate()} ${MAN[a.getMonth()].slice(0, 3)}-${b.getDate()} ${MAN[b.getMonth()].slice(0, 3)}`
+} // veckor inom det har avstandet raknas som "nara"
 
 const PROBLEM = [
   { title: 'Gruppen fungerar, men inte fullt ut', description: 'Möten som går på rutin, beslut som fattas utan att någon riktigt står bakom dem och konflikter som ligger kvar under ytan. Det kostar tid varje vecka, och energi hos alla inblandade.', image: BAS + 'ugl-samtal.webp' },
@@ -91,7 +97,7 @@ export default function OrtPage() {
   const tvaMan = new Date(); tvaMan.setMonth(tvaMan.getMonth() + 2)
   const inomTva = nara.filter((x) => x.k.start <= tvaMan)
   const heroVeckor = (inomTva.length >= 3 ? inomTva : nara).slice(0, 3)
-  const heroRubrik = inomTva.length >= 3 ? 'Lediga veckor inom två månader' : 'Nästa lediga veckor'
+  const heroRubrik = `Nästa lediga veckor nära ${stad?.namn ?? 'dig'}`
   const tillVecka = (id: string) => {
     spara('hero_vecka', { id, stad: stad?.slug ?? '' })
     setVisade((v) => Math.max(v, nara.findIndex((x) => x.k.id === id) + 1))
@@ -194,9 +200,10 @@ export default function OrtPage() {
                 <li key={k.id}>
                   <button type="button" onClick={() => tillVecka(k.id)} className="w-full h-full text-left rounded-2xl bg-black/25 backdrop-blur-md border border-white/15 hover:border-[#F6E4CF]/60 hover:bg-black/35 transition-colors px-4 py-4">
                     <span className="block text-2xl md:text-[28px] text-white leading-none tracking-tight" style={EM}>Vecka {k.vecka}</span>
-                    <span className="block mt-2 text-[12px] text-[#FFF9F2]/90 leading-snug">{k.period.replace(/ \d{4}$/, '')}</span>
-                    <span className="block mt-1.5 text-[11px] text-[#F6E4CF]/70 leading-snug">{k.anlaggning}, {restid(km)}</span>
-                    <span className="block mt-2 text-[13px] text-white font-medium">{k.total ? kr(k.total) : 'Pris meddelas'} <span className="text-[#F6E4CF]/60 font-normal">exkl. moms</span></span>
+                    <span className="block mt-2 text-[13px] text-[#FFF9F2]/90 leading-snug whitespace-nowrap">{kortPeriod(k.start, k.slut)}</span>
+                    <span className="block mt-1 text-[11px] text-[#F6E4CF]/70 leading-snug truncate">{k.anlaggning}</span>
+                    <span className="block text-[11px] text-[#F6E4CF]/70 leading-snug">{restid(km)}</span>
+                    <span className="block mt-2 text-[13px] text-white font-medium whitespace-nowrap">{k.total ? kr(k.total) : 'Pris meddelas'} <span className="text-[#F6E4CF]/60 font-normal text-[11px]">exkl. moms</span></span>
                   </button>
                 </li>
               ))}
