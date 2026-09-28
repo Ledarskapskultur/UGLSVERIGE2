@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { ArrowRight, Calendar, ChevronDown, MapPin, Navigation, Phone, Search, SlidersHorizontal, X } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
-import Anmalan from './Anmalan'
+import SaGarDetTill from './SaGarDetTill'
 import Omdomen, { snitt } from './Omdomen'
 import KursModal from './KursModal'
 import { SAMTAL } from './Kassa'
@@ -322,7 +322,7 @@ export default function KurserPage() {
         </div>
       </section>
 
-      <Anmalan valdaKurser={valdaKurser} toggle={toggle} />
+      <SaGarDetTill antal={valda.length} onVidare={() => { setOppnaIntresse((n) => n + 1); if (window.innerWidth < 1024) setKassa(true); else document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} />
 
       <Omdomen omdomen={omdomen} />
 

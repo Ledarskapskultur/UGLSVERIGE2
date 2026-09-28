@@ -14,7 +14,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
   const [forsta, setForsta] = useState<string | null>(null)
   const [bortvalda, setBortvalda] = useState<string[]>([])
   const medtagna = valda.filter((k) => !bortvalda.includes(k.id))
-  const [f, setF] = useState({ namn: '', epost: '', telefon: '', samtycke: false })
+  const [f, setF] = useState({ namn: '', epost: '', telefon: '', samtycke: false, oppen: false })
   const [status, setStatus] = useState<string | null>(null)
   const [skickar, setSkickar] = useState(false)
   const forstaId = medtagna.some((k) => k.id === forsta) ? forsta! : medtagna[0]?.id
@@ -32,7 +32,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     setStatus(null)
     const ordnade = [...medtagna].sort((a, b) => (a.id === forstaId ? 0 : 1) - (b.id === forstaId ? 0 : 1))
     const rader = ordnade.map((k, i) => `- ${i === 0 ? 'Förstahandsval' : 'Alternativ'}: Vecka ${k.vecka}, ${k.period}, ${k.anlaggning}, ${k.ort}`)
-    const r = await posta({ typ: 'intresse', kurser: ordnade.map((k, i) => ({ ...kursData(k), id: k.nyckel, forstahandsval: i === 0 })), meddelande: rader.join('\n'), namn: f.namn, epost: f.epost, telefon: f.telefon, samtycke: true })
+    const r = await posta({ typ: 'intresse', kurser: ordnade.map((k, i) => ({ ...kursData(k), id: k.nyckel, forstahandsval: i === 0 })), meddelande: rader.join('\n') + (f.oppen ? '\n- Öppen för andra veckor också, föreslå gärna datum' : ''), namn: f.namn, epost: f.epost, telefon: f.telefon, samtycke: true })
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
     if (!r.mejl) {
@@ -140,6 +140,10 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
               <div><label className={label}>Telefon <span className="normal-case tracking-normal text-[#321C04]/40">valfritt</span></label><input type="tel" className={field} value={f.telefon} onChange={(e) => setF({ ...f, telefon: e.target.value })} autoComplete="tel" /></div>
             </div>
             <label className="flex items-start gap-3 mt-5 text-sm text-[#321C04]/80 cursor-pointer">
+              <input type="checkbox" checked={f.oppen} onChange={(e) => setF({ ...f, oppen: e.target.checked })} className="mt-0.5 w-4 h-4 accent-[#321C04]" />
+              Jag är öppen för andra veckor också, föreslå gärna datum.
+            </label>
+            <label className="flex items-start gap-3 mt-3 text-sm text-[#321C04]/80 cursor-pointer">
               <input type="checkbox" checked={f.samtycke} onChange={(e) => setF({ ...f, samtycke: e.target.checked })} className="mt-0.5 w-4 h-4 accent-[#321C04]" />
               Jag godkänner att mina uppgifter används för att kontakta mig om de valda veckorna.
             </label>
