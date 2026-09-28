@@ -24,7 +24,6 @@ const INGAR = [
   ['Fem kursdagar', Calendar], ['Boende fyra nätter', BedDouble], ['Alla måltider', UtensilsCrossed],
   ['Kursmaterial', BookOpen], ['Två handledare', Users], ['Intyg efter kursen', Award],
 ] as const
-const DAGAR = [['Dag 1', 'Ni möts'], ['Dag 2', 'Gruppen formas'], ['Dag 3', 'Samtal på djupet'], ['Dag 4', 'Tilliten växer'], ['Dag 5', 'Din plan']]
 const init = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
 export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse, onTipsa, onClose }: {
@@ -84,30 +83,23 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
               <button type="button" onClick={onTipsa} className="inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-3 rounded-xl text-[#321C04]/80 hover:text-[#321C04] underline underline-offset-4"><Send size={14} /> Tipsa om UGL</button>
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Anmälan är inte bindande förrän den bekräftats. Svar inom två arbetsdagar.</p>
+            <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
+              <p className={label}>Det här ingår</p>
+              <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                {INGAR.map(([t, Icon]) => <li key={t} className="flex items-center gap-2"><Icon size={15} className="text-[#9C7A4A] shrink-0" />{t}</li>)}
+              </ul>
+            </div>
           </div>
         </div>
 
         <div className="px-6 md:px-8 pb-8 grid md:grid-cols-2 gap-8 border-t border-[#D9C4AA] pt-7">
           <div>
-            <p className={label}>Det här ingår</p>
-            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 text-[14px]">
-              {INGAR.map(([t, Icon]) => <li key={t} className="flex items-center gap-2.5"><Icon size={16} className="text-[#9C7A4A] shrink-0" />{t}</li>)}
-            </ul>
-            <p className={`${label} mt-7`}>Veckan</p>
-            <ol className="mt-3 flex flex-col gap-1.5 text-[14px]">
-              {DAGAR.map(([d, t]) => <li key={d} className="flex gap-3"><span className="w-12 text-[#321C04]/50">{d}</span><span>{t}</span></li>)}
-            </ol>
-          </div>
-          <div>
-            <p className={label}>Kursgård</p>
-            <p className="mt-2 text-[15px] font-medium">{k.anlaggning}, {k.ort}</p>
-            <p className="mt-1 text-[14px] text-[#321C04]/75 leading-[1.5]">{anl?.text || 'Kursgård med enkelrum, alla måltider och avskilda grupprum. Vägbeskrivning och tider kommer i välkomstbrevet.'}</p>
-            <p className={`${label} mt-7`}>Handledare</p>
-            <ul className="mt-3 flex flex-col gap-4">
+            <p className={label}>Handledare</p>
+            <ul className="mt-4 flex flex-col gap-4">
               {(k.handledare.length ? k.handledare : ['Handledare meddelas senare']).map((n) => {
                 const h = reg[n]
                 return (
-                  <li key={n} className="flex gap-3">
+                  <li key={n} className="flex gap-3 items-start">
                     {h?.bild ? <img src={BAS + 'assets/' + h.bild} alt="" className="w-12 h-12 rounded-full object-cover shrink-0" /> : <span className="w-12 h-12 rounded-full bg-[#F6E4CF] text-[#321C04] flex items-center justify-center text-sm font-medium shrink-0">{init(n)}</span>}
                     <div className="min-w-0">
                       <p className="text-[15px] font-medium">{n}</p>
@@ -118,7 +110,12 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
                 )
               })}
             </ul>
-            <a href={k.lank} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4"><ExternalLink size={14} /> Öppna hela kurssidan</a>
+          </div>
+          <div>
+            <p className={label}>Kursgård</p>
+            <p className="mt-2 text-[15px] font-medium">{k.anlaggning}, {k.ort}</p>
+            <p className="mt-1 text-[14px] text-[#321C04]/75 leading-[1.5]">{anl?.text || 'Kursgård med enkelrum, alla måltider och avskilda grupprum. Vägbeskrivning och tider kommer i välkomstbrevet.'}</p>
+            <a href={k.lank} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4"><ExternalLink size={14} /> Öppna hela kurssidan</a>
           </div>
         </div>
       </div>
