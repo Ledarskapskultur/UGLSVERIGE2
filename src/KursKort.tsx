@@ -7,12 +7,12 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa,
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
-      className={`rounded-3xl border p-4 md:p-5 grid gap-4 md:gap-5 items-start transition-colors ${kompakt ? 'md:grid-cols-[120px_minmax(0,1fr)]' : 'md:grid-cols-[150px_minmax(0,1fr)_200px]'} ${
+      className={`rounded-3xl border p-4 md:p-5 grid gap-4 md:gap-5 items-stretch transition-colors ${kompakt ? 'md:grid-cols-[120px_minmax(0,1fr)]' : 'md:grid-cols-[180px_minmax(0,1fr)_210px]'} ${
         vald ? 'bg-[#321C04] border-[#321C04] text-[#FFF9F2]' : 'bg-[#FFF9F2] border-[#D9C4AA] text-[#321C04]'
       }`}
     >
-      <div className={`relative aspect-[4/3] ${kompakt ? 'md:aspect-[3/4]' : 'md:aspect-[4/5]'} rounded-2xl overflow-hidden bg-[#2B2724]`}>
-        <img src={k.bild} alt="" loading="lazy" className="w-full h-full object-cover" />
+      <div className={`relative aspect-[4/3] ${kompakt ? 'md:aspect-[3/4]' : 'md:aspect-auto md:min-h-[190px]'} rounded-2xl overflow-hidden bg-[#2B2724]`}>
+        <img src={k.bild} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
         {(badge || !k.ledig) && (
           <span className={`absolute top-2 left-2 text-[10px] uppercase tracking-[0.16em] font-medium px-2.5 py-1 rounded-full ${k.ledig ? 'bg-[#321C04] text-[#F6E4CF]' : 'bg-[#FFF9F2] text-[#321C04]'}`}>
             {k.ledig ? badge : 'Fullbokad'}
@@ -50,6 +50,30 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa,
             {k.samlat ? 'Kurs, kost och logi ingår' : `Kurs ${kr(k.kurspris)} · Kost och logi ${kr(k.logi)}`}
           </p>
         )}
+        {!kompakt && (
+          <div className="hidden md:flex items-end gap-6 mt-4">
+            {k.total ? (
+              <>
+                <div className={`pr-6 border-r ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]/70'}`}>
+                  <p className="text-2xl font-medium tracking-tight whitespace-nowrap leading-none">{kr(k.total)}</p>
+                  <p className={`text-xs mt-1 ${muted}`}>exkl. moms</p>
+                </div>
+                <dl className={`text-[13px] min-w-[190px] ${muted}`}>
+                  {k.samlat ? (
+                    <div className="flex justify-between gap-3"><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div>
+                  ) : (
+                    <>
+                      <div className="flex justify-between gap-3"><dt>Kurs</dt><dd>{kr(k.kurspris)}</dd></div>
+                      <div className="flex justify-between gap-3 mt-1"><dt>Kost och logi</dt><dd>{kr(k.logi)}</dd></div>
+                    </>
+                  )}
+                </dl>
+              </>
+            ) : (
+              <p className="text-base">Pris meddelas</p>
+            )}
+          </div>
+        )}
         <div className={`mt-4 pt-4 border-t flex flex-wrap items-center gap-3 ${kompakt ? '' : 'md:hidden'} ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]/70'}`}>
           <button
             type="button"
@@ -77,36 +101,14 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa,
       </div>
 
       {!kompakt && (
-        <div className={`hidden md:flex flex-col gap-4 md:border-l md:pl-6 self-stretch ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]'}`}>
-          <div>
-            {k.total ? (
-              <>
-                <p className="text-2xl font-medium tracking-tight whitespace-nowrap">{kr(k.total)}</p>
-                <p className={`text-xs ${muted}`}>exkl. moms</p>
-                <dl className={`mt-2 pt-2 border-t text-[13px] ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]/70'} ${muted}`}>
-                  {k.samlat ? (
-                    <div className="flex justify-between gap-3"><dt>Kurs, kost och logi</dt><dd>Ingår</dd></div>
-                  ) : (
-                    <>
-                      <div className="flex justify-between gap-3"><dt>Kurs</dt><dd>{kr(k.kurspris)}</dd></div>
-                      <div className="flex justify-between gap-3 mt-1"><dt>Kost och logi</dt><dd>{kr(k.logi)}</dd></div>
-                    </>
-                  )}
-                </dl>
-              </>
-            ) : (
-              <p className="text-base">Pris meddelas</p>
-            )}
-          </div>
-          <div className="mt-auto flex flex-col gap-3">
-            <button type="button" onClick={onToggle} disabled={!k.ledig || (fullt && !vald)} aria-pressed={vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'bg-[#F6E4CF] text-[#321C04] hover:bg-[#FFF9F2]' : 'bg-[#321C04] text-[#FFF9F2] hover:bg-[#2B2724]'}`}>
-              {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
-            </button>
-            <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
-            <button type="button" onClick={onVisa} className={`inline-flex items-center justify-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'}`}>
-              Se kursen <ArrowRight size={15} />
-            </button>
-          </div>
+        <div className={`hidden md:flex flex-col justify-center items-stretch gap-3 md:border-l md:pl-6 ${vald ? 'border-[#F6E4CF]/20' : 'border-[#D9C4AA]'}`}>
+          <button type="button" onClick={onToggle} disabled={!k.ledig || (fullt && !vald)} aria-pressed={vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'bg-[#F6E4CF] text-[#321C04] hover:bg-[#FFF9F2]' : 'bg-[#321C04] text-[#FFF9F2] hover:bg-[#2B2724]'}`}>
+            {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
+          </button>
+          <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
+          <button type="button" onClick={onVisa} className={`inline-flex items-center justify-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'}`}>
+            Se kursen <ArrowRight size={15} />
+          </button>
         </div>
       )}
     </article>
