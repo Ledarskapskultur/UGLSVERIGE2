@@ -77,7 +77,6 @@ export default function KurserPage() {
   const [sok, setSok] = useState('')
   const [period, setPeriod] = useState('')
   const [manad, setManad] = useState('')
-  const [visaManad, setVisaManad] = useState(false)
   const [region, setRegion] = useState('')
   const [ort, setOrt] = useState('')
   const [pris, setPris] = useState('')
@@ -232,23 +231,14 @@ export default function KurserPage() {
           <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '176px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
           <aside className={`lg:sticky lg:top-6 bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl flex flex-col transition-[padding] duration-300 ${valda.length ? 'p-4 gap-4 text-[13px]' : 'p-5 gap-5'}`} aria-label="Filtrera kurser" data-kompakt={valda.length ? '1' : undefined}>
             <div>
-              <p className={flabel}>När vill du gå?</p>
-              <div className={`grid gap-2 ${valda.length ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                {PERIODER.map((p) => (
-                  <button key={p.id} type="button" onClick={() => { setPeriod(period === p.id ? '' : p.id); setManad(''); setVisade(6) }} aria-pressed={period === p.id && !manad} className={`px-2 py-2 rounded-xl text-[12.5px] font-medium border text-center whitespace-nowrap transition-colors ${period === p.id && !manad ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'bg-white text-[#321C04] border-[#D9C4AA] hover:border-[#321C04]'}`}>
-                    {p.kort}
-                  </button>
-                ))}
-              </div>
-              <button type="button" onClick={() => setVisaManad((v) => !v)} className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4">
-                <ChevronDown size={13} className={`transition-transform ${visaManad || manad ? 'rotate-180' : ''}`} /> {manad ? 'Vald månad' : 'Välj exakt månad'}
-              </button>
-              {(visaManad || manad) && (
-                <select id="f-manad" value={manad} onChange={(e) => { setManad(e.target.value); setPeriod(''); setVisade(6) }} className={fselect + ' mt-2'}>
-                  <option value="">Alla månader</option>
-                  {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
-                </select>
-              )}
+              <label htmlFor="f-period" className={flabel}>När vill du gå?</label>
+              <select id="f-period" value={manad ? 'm:' + manad : period} onChange={(e) => { const v = e.target.value; if (v.startsWith('m:')) { setManad(v.slice(2)); setPeriod('') } else { setPeriod(v); setManad('') } setVisade(6) }} className={fselect}>
+                <option value="">Alla datum</option>
+                {PERIODER.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+                <optgroup label="Exakt månad">
+                  {manader.map((m) => <option key={m.id} value={'m:' + m.id}>{m.label}</option>)}
+                </optgroup>
+              </select>
             </div>
             <div>
               <label htmlFor="f-region" className={flabel}>Var vill du gå?</label>
