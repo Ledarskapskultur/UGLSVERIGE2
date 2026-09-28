@@ -83,7 +83,7 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Anmälan är inte bindande förrän den bekräftats. Svar inom två arbetsdagar.</p>
             <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
-              <Dela kurser={[k]} kanal="kurspopup" rubrik="Dela veckan" rutnat />
+              <Dela kurser={[k]} kanal="kurspopup" rubrik="Dela veckan" />
             </div>
           </div>
         </div>
