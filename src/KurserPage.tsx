@@ -114,9 +114,10 @@ export default function KurserPage() {
             </p>
           </div>
 
-          {/* Tre val */}
-          <div className="mt-12 md:mt-16 grid md:grid-cols-3 gap-5 md:gap-6">
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-6 md:p-7">
+          {/* Filter, lista och kassa */}
+          <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-6 lg:items-start transition-[grid-template-columns] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 200px' }}>
+          <aside className="grid sm:grid-cols-3 lg:grid-cols-1 gap-4">
+            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
               <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">01</p>
               <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">När?</h3>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -130,7 +131,7 @@ export default function KurserPage() {
                 </button>
               </div>
             </div>
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-6 md:p-7">
+            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
               <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">02</p>
               <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">Var?</h3>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -144,7 +145,7 @@ export default function KurserPage() {
                 </button>
               </div>
             </div>
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-6 md:p-7">
+            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
               <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">03</p>
               <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">Visa</h3>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -162,15 +163,10 @@ export default function KurserPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </aside>
 
-          {/* Räknare */}
-          <div className="mt-12 md:mt-16 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#D9C4AA]" />
-            <span className="flex-1 h-[2px] bg-[#D9C4AA]" />
-            <span className="w-2 h-2 rounded-full bg-[#D9C4AA]" />
-          </div>
-          <div className="mt-8 flex flex-wrap items-baseline justify-between gap-3">
+          <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
             <p className="text-[#321C04] text-lg">
               {kurser === null && !fel && 'Hämtar kursdatum…'}
               {fel && 'Kursdatumen kunde inte hämtas just nu. Skriv till kontakt@uglsverige.se, så skickar vi aktuella datum.'}
@@ -190,10 +186,7 @@ export default function KurserPage() {
             )}
           </div>
 
-          {/* Kort + kassa */}
-          <div id="kurslista" className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8 lg:items-start">
-          <div>
-          <div className="flex flex-col gap-4 md:gap-5">
+          <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
               <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
@@ -215,8 +208,8 @@ export default function KurserPage() {
             </p>
           </div>
           </div>
-          <aside className="hidden lg:block lg:sticky lg:top-6">
-            <Kassa valda={valdaKurser} toggle={toggle} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+          <aside className="hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
+            <Kassa valda={valdaKurser} toggle={toggle} kompakt={valda.length === 0} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>

@@ -7,7 +7,7 @@ const EM = { fontFamily: "'Instrument Serif', serif" }
 const PORTAL = 'https://www.uglsverige.store/portal'
 const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddelas')
 
-export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void }) {
+export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean }) {
   const [steg, setSteg] = useState<'val' | 'intresse' | 'klart'>('val')
   const [forsta, setForsta] = useState<string | null>(null)
   const [bortvalda, setBortvalda] = useState<string[]>([])
@@ -38,6 +38,16 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra }: { va
       window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Intresseanmälan UGL, ' + f.namn) + '&body=' + encodeURIComponent(text)
     }
     setSteg('klart')
+  }
+
+  if (kompakt) {
+    return (
+      <div className="bg-[#FFF9F2] text-[#321C04] rounded-3xl border border-dashed border-[#D9C4AA] px-5 py-6">
+        <p className={eyebrow}>Valda kursveckor</p>
+        <p className="text-[30px] leading-none tracking-tight" style={EM}>0 <span className="text-[#321C04]/40">av 3</span></p>
+        <p className="mt-3 text-sm text-[#321C04]/65 leading-[1.5]">Välj upp till tre veckor i listan, så samlas de här.</p>
+      </div>
+    )
   }
 
   return (
