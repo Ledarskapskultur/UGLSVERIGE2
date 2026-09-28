@@ -33,7 +33,7 @@
   "rewrites": [
     {
       "source": "/ugl/:stad",
-      "destination": "/ugl/index.html"
+      "destination": "/ugl"
     }
   ]
 }
