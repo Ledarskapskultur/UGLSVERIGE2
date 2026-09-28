@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ArrowRight, Check } from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import Anmalan from './Anmalan'
@@ -11,57 +11,65 @@ import { useKurser } from './kursdata'
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 const HERO_IMAGE = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
-const PERIODER = [
-  { id: '3', label: 'Inom 3 månader', max: 3 },
-  { id: '6', label: 'Om 4 till 6 månader', min: 4, max: 6 },
-  { id: '12', label: 'Om 7 till 12 månader', min: 7, max: 12 },
-]
+const MANADER = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december']
+const manadId = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+const flabel = 'block text-[#321C04]/60 text-[11px] uppercase tracking-[0.2em] font-medium mb-2'
+const fselect = 'w-full bg-white border border-[#D9C4AA] rounded-xl px-3 py-2.5 text-[15px] text-[#321C04] focus:outline-none focus:border-[#321C04]'
+const chipS = (on: boolean) =>
+  `px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors ${
+    on ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'text-[#321C04] border-[#321C04]/25 hover:border-[#321C04]/60'
+  }`
 const FAQ = [
   { q: 'Vad ingår i priset?', a: 'Kursledning med två handledare, kursmaterial och dokumentation samt kost och logi under veckan. Resa till och från kursgården tillkommer. Alla priser är exklusive moms.' },
   { q: 'Kan flera från samma arbetsplats gå?', a: 'Inte på samma vecka. Gruppen ska vara en främlingsgrupp, och det är en förutsättning för öppenheten. För en hel organisation är en egen kurs rätt väg.' },
   { q: 'Hur fungerar betalning och avbokning?', a: 'Betalning sker mot faktura efter bekräftad plats. Vid förhinder, hör av er så snart det går. Villkoren står i bekräftelsen.' },
 ]
 
-const chip = (on: boolean) =>
-  `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
-    on ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'text-[#321C04] border-[#321C04]/25 hover:border-[#321C04]/60'
-  }`
-
-function manaderFram(d: Date) {
-  const nu = new Date()
-  return (d.getFullYear() - nu.getFullYear()) * 12 + d.getMonth() - nu.getMonth() + (d.getDate() >= nu.getDate() ? 0 : -1)
-}
 
 export default function KurserPage() {
   const { kurser, fel } = useKurser()
-  const [period, setPeriod] = useState<string | null>(null)
-  const [region, setRegion] = useState<string | null>(null)
+  const [manad, setManad] = useState('')
+  const [region, setRegion] = useState('')
+  const [ort, setOrt] = useState('')
+  const [pris, setPris] = useState('')
   const [baraLediga, setBaraLediga] = useState(true)
-  const [sort, setSort] = useState<'datum' | 'pris'>('datum')
+  const [sort, setSort] = useState<'datum' | 'pris' | 'ort'>('datum')
+  const [snabbAktiv, setSnabbAktiv] = useState<string | null>(null)
   const [visade, setVisade] = useState(6)
   const [valda, setValda] = useState<string[]>([])
   const [dela, setDela] = useState<null | 'chef' | 'tips'>(null)
   const [kassa, setKassa] = useState(false)
 
   const regioner = useMemo(() => (kurser ? [...new Set(kurser.map((k) => k.region))].sort((a, b) => a.localeCompare(b, 'sv')) : []), [kurser])
+  const orter = useMemo(() => (kurser ? [...new Set(kurser.map((k) => k.ort))].sort((a, b) => a.localeCompare(b, 'sv')) : []), [kurser])
+  const manader = useMemo(() => {
+    if (!kurser) return []
+    const idag = new Date(); idag.setHours(0, 0, 0, 0)
+    const ids = [...new Set(kurser.filter((k) => k.start >= idag).map((k) => manadId(k.start)))]
+    return ids.map((id) => { const d = new Date(id + '-01T00:00:00'); return { id, label: MANADER[d.getMonth()] + ' ' + d.getFullYear() } })
+  }, [kurser])
+  const filtrerat = !!(manad || region || ort || pris || !baraLediga || snabbAktiv)
+  const rensa = () => { setManad(''); setRegion(''); setOrt(''); setPris(''); setBaraLediga(true); setSnabbAktiv(null); setVisade(6) }
+  const snabb = (q: string) => {
+    const av = snabbAktiv === q
+    setSnabbAktiv(av ? null : q); setRegion(''); setManad(''); setVisade(6)
+    if (!av) { if (q === 'snart') setManad(manader[0]?.id ?? ''); else setRegion(q) }
+  }
 
   const lista = useMemo(() => {
     if (!kurser) return []
     const idag = new Date()
     idag.setHours(0, 0, 0, 0)
     let f = kurser.filter((k) => k.start >= idag)
-    if (period) {
-      const p = PERIODER.find((x) => x.id === period)!
-      f = f.filter((k) => {
-        const m = manaderFram(k.start)
-        return m <= p.max && (p.min === undefined || m >= p.min)
-      })
-    }
+    if (manad) f = f.filter((k) => manadId(k.start) === manad)
     if (region) f = f.filter((k) => k.region === region)
+    if (ort) f = f.filter((k) => k.ort === ort)
+    if (pris) f = f.filter((k) => k.total && k.total < +pris)
     if (baraLediga) f = f.filter((k) => k.ledig)
     if (sort === 'pris') f = [...f].sort((a, b) => (a.total || 1e9) - (b.total || 1e9))
+    else if (sort === 'ort') f = [...f].sort((a, b) => a.ort.localeCompare(b.ort, 'sv') || a.start.getTime() - b.start.getTime())
     return f
-  }, [kurser, period, region, baraLediga, sort])
+  }, [kurser, manad, region, ort, pris, baraLediga, sort])
 
   const billigast = useMemo(() => lista.filter((k) => k.total).sort((a, b) => a.total - b.total)[0]?.id ?? null, [lista])
   const valdaKurser = (kurser || []).filter((k) => valda.includes(k.id))
@@ -116,74 +124,76 @@ export default function KurserPage() {
 
           {/* Filter, lista och kassa */}
           <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
-          <aside className="grid sm:grid-cols-3 lg:grid-cols-1 gap-4">
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
-              <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">01</p>
-              <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">När?</h3>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {PERIODER.map((p) => (
-                  <button key={p.id} type="button" onClick={() => { setPeriod(period === p.id ? null : p.id); setVisade(6) }} aria-pressed={period === p.id} className={chip(period === p.id)}>
-                    {p.label}
-                  </button>
-                ))}
-                <button type="button" onClick={() => { setPeriod(null); setVisade(6) }} aria-pressed={period === null} className={chip(period === null)}>
-                  Alla datum
-                </button>
-              </div>
+          <aside className="lg:sticky lg:top-6 bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5 flex flex-col gap-5" aria-label="Filtrera kurser">
+            <div>
+              <label htmlFor="f-manad" className={flabel}>När vill du gå?</label>
+              <select id="f-manad" value={manad} onChange={(e) => { setManad(e.target.value); setVisade(6) }} className={fselect}>
+                <option value="">Alla perioder</option>
+                {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+              </select>
             </div>
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
-              <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">02</p>
-              <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">Var?</h3>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {regioner.map((r) => (
-                  <button key={r} type="button" onClick={() => { setRegion(region === r ? null : r); setVisade(6) }} aria-pressed={region === r} className={chip(region === r)}>
-                    {r}
-                  </button>
-                ))}
-                <button type="button" onClick={() => { setRegion(null); setVisade(6) }} aria-pressed={region === null} className={chip(region === null)}>
-                  Hela landet
-                </button>
-              </div>
+            <div>
+              <label htmlFor="f-region" className={flabel}>Var vill du gå?</label>
+              <select id="f-region" value={region} onChange={(e) => { setRegion(e.target.value); setVisade(6) }} className={fselect}>
+                <option value="">Alla regioner</option>
+                {regioner.map((r) => <option key={r} value={r}>{r}</option>)}
+              </select>
             </div>
-            <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
-              <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">03</p>
-              <h3 className="text-[#321C04] text-xl font-medium tracking-tight mt-3">Visa</h3>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" onClick={() => setBaraLediga((v) => !v)} aria-pressed={baraLediga} className={`inline-flex items-center gap-2 ${chip(baraLediga)}`}>
-                  <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${baraLediga ? 'border-[#FFF9F2] bg-[#FFF9F2] text-[#321C04]' : 'border-current'}`}>
-                    {baraLediga && <Check size={10} />}
-                  </span>
-                  Bara lediga platser
-                </button>
-                <button type="button" onClick={() => setSort('datum')} aria-pressed={sort === 'datum'} className={chip(sort === 'datum')}>
-                  Närmast först
-                </button>
-                <button type="button" onClick={() => setSort('pris')} aria-pressed={sort === 'pris'} className={chip(sort === 'pris')}>
-                  Lägst pris först
-                </button>
+            <div>
+              <label htmlFor="f-ort" className={flabel}>Ort</label>
+              <select id="f-ort" value={ort} onChange={(e) => { setOrt(e.target.value); setVisade(6) }} className={fselect}>
+                <option value="">Alla orter</option>
+                {orter.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="f-pris" className={flabel}>Totalpris</label>
+              <select id="f-pris" value={pris} onChange={(e) => { setPris(e.target.value); setVisade(6) }} className={fselect}>
+                <option value="">Alla priser</option>
+                <option value="33000">Under 33 000 kr</option>
+                <option value="34000">Under 34 000 kr</option>
+              </select>
+            </div>
+            <label className="flex items-center gap-2.5 text-[15px] text-[#321C04] cursor-pointer">
+              <input type="checkbox" checked={baraLediga} onChange={(e) => { setBaraLediga(e.target.checked); setVisade(6) }} className="w-4 h-4 accent-[#321C04]" />
+              Visa bara lediga
+            </label>
+            <div className="pt-4 border-t border-[#D9C4AA]">
+              <p className={flabel}>Snabbfilter</p>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => snabb('snart')} aria-pressed={snabbAktiv === 'snart'} className={chipS(snabbAktiv === 'snart')}>Närmast i tiden</button>
+                {['Stockholm', 'Skåne', 'Västra Götaland', 'Halland'].filter((r) => regioner.includes(r)).map((r) => (
+                  <button key={r} type="button" onClick={() => snabb(r)} aria-pressed={snabbAktiv === r} className={chipS(snabbAktiv === r)}>{r}</button>
+                ))}
               </div>
+              {filtrerat && (
+                <button type="button" onClick={rensa} className="mt-4 inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4">
+                  <X size={13} /> Rensa filter
+                </button>
+              )}
             </div>
           </aside>
 
           <div>
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-[#321C04] text-lg">
               {kurser === null && !fel && 'Hämtar kursdatum…'}
               {fel && 'Kursdatumen kunde inte hämtas just nu. Skriv till kontakt@uglsverige.se, så skickar vi aktuella datum.'}
               {kurser && (
                 <>
-                  <strong className="font-medium">{lista.length}</strong> {lista.length === 1 ? 'kursvecka' : 'kursveckor'}
-                  {region ? ` i ${region}` : ' i hela landet'}
-                  {period ? `, ${PERIODER.find((p) => p.id === period)!.label.toLowerCase()}` : ''}
+                  <strong className="font-medium text-2xl">{lista.length}</strong> {lista.length === 1 ? 'kurs' : 'kurser'}
+                  {valda.length > 0 && <span className="ml-3 text-[#321C04]/60 text-sm">{valda.length} av {MAX_VALDA} veckor valda</span>}
                 </>
               )}
             </p>
-            {valda.length > 0 && <span className="text-[#321C04]/70 text-sm">{valda.length} av {MAX_VALDA} veckor valda</span>}
-            {(period || region || !baraLediga || sort !== 'datum') && (
-              <button type="button" onClick={() => { setPeriod(null); setRegion(null); setBaraLediga(true); setSort('datum'); setVisade(6) }} className="text-[#321C04]/70 hover:text-[#321C04] text-sm underline underline-offset-4">
-                Rensa val
-              </button>
-            )}
+            <label className="flex items-center gap-2 text-sm text-[#321C04]/70">
+              Sortera
+              <select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className={fselect + ' w-auto'}>
+                <option value="datum">Datum, närmast först</option>
+                <option value="pris">Pris, lägst först</option>
+                <option value="ort">Ort, A till Ö</option>
+              </select>
+            </label>
           </div>
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
