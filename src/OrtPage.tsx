@@ -186,7 +186,7 @@ export default function OrtPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl text-white leading-[1.05] tracking-tight">UGL i <em className="not-italic" style={EM}>{stad.namn}.</em></h1>
             <p className="mt-6 text-white/85 text-base md:text-lg max-w-[50ch] leading-[1.5]">
               Fem dagar som förändrar hur du leder och hur du fungerar i grupp, utan att du behöver lämna vardagen i mer än en vecka.
-              {nasta ? <> Närmaste kursgård ligger {restid(nasta.km)} från {stad.namn}, och det går att boka fram till dagen före kursstart.</> : null}
+              {nasta ? <> Närmaste kursgård ligger {restid(nasta.km)} från {stad.namn}.</> : null}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button type="button" onClick={tillLista} className="inline-flex items-center gap-2 bg-[#F6E4CF] text-[#2B2724] text-sm font-medium px-6 py-3.5 rounded-xl hover:bg-[#FFF9F2] transition-colors">Se veckorna nära {stad.namn} <ArrowRight size={16} /></button>
