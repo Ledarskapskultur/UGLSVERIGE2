@@ -22,10 +22,10 @@
       <p class="lead">Bjud in arrangörer och arbetsgivare, sätt avtalen, granska nya kurser och följ intäkterna. Den här vyn ligger ett steg ovanför arrangörernas egen portal.</p>
       <form id="login-form">
         <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@uglsverige.store" autocomplete="email"></div>
-        <button class="button" type="submit">Skicka inloggningslänk</button>
+        <div class="field"><label for="log-nyckel">Adminnyckel</label><input id="log-nyckel" type="password" placeholder="Samma som UGL_ADMIN_NYCKEL i Supabase" autocomplete="current-password"></div>
+        <button class="button" type="submit">Logga in</button>
       </form>
-      <p class="login-not">Inloggningslänk via mejl, inga lösenord.</p>
-      <p class="login-demo">I demon räcker det att trycka på knappen.</p>
+      <p class="login-not">Med nyckel visas riktiga leads från sajten. Utan nyckel visas demodata.</p>
     </div>
     <aside class="login-bild">
       <ul class="login-punkter">
@@ -64,6 +64,6 @@
     <ul id="notis-lista"></ul>
   </div>
 
-  <script src="admin.js?v=3"></script>
+  <script src="admin.js?v=4"></script>
 </body>
 </html>

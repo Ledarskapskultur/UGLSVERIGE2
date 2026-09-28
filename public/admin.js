@@ -22,8 +22,8 @@
   var ISTATUS={skickad:['Skickad','st-utkast'],oppnad:['Öppnad','st-forfragan'],aktiverad:['Aktiverad','st-bekraftad'],utgangen:['Utgången','st-ingen']};
   var LSTATUS={ny:['Ny','st-forfragan'],kontaktad:['Kontaktad','st-utkast'],vunnen:['Bokad','st-bekraftad'],tappad:['Tappad','st-ingen']};
   var FSTATUS={utkast:['Underlag','st-utkast'],skickad:['Skickad','st-forfragan'],betald:['Betald','st-bekraftad'],forfallen:['Förfallen','st-ingen']};
-  var LTYP={intresse:'Intresselista',chef:'Skickat till chef',bokning:'Bokningsförfrågan'};
-  var KALLA={linkedin:'LinkedIn',google:'Google',nyhetsbrev:'Nyhetsbrev',rekommendation:'Rekommendation',
+  var LTYP={intresse:'Intresselista',chef:'Beslutsunderlag',bokning:'Bokningsförfrågan',tips:'Tipsade en kollega',samtal:'Ring mig',bevakning:'Bevakning'};
+  var KALLA={webb:'Sajten',linkedin:'LinkedIn',google:'Google',nyhetsbrev:'Nyhetsbrev',rekommendation:'Rekommendation',
              massa:'Mässa och event',chefsutskick:'Skickat till chef',arbetsgivarportal:'Arbetsgivarportal',direkt:'Direkt till sajten'};
   var KANAL={webb:'Webbformulär',mejl:'Mejl',telefon:'Telefon',mote:'Möte',linkedin:'LinkedIn',nyhetsbrev:'Nyhetsbrev'};
   var KANALIKON={webb:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>',
@@ -203,6 +203,24 @@
   };
 
   var S=null,nastaId=200;
+  /* ---------- Riktiga leads fran Supabase (kraver adminnyckel) ---------- */
+  var LEADS_API='https://nepnzqvxnkxvyyfdymui.supabase.co/functions/v1/ugl-admin';
+  function nyckel(){try{return localStorage.getItem('ugl-admin-nyckel')||''}catch(e){return ''}}
+  var leadsLive=false;
+  function hamtaLeads(cb){
+    var k=nyckel();if(!k){leadsLive=false;if(cb)cb(false);return}
+    fetch(LEADS_API,{headers:{'x-admin-nyckel':k}}).then(function(r){return r.json()}).then(function(j){
+      if(!j.ok){leadsLive=false;toast(j.error==='Fel nyckel'?'Fel adminnyckel, visar demodata.':'Kunde inte hämta leads: '+(j.error||'okänt fel'));if(cb)cb(false);return}
+      S.leads=j.leads;leadsLive=true;if(cb)cb(true);
+    }).catch(function(){leadsLive=false;toast('Ingen kontakt med servern, visar demodata.');if(cb)cb(false)});
+  }
+  function synkaLead(l){
+    if(!leadsLive)return;
+    fetch(LEADS_API,{method:'POST',headers:{'Content-Type':'application/json','x-admin-nyckel':nyckel()},
+      body:JSON.stringify({id:l.id,status:l.status,anteckning:l.not||'',bokad:l.bokad||null,kontakter:l.kontakter||[]})})
+      .then(function(r){return r.json()}).then(function(j){if(!j.ok)toast('Kunde inte spara till servern: '+(j.error||''))})
+      .catch(function(){toast('Kunde inte spara till servern.')});
+  }
   function las(){try{var r=localStorage.getItem('ugl-admin-demo');if(r)return komplettera(JSON.parse(r))}catch(e){}return null}
   function spara(){try{localStorage.setItem('ugl-admin-demo',JSON.stringify(S))}catch(e){}}
   function nollstall(){S=JSON.parse(JSON.stringify(DEMO));spara()}
@@ -388,7 +406,7 @@
       kpi(String(snittKontakter()).replace('.',','),'kontakter i snitt','innan bokning')+
       kpi(S.leads.length?Math.round(v.length/S.leads.length*100)+' %':'-','blir bokning')+'</div>';
     h+='<div class="panel"><div class="filterchips">'+
-      [['alla','Alla typer'],['intresse','Intresselista'],['chef','Skickat till chef'],['bokning','Bokningsförfrågan']].map(function(f){
+      [['alla','Alla typer'],['bokning','Bokning'],['intresse','Intresse'],['samtal','Ring mig'],['chef','Beslutsunderlag'],['tips','Tips'],['bevakning','Bevakning']].map(function(f){
         return '<button type="button" class="fchip'+(leadFilter===f[0]?' ar-pa':'')+'" data-lfilter="'+f[0]+'">'+f[1]+'</button>'}).join('')+'</div>';
     h+='<div class="filterchips filter-tva">'+
       '<button type="button" class="fchip'+(leadKalla==='alla'?' ar-pa':'')+'" data-lkalla="alla">Alla källor</button>'+
@@ -705,7 +723,11 @@
       rad('Storlek',l.storlek?l.storlek+' anställda':'-')+
       rad('Kanal in',LTYP[l.typ])+
       rad('Kampanj',l.kampanj||'Ingen')+
-      rad('Kurs',l.kurs+(l.kursdatum?', '+dat(l.kursdatum):''))+
+      rad('Kurs',(l.kurs||'Ingen vecka vald')+(l.kursdatum?', '+dat(l.kursdatum):''))+
+      (l.kurser&&l.kurser.length>1?rad('Alternativ',l.kurser.slice(1).map(function(k){return 'Vecka '+k.vecka+', '+k.anlaggning}).join('; ')):'')+
+      (l.mottagare?rad('Mottagare',l.mottagare):'')+
+      (l.meddelande?rad('Meddelande',l.meddelande):'')+
+      (leadsLive?rad('Mejl',l.mejl_skickat?'Skickat automatiskt':'Inte skickat'):'')+
       rad('Ansvarig',l.agare||'-')+'</dl>';
     kropp+='<div class="tidslinje-blk"><h4>Kontakthistorik</h4><ol class="tidslinje">'+
       k.map(function(x,i){
@@ -741,18 +763,18 @@
       l.status=$('nk-status').value;
       if(l.status==='vunnen'&&!l.bokad)l.bokad=$('nk-datum').value||idagISO();
       l.not=$('l-not').value.trim();
-      spara();stang();toast('Kontakten är loggad.');leadModal(id);
+      spara();synkaLead(l);stang();toast('Kontakten är loggad.');leadModal(id);
     });
     $('l-spara').addEventListener('click',function(){
       l.status=$('nk-status').value;l.not=$('l-not').value.trim();
       if(l.status==='vunnen'&&!l.bokad)l.bokad=idagISO();
-      spara();stang();toast('Kundkortet är uppdaterat.');rita()});
+      spara();synkaLead(l);stang();toast('Kundkortet är uppdaterat.');rita()});
     if($('l-bokad'))$('l-bokad').addEventListener('click',function(){
       l.status='vunnen';l.bokad=idagISO();
       l.kontakter=kontakter(l);
       l.kontakter.push({d:idagISO(),kanal:'mejl',riktning:'in',not:'Bokade plats'});
-      spara();stang();toast('Bokningen är registrerad. Ledtiden blev '+dagar(ledtid(l))+'.');rita()});
-    $('l-mejl').addEventListener('click',function(){stang();toast('I skarpt läge öppnas ett mejl till '+l.epost+'.')});
+      spara();synkaLead(l);stang();toast('Bokningen är registrerad. Ledtiden blev '+dagar(ledtid(l))+'.');rita()});
+    $('l-mejl').addEventListener('click',function(){stang();if(leadsLive&&l.epost){location.href='mailto:'+l.epost+'?subject='+encodeURIComponent('UGL, '+(l.kurs||'din förfrågan'))}else toast('I skarpt läge öppnas ett mejl till '+l.epost+'.')});
   }
 
   function fakturaModal(id){
@@ -854,7 +876,7 @@
     var r=e.target.closest('[data-oppna]');if(!r)return;
     var d=r.getAttribute('data-oppna').split(':');
     if(!OPPNA[d[0]])return;
-    OPPNA[d[0]](d[0]==='vy'?d[1]:+d[1]);
+    var id=d.slice(1).join(':');OPPNA[d[0]](d[0]==='vy'||isNaN(+id)?id:+id);
   }
 
   function ritaMeny(){
@@ -948,6 +970,8 @@
     S=las()||JSON.parse(JSON.stringify(DEMO));
     var ep=$('log-epost').value.trim();
     if(ep&&ep.indexOf('@')>0){S.jag.namn=S.jag.namn;S.plattform.epost=ep}
+    var ny=$('log-nyckel').value.trim();
+    try{if(ny)localStorage.setItem('ugl-admin-nyckel',ny)}catch(e){}
     spara();
     $('kund-logga').textContent=S.plattform.kort;
     $('kund-namn').textContent=S.plattform.namn;
@@ -963,6 +987,7 @@
       ev.preventDefault();radKlick(ev);
     });
     rita();
+    hamtaLeads(function(ok){if(ok){rita();toast(S.leads.length+' leads hämtade från sajten.')}});
   });
   $('logga-ut').addEventListener('click',function(){$('app').hidden=true;$('login').hidden=false});
   $('notis-knapp').addEventListener('click',function(){$('notis-panel').hidden=!$('notis-panel').hidden});
