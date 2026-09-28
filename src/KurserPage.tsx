@@ -56,10 +56,18 @@ export default function KurserPage() {
   const { kurser, fel } = useKurser()
   const omdomen = useOmdomen()
   const [oppnaIntresse, setOppnaIntresse] = useState(0)
+  const [oppnaBoka, setOppnaBoka] = useState(0)
+  const [bokaVal, setBokaVal] = useState<string | null>(null)
   const [visa, setVisa] = useState<string | null>(null)
   const betygFor = (anlaggning: string) => {
     const o = omdomen.filter((x) => !x.anlaggning || x.anlaggning === anlaggning)
     return o.length ? { snitt: snitt(o), antal: o.length } : null
+  }
+  const boka = (id: string) => {
+    setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
+    setBokaVal(id)
+    setOppnaBoka((n) => n + 1)
+    if (window.innerWidth < 1024) setKassa(true)
   }
   const intresse = (id: string) => {
     setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
@@ -298,6 +306,7 @@ export default function KurserPage() {
               )}
             </div>
           )}
+          <p className="mb-4 text-[14px] text-[#321C04]/70 leading-[1.5] max-w-[70ch]"><strong className="font-medium text-[#321C04]">Boka plats</strong> när du vet vilken vecka. <strong className="font-medium text-[#321C04]">Anmäl intresse</strong> om du vill hålla flera veckor öppna. Inget är bindande förrän vi har bekräftat.</p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-[#321C04] text-lg">
               {kurser === null && !fel && 'Hämtar kursdatum…'}
@@ -321,7 +330,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onVisa={() => setVisa(k.id)} tipsaresVecka={!!tips?.av && (tips?.veckor.includes(k.id) ?? false)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onBoka={() => boka(k.id)} onVisa={() => setVisa(k.id)} tipsaresVecka={!!tips?.av && (tips?.veckor.includes(k.id) ?? false)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -342,7 +351,7 @@ export default function KurserPage() {
           </div>
           </div>
           <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto no-scrollbar transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
@@ -397,12 +406,12 @@ export default function KurserPage() {
         <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
           <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}
 
-      {visa && (() => { const k = (kurser || []).find((x) => x.id === visa); return k ? <KursModal k={k} vald={valda.includes(k.id)} fullt={fullt} betyg={betygFor(k.anlaggning)} onToggle={() => toggle(k.id)} onIntresse={() => { setVisa(null); intresse(k.id) }} onTipsa={() => { setVisa(null); if (!valda.includes(k.id) && !fullt) toggle(k.id); setDela('chef') }} onClose={() => setVisa(null)} /> : null })()}
+      {visa && (() => { const k = (kurser || []).find((x) => x.id === visa); return k ? <KursModal k={k} vald={valda.includes(k.id)} fullt={fullt} betyg={betygFor(k.anlaggning)} onToggle={() => toggle(k.id)} onIntresse={() => { setVisa(null); intresse(k.id) }} onBoka={() => { setVisa(null); boka(k.id) }} onTipsa={() => { setVisa(null); if (!valda.includes(k.id) && !fullt) toggle(k.id); setDela('chef') }} onClose={() => setVisa(null)} /> : null })()}
       {dela && <DelaModal flik={dela} setFlik={setDela} valda={valdaKurser} onClose={() => setDela(null)} />}
     </>
   )

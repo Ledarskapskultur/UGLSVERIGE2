@@ -4,7 +4,7 @@ import { SAMTAL } from './Kassa'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 const BILD = 'https://www.uglsverige.store/assets/ugl-samtal.webp'
 const STEG = [
-  { n: '01', t: 'Välj veckor och skicka intresse', d: 'Markera upp till tre veckor i listan och ange förstahandsval. Ingen plats bokas, inget är bindande.' },
+  { n: '01', t: 'Boka plats eller anmäl intresse', d: 'Boka när du vet vilken vecka. Anmäl intresse om du vill hålla upp till tre veckor öppna. Inget är bindande ännu.' },
   { n: '02', t: 'Vi hörs kort', d: 'Inom två arbetsdagar stämmer vi av att veckan passar och att gruppen blir rätt sammansatt.' },
   { n: '03', t: 'Bekräftelse och faktura', d: 'Först då är platsen din. Välkomstbrev med kursgård, tider och resväg kommer före kursstart.' },
 ]

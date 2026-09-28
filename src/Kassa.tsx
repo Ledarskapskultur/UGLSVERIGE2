@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { ArrowLeft, ChevronRight, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
+import { ArrowLeft, CalendarCheck, ChevronRight, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
 import { MOTTAGARE, posta, kursData } from './forfragan'
 import { kr, type Kurs } from './kursdata'
 import Dela from './Dela'
@@ -9,10 +9,14 @@ const PORTAL = 'https://www.uglsverige.store/portal'
 export const SAMTAL = 'mailto:kontakt@uglsverige.se?subject=' + encodeURIComponent('Boka ett kort samtal om UGL') + '&body=' + encodeURIComponent('Hej,\n\njag vill boka ett kort samtal om UGL. Jag kan nås på telefon:\nTider som passar:\n')
 const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddelas')
 
-export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0, tipsare }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number; tipsare?: { namn: string; veckor: string[] } | null }) {
+export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0, oppnaBoka = 0, bokaVal, tipsare }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number; oppnaBoka?: number; bokaVal?: string | null; tipsare?: { namn: string; veckor: string[] } | null }) {
   const krock = tipsare ? valda.filter((k) => tipsare.veckor.includes(k.id)) : []
-  const [steg, setSteg] = useState<'val' | 'intresse' | 'klart'>('val')
+  const [steg, setSteg] = useState<'val' | 'intresse' | 'boka' | 'klart' | 'bokat'>('val')
   useEffect(() => { if (oppnaIntresse > 0) setSteg('intresse') }, [oppnaIntresse])
+  const [bokaId, setBokaId] = useState<string | null>(null)
+  useEffect(() => { if (oppnaBoka > 0) { setSteg('boka'); if (bokaVal) setBokaId(bokaVal) } }, [oppnaBoka, bokaVal])
+  const bokaKurs = valda.find((k) => k.id === bokaId) ?? valda[valda.length - 1]
+  const [b, setB] = useState({ namn: '', epost: '', telefon: '', organisation: '', fakturering: '', meddelande: '', samtycke: false })
   const [forsta, setForsta] = useState<string | null>(null)
   const [bortvalda, setBortvalda] = useState<string[]>([])
   const medtagna = valda.filter((k) => !bortvalda.includes(k.id))
@@ -42,6 +46,25 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
       window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Intresseanmälan UGL, ' + f.namn) + '&body=' + encodeURIComponent(text)
     }
     setSteg('klart')
+  }
+
+  const boka = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!bokaKurs) return setStatus('Välj vilken vecka du vill boka.')
+    if (!b.namn.trim() || !b.epost.includes('@')) return setStatus('Fyll i namn och e-post.')
+    if (!b.telefon.trim()) return setStatus('Fyll i telefonnummer, vi ringer och stämmer av.')
+    if (!b.samtycke) return setStatus('Kryssa i samtycket så att vi får kontakta dig.')
+    setSkickar(true)
+    setStatus(null)
+    const extra = [b.fakturering ? 'Fakturering: ' + b.fakturering : '', b.meddelande].filter(Boolean).join('\n')
+    const r = await posta({ typ: 'bokning', kurser: [{ ...kursData(bokaKurs), id: bokaKurs.nyckel, forstahandsval: true }], namn: b.namn, epost: b.epost, telefon: b.telefon, organisation: b.organisation, meddelande: extra, samtycke: true })
+    setSkickar(false)
+    if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
+    if (!r.mejl) {
+      const text = ['Bokning UGL', '', 'Namn: ' + b.namn, 'E-post: ' + b.epost, 'Telefon: ' + b.telefon, 'Organisation: ' + (b.organisation || 'Ej angiven'), '', `Vecka ${bokaKurs.vecka}, ${bokaKurs.anlaggning}, ${bokaKurs.ort} (${bokaKurs.period})`, '', extra].join('\n')
+      window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Bokning UGL, ' + b.namn) + '&body=' + encodeURIComponent(text)
+    }
+    setSteg('bokat')
   }
 
   if (kompakt) {
@@ -83,16 +106,21 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
             {valda.length > 0 && (
               <>
                 <button type="button" onClick={onAndra} className="mt-4 inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 decoration-[#321C04]/40 hover:decoration-[#321C04]"><Pencil size={14} /> Ändra urval</button>
-                <p className="mt-2 text-sm text-[#321C04]/65">Välj förstahandsval i nästa steg. Inga platser är bokade.</p>
+                <p className="mt-2 text-sm text-[#321C04]/65">Inget är bokat ännu. Välj nedan om du vill boka eller anmäla intresse.</p>
               </>
             )}
 
-            <p className={eyebrow + ' mt-9'}>Anmälan</p>
-            <h2 className="text-[30px] leading-[1.1] tracking-tight mb-4" style={EM}>Vem anmäler du?</h2>
+            <p className={eyebrow + ' mt-9'}>Nästa steg</p>
+            <h2 className="text-[30px] leading-[1.1] tracking-tight mb-4" style={EM}>Vad vill du göra?</h2>
             <div className="space-y-3">
-              <button type="button" disabled={!valda.length} onClick={() => setSteg('intresse')} className="disabled:opacity-40 disabled:cursor-not-allowed w-full text-left grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-xl border-[1.5px] border-[#321C04] bg-[#F6E4CF] px-4 py-4 hover:bg-[#EBD3B6] transition-colors">
+              <button type="button" disabled={!valda.length} onClick={() => setSteg('boka')} className="disabled:opacity-40 disabled:cursor-not-allowed w-full text-left grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-xl border-[1.5px] border-[#321C04] bg-[#F6E4CF] px-4 py-4 hover:bg-[#EBD3B6] transition-colors">
+                <CalendarCheck size={34} strokeWidth={1.4} />
+                <span><span className="block text-[19px] leading-tight" style={EM}>Boka plats</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Du vet vilken vecka. Vi bekräftar inom två arbetsdagar, först då är platsen din.</span></span>
+                <ChevronRight size={20} />
+              </button>
+              <button type="button" disabled={!valda.length} onClick={() => setSteg('intresse')} className="disabled:opacity-40 disabled:cursor-not-allowed w-full text-left grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-xl border border-[#D9C4AA] bg-white/60 px-4 py-4 hover:border-[#321C04] transition-colors">
                 <User size={34} strokeWidth={1.4} />
-                <span><span className="block text-[19px] leading-tight" style={EM}>Mig själv</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Ange förstahandsval och skicka en intresseanmälan.</span></span>
+                <span><span className="block text-[19px] leading-tight" style={EM}>Anmäl intresse</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Håll flera veckor öppna. Vi hör av oss, inget bokas.</span></span>
                 <ChevronRight size={20} />
               </button>
               <a href={portalLank} aria-disabled={!valda.length} onClick={(e) => { if (!valda.length) e.preventDefault() }} className={`${valda.length ? '' : 'opacity-40 cursor-not-allowed'} w-full grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-xl border border-[#D9C4AA] bg-white/60 px-4 py-4 hover:border-[#321C04] transition-colors`}>
@@ -164,6 +192,56 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Svar inom två arbetsdagar. Ingen plats bokas förrän du sagt ja.</p>
           </form>
+        )}
+
+        {steg === 'boka' && (
+          <form onSubmit={boka} noValidate>
+            <p className={eyebrow}>Boka plats</p>
+            <h2 className="text-[30px] leading-[1.1] tracking-tight mb-2" style={EM}>Boka plats</h2>
+            <p className="text-sm text-[#321C04]/70 mb-5 max-w-[50ch]">Vi ringer och stämmer av att veckan passar och att gruppen blir rätt sammansatt. Platsen är bindande först när vi bekräftat den.</p>
+            <p className={label}>{valda.length > 1 ? 'Vilken vecka vill du boka?' : 'Vecka'}</p>
+            <ul className="divide-y divide-[#321C04]/15 border-y border-[#321C04]/15 mb-5">
+              {valda.map((k) => (
+                <li key={k.id}>
+                  <label className="flex items-center gap-3 py-3 cursor-pointer">
+                    {valda.length > 1 && <input type="radio" name="boka" checked={bokaKurs?.id === k.id} onChange={() => setBokaId(k.id)} className="w-4 h-4 accent-[#321C04]" />}
+                    <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning}</span></span>
+                    <span className="text-sm shrink-0">{pris(k)}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <div className="grid gap-y-4">
+              <div><label className={label}>Namn</label><input className={field} value={b.namn} onChange={(e) => setB({ ...b, namn: e.target.value })} autoComplete="name" /></div>
+              <div><label className={label}>E-post</label><input type="email" className={field} value={b.epost} onChange={(e) => setB({ ...b, epost: e.target.value })} autoComplete="email" /></div>
+              <div><label className={label}>Telefon</label><input type="tel" className={field} value={b.telefon} onChange={(e) => setB({ ...b, telefon: e.target.value })} autoComplete="tel" /></div>
+              <div><label className={label}>Organisation <span className="normal-case tracking-normal text-[#321C04]/40">valfritt</span></label><input className={field} value={b.organisation} onChange={(e) => setB({ ...b, organisation: e.target.value })} autoComplete="organization" /></div>
+              <div><label className={label}>Fakturering <span className="normal-case tracking-normal text-[#321C04]/40">adress, referens, valfritt</span></label><input className={field} value={b.fakturering} onChange={(e) => setB({ ...b, fakturering: e.target.value })} /></div>
+              <div><label className={label}>Meddelande <span className="normal-case tracking-normal text-[#321C04]/40">valfritt</span></label><textarea rows={2} className={field + ' resize-none'} value={b.meddelande} onChange={(e) => setB({ ...b, meddelande: e.target.value })} /></div>
+            </div>
+            <label className="flex items-start gap-3 mt-5 text-sm text-[#321C04]/80 cursor-pointer">
+              <input type="checkbox" checked={b.samtycke} onChange={(e) => setB({ ...b, samtycke: e.target.checked })} className="mt-0.5 w-4 h-4 accent-[#321C04]" />
+              Jag godkänner att mina uppgifter används för att hantera bokningen.
+            </label>
+            {status && <p className="mt-4 text-sm text-[#9C3A2E]">{status}</p>}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button type="button" onClick={() => setSteg('val')} className="inline-flex items-center gap-2 border border-[#321C04]/30 text-sm font-medium px-5 py-3 rounded-xl hover:border-[#321C04]"><ArrowLeft size={15} /> Tillbaka</button>
+              <button type="submit" disabled={skickar} className="flex-1 inline-flex items-center justify-center bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] disabled:opacity-60 transition-colors">{skickar ? 'Skickar…' : 'Skicka bokning'}</button>
+            </div>
+            <p className="mt-3 text-[13px] text-[#321C04]/60">Vi bekräftar inom två arbetsdagar. Bindande först vid bekräftelse.</p>
+          </form>
+        )}
+
+        {steg === 'bokat' && (
+          <div className="py-6">
+            <h2 className="text-[30px] leading-[1.1] tracking-tight mb-3" style={EM}>Tack, bokningen är mottagen.</h2>
+            <p className="text-[#321C04]/75 max-w-[50ch]">Vi ringer inom två arbetsdagar och bekräftar platsen. Först då är den bindande, och då kommer bekräftelse och faktura.</p>
+            <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
+              <p className="text-[15px] text-[#321C04] leading-[1.5] mb-4">Berätta för en kollega att du ska gå. Går ni var sin vecka har ni varandra att bolla med efteråt.</p>
+              <Dela kurser={bokaKurs ? [bokaKurs] : valda} av={b.namn} epost={b.epost} kanal="efter-bokning" rubrik="Tipsa kollegor och nätverk" />
+            </div>
+            <button type="button" onClick={() => (onClose ? onClose() : setSteg('val'))} className="mt-6 inline-flex items-center bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724]">Stäng</button>
+          </div>
         )}
 
         {steg === 'klart' && (

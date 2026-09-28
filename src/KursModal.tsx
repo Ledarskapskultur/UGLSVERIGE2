@@ -27,9 +27,9 @@ const INGAR = [
 ] as const
 const init = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
-export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse, onTipsa, onClose }: {
+export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse, onBoka, onTipsa, onClose }: {
   k: Kurs; vald: boolean; fullt: boolean; betyg?: { snitt: number; antal: number } | null
-  onToggle: () => void; onIntresse: () => void; onTipsa: () => void; onClose: () => void
+  onToggle: () => void; onIntresse: () => void; onBoka: () => void; onTipsa: () => void; onClose: () => void
 }) {
   const [, setLaddad] = useState(0)
   useEffect(() => { laddaRegister(() => setLaddad((n) => n + 1)) }, [])
@@ -77,10 +77,11 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <button type="button" onClick={onToggle} disabled={!k.ledig || (fullt && !vald)} aria-pressed={vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'bg-[#F6E4CF] text-[#321C04]' : 'bg-[#321C04] text-[#FFF9F2] hover:bg-[#2B2724]'}`}>
-                {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
+              <button type="button" onClick={onBoka} disabled={!k.ledig || (fullt && !vald)} className="inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl bg-[#321C04] text-[#FFF9F2] hover:bg-[#2B2724] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                {!k.ledig ? 'Fullbokad' : fullt && !vald ? 'Max tre valda' : 'Boka plats'}
               </button>
-              <button type="button" onClick={onIntresse} disabled={fullt && !vald} className="inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border border-[#321C04]/30 hover:border-[#321C04] disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
+              <button type="button" onClick={onIntresse} disabled={fullt && !vald} className="inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border border-[#321C04]/30 hover:border-[#321C04] disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{k.ledig ? 'Anmäl intresse' : 'Ställ mig på kö'}</button>
+              {vald && <button type="button" onClick={onToggle} className="inline-flex items-center gap-1.5 text-[13px] text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4"><Check size={13} /> I urvalet, ta bort</button>}
               <button type="button" onClick={onTipsa} className="inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-3 rounded-xl text-[#321C04]/80 hover:text-[#321C04] underline underline-offset-4"><Send size={14} /> Tipsa om UGL</button>
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Anmälan är inte bindande förrän den bekräftats. Svar inom två arbetsdagar.</p>
