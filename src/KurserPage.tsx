@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { ArrowRight, X } from 'lucide-react'
+import { useMemo, useState, type ReactNode } from 'react'
+import { ArrowRight, Calendar, ChevronDown, MapPin, Navigation, Search, SlidersHorizontal, X } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import Anmalan from './Anmalan'
@@ -26,8 +26,20 @@ const FAQ = [
 ]
 
 
+function Pill({ icon, label, aktiv, children }: { icon: ReactNode; label: string; aktiv: boolean; children: ReactNode }) {
+  return (
+    <div className={`relative inline-flex items-center gap-2.5 text-[15px] font-medium px-5 py-3 rounded-2xl border transition-colors ${aktiv ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'bg-white text-[#321C04] border-[#D9C4AA] hover:border-[#321C04]'}`}>
+      {icon}
+      <span>{label}</span>
+      <ChevronDown size={16} className="opacity-70" />
+      {children}
+    </div>
+  )
+}
+
 export default function KurserPage() {
   const { kurser, fel } = useKurser()
+  const [sok, setSok] = useState('')
   const [manad, setManad] = useState('')
   const [region, setRegion] = useState('')
   const [ort, setOrt] = useState('')
@@ -48,8 +60,8 @@ export default function KurserPage() {
     const ids = [...new Set(kurser.filter((k) => k.start >= idag).map((k) => manadId(k.start)))]
     return ids.map((id) => { const d = new Date(id + '-01T00:00:00'); return { id, label: MANADER[d.getMonth()] + ' ' + d.getFullYear() } })
   }, [kurser])
-  const filtrerat = !!(manad || region || ort || pris || !baraLediga || snabbAktiv)
-  const rensa = () => { setManad(''); setRegion(''); setOrt(''); setPris(''); setBaraLediga(true); setSnabbAktiv(null); setVisade(6) }
+  const filtrerat = !!(sok || manad || region || ort || pris || !baraLediga || snabbAktiv)
+  const rensa = () => { setSok(''); setManad(''); setRegion(''); setOrt(''); setPris(''); setBaraLediga(true); setSnabbAktiv(null); setVisade(6) }
   const snabb = (q: string) => {
     const av = snabbAktiv === q
     setSnabbAktiv(av ? null : q); setRegion(''); setManad(''); setVisade(6)
@@ -64,12 +76,13 @@ export default function KurserPage() {
     if (manad) f = f.filter((k) => manadId(k.start) === manad)
     if (region) f = f.filter((k) => k.region === region)
     if (ort) f = f.filter((k) => k.ort === ort)
+    if (sok.trim()) { const q = sok.trim().toLowerCase(); f = f.filter((k) => [k.ort, k.anlaggning, k.region, ...k.handledare, 'vecka ' + k.vecka].some((t) => t.toLowerCase().includes(q))) }
     if (pris) f = f.filter((k) => k.total && k.total < +pris)
     if (baraLediga) f = f.filter((k) => k.ledig)
     if (sort === 'pris') f = [...f].sort((a, b) => (a.total || 1e9) - (b.total || 1e9))
     else if (sort === 'ort') f = [...f].sort((a, b) => a.ort.localeCompare(b.ort, 'sv') || a.start.getTime() - b.start.getTime())
     return f
-  }, [kurser, manad, region, ort, pris, baraLediga, sort])
+  }, [kurser, sok, manad, region, ort, pris, baraLediga, sort])
 
   const billigast = useMemo(() => lista.filter((k) => k.total).sort((a, b) => a.total - b.total)[0]?.id ?? null, [lista])
   const valdaKurser = (kurser || []).filter((k) => valda.includes(k.id))
@@ -79,7 +92,7 @@ export default function KurserPage() {
   return (
     <>
       {/* Hero */}
-      <section id="top" className="relative min-h-[70vh] overflow-hidden mb-[-25px] bg-[#2B2724]">
+      <section id="top" className="relative overflow-hidden mb-[-25px] bg-[#2B2724]">
         <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${HERO_IMAGE}")` }} />
         <div
           aria-hidden="true"
@@ -87,7 +100,7 @@ export default function KurserPage() {
           style={{ background: 'linear-gradient(180deg, rgba(43,39,36,0.55) 0%, rgba(43,39,36,0.45) 50%, rgba(43,39,36,0.85) 100%)' }}
         />
         <Navbar />
-        <div className="relative z-10 min-h-[70vh] flex flex-col justify-end items-center px-6 pb-14 md:pb-20 pt-40 gap-6 text-center">
+        <div className="relative z-10 min-h-[62vh] flex flex-col justify-end items-center px-6 pb-12 md:pb-16 pt-40 gap-6 text-center">
           <p className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.25em] font-medium">Öppna kurser</p>
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[84px] font-normal text-white leading-[1.05] tracking-tight">
             Kursdatum och{' '}
@@ -99,11 +112,50 @@ export default function KurserPage() {
             Fem sammanhängande dagar på kursgård, 8 till 12 deltagare och två handledare certifierade av Försvarshögskolan.
             Anmälan är inte bindande förrän den bekräftats.
           </p>
+          <form onSubmit={(e) => { e.preventDefault(); document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} className="mt-2 w-full max-w-[560px] relative">
+            <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#321C04]/50" />
+            <input value={sok} onChange={(e) => { setSok(e.target.value); setVisade(6) }} placeholder="Sök ort, kursgård eller handledare" aria-label="Sök kurs" className="w-full bg-white text-[#321C04] placeholder:text-[#321C04]/50 rounded-2xl pl-12 pr-5 py-4 text-base shadow-[0_10px_40px_rgba(43,39,36,0.35)] focus:outline-none focus:ring-2 focus:ring-[#F6E4CF]" />
+          </form>
+        </div>
+
+        {/* Filterrad */}
+        <div className="relative z-10 bg-[#F6E4CF]/95 backdrop-blur px-6 pt-6 pb-14">
+          <div className="max-w-6xl mx-auto">
+            <p className="text-[#321C04] text-sm font-medium mb-3">Filtrera efter</p>
+            <div className="flex flex-wrap gap-3">
+              <Pill icon={<Calendar size={16} />} aktiv={!!manad} label={manad ? manader.find((m) => m.id === manad)?.label ?? 'Period' : 'Period'}>
+                <select value={manad} onChange={(e) => { setManad(e.target.value); setVisade(6) }} aria-label="Period" className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                  <option value="">Alla perioder</option>
+                  {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+                </select>
+              </Pill>
+              <Pill icon={<MapPin size={16} />} aktiv={!!region} label={region || 'Region'}>
+                <select value={region} onChange={(e) => { setRegion(e.target.value); setVisade(6) }} aria-label="Region" className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                  <option value="">Alla regioner</option>
+                  {regioner.map((r) => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </Pill>
+              <Pill icon={<Navigation size={16} />} aktiv={!!ort} label={ort || 'Ort'}>
+                <select value={ort} onChange={(e) => { setOrt(e.target.value); setVisade(6) }} aria-label="Ort" className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                  <option value="">Alla orter</option>
+                  {orter.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </Pill>
+              <button type="button" onClick={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="inline-flex items-center gap-2 bg-white border border-[#D9C4AA] text-[#321C04] text-[15px] font-medium px-5 py-3 rounded-2xl hover:border-[#321C04] transition-colors">
+                <SlidersHorizontal size={16} /> Visa alla filter
+              </button>
+              {filtrerat && (
+                <button type="button" onClick={rensa} className="inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 px-2">
+                  <X size={13} /> Rensa
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Filter + lista */}
-      <section id="kurser" className="relative z-10 bg-[#F6E4CF] rounded-t-[25px] py-20 md:py-28 px-6 mb-[-25px]">
+      <section id="kurser" className="relative z-10 bg-[#F6E4CF] rounded-t-[25px] pt-16 md:pt-20 pb-20 md:pb-28 px-6 mb-[-25px]">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-10 md:gap-16 items-start">
             <div>
