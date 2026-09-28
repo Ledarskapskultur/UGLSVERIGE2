@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Award, BedDouble, BookOpen, Calendar, Check, ExternalLink, MapPin, Send, Users, UtensilsCrossed, X } from 'lucide-react'
+import { Calendar, Check, ExternalLink, MapPin, Send, Users, X } from 'lucide-react'
 import { kr, type Kurs } from './kursdata'
 import { Stjarnor } from './Omdomen'
 import Dela from './Dela'
@@ -21,10 +21,6 @@ function laddaRegister(cb: () => void) {
   }
   if (kvar === 0) cb()
 }
-const INGAR = [
-  ['Fem kursdagar', Calendar], ['Boende fyra nätter', BedDouble], ['Alla måltider', UtensilsCrossed],
-  ['Kursmaterial', BookOpen], ['Två handledare', Users], ['Intyg efter kursen', Award],
-] as const
 const init = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
 export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse, onBoka, onTipsa, onClose }: {
@@ -72,6 +68,7 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
                 <>
                   <p className="text-3xl font-medium tracking-tight">{kr(k.total)} <span className="text-sm font-normal text-[#321C04]/60">exkl. moms per person</span></p>
                   <p className="mt-1 text-sm text-[#321C04]/65">{k.samlat ? 'Kurs, kost och logi ingår i priset.' : `Kursavgift ${kr(k.kurspris)} och kost och logi ${kr(k.logi)}. Resa tillkommer.`}</p>
+                  <p className="mt-1.5 text-[13px] text-[#321C04]/60">I priset: fem kursdagar, boende fyra nätter, alla måltider, kursmaterial, två handledare och intyg.</p>
                 </>
               ) : <p className="text-base">Pris meddelas</p>}
             </div>
@@ -86,10 +83,7 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Anmälan är inte bindande förrän den bekräftats. Svar inom två arbetsdagar.</p>
             <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
-              <p className={label}>Det här ingår</p>
-              <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
-                {INGAR.map(([t, Icon]) => <li key={t} className="flex items-center gap-2"><Icon size={15} className="text-[#9C7A4A] shrink-0" />{t}</li>)}
-              </ul>
+              <Dela kurser={[k]} kanal="kurspopup" rubrik="Dela veckan" rutnat />
             </div>
           </div>
         </div>
@@ -118,7 +112,6 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
             <p className="mt-2 text-[15px] font-medium">{k.anlaggning}, {k.ort}</p>
             <p className="mt-1 text-[14px] text-[#321C04]/75 leading-[1.5]">{anl?.text || 'Kursgård med enkelrum, alla måltider och avskilda grupprum. Vägbeskrivning och tider kommer i välkomstbrevet.'}</p>
             <a href={k.lank} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4"><ExternalLink size={14} /> Öppna hela kurssidan</a>
-            <div className="mt-7"><Dela kurser={[k]} kanal="kurspopup" rubrik="Dela veckan" /></div>
           </div>
         </div>
       </div>

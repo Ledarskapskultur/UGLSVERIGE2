@@ -4,7 +4,8 @@ import type { Kurs } from './kursdata'
 import { delningskod, delningslank, delningstext } from './delning'
 
 // Delningsrad: LinkedIn, Facebook, X, WhatsApp, Teams, sms, mejl, kopiera lank och systemets egen delning.
-export default function Dela({ kurser, av, epost, kanal, rubrik, morkt }: { kurser: Kurs[]; av?: string; epost?: string; kanal: string; rubrik?: string; morkt?: boolean }) {
+// rutnat: tre rader med tre knappar i varje (delningsknappen visas alltid, med kopiering som reserv).
+export default function Dela({ kurser, av, epost, kanal, rubrik, morkt, rutnat }: { kurser: Kurs[]; av?: string; epost?: string; kanal: string; rubrik?: string; morkt?: boolean; rutnat?: boolean }) {
   const [kod, setKod] = useState<string | null>(null)
   const [kopierad, setKopierad] = useState(false)
   useEffect(() => { delningskod(kurser, kanal, av, epost).then(setKod) }, [kurser, kanal, av, epost])
@@ -29,17 +30,17 @@ export default function Dela({ kurser, av, epost, kanal, rubrik, morkt }: { kurs
     }
     setKopierad(true); setTimeout(() => setKopierad(false), 2000)
   }
-  const dela = () => navigator.share?.({ title: amne, text, url }).catch(() => {})
+  const dela = () => { if (typeof navigator !== 'undefined' && 'share' in navigator) navigator.share({ title: amne, text, url }).catch(() => {}); else kopiera() }
   const ruta = `w-11 h-11 rounded-xl border flex items-center justify-center transition-colors ${morkt ? 'border-[#F6E4CF]/30 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#D9C4AA] bg-white text-[#321C04] hover:border-[#321C04]'}`
   return (
     <div>
       {rubrik && <p className={`text-[11px] uppercase tracking-[0.2em] font-medium mb-3 ${morkt ? 'text-[#F6E4CF]/60' : 'text-[#321C04]/60'}`}>{rubrik}</p>}
-      <div className="flex flex-wrap gap-2">
+      <div className={rutnat ? 'grid grid-cols-3 gap-2 w-fit' : 'flex flex-wrap gap-2'}>
         {kanaler.map((k) => (
           <a key={k.n} href={k.h} target={k.h.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" aria-label={`Dela via ${k.n}`} title={k.n} className={ruta}>{k.i}</a>
         ))}
         <button type="button" onClick={kopiera} aria-label="Kopiera länk" title="Kopiera länk" className={ruta}>{kopierad ? <Check size={18} /> : <Link2 size={18} />}</button>
-        {typeof navigator !== 'undefined' && 'share' in navigator && (
+        {(rutnat || (typeof navigator !== 'undefined' && 'share' in navigator)) && (
           <button type="button" onClick={dela} aria-label="Fler sätt att dela" title="Fler sätt att dela" className={ruta}><Share2 size={18} /></button>
         )}
       </div>
