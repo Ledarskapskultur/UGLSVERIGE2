@@ -115,7 +115,7 @@ export default function KurserPage() {
           </div>
 
           {/* Filter, lista och kassa */}
-          <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-6 lg:items-start transition-[grid-template-columns] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 200px' }}>
+          <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
           <aside className="grid sm:grid-cols-3 lg:grid-cols-1 gap-4">
             <div className="bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5">
               <p className="text-[#321C04]/50 text-xs tracking-[0.2em] font-medium">01</p>
@@ -188,7 +188,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -208,8 +208,8 @@ export default function KurserPage() {
             </p>
           </div>
           </div>
-          <aside className="hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
-            <Kassa valda={valdaKurser} toggle={toggle} kompakt={valda.length === 0} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+          <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
+            <Kassa valda={valdaKurser} toggle={toggle} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
