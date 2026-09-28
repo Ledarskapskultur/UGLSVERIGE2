@@ -2,5 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /leverantor
-
+Disallow: /portal
 Sitemap: https://www.uglsverige.store/sitemap.xml

@@ -17,8 +17,8 @@ const COLUMNS = [
     title: 'Kurser',
     links: [
       { label: 'Kursdatum', href: '/kurser' },
-      { label: 'Kursorter', href: 'https://uglsverige.store/kursorter', external: true },
-      { label: 'För organisationer', href: 'https://uglsverige.store/organisationer', external: true },
+      { label: 'Kursorter', href: '/ugl' },
+      { label: 'UGL i egen regi', href: '/foretag' },
       { label: 'Nyhetsbrev', href: '/#nyhetsbrev' },
     ],
   },
@@ -26,7 +26,6 @@ const COLUMNS = [
     title: 'Om UGL',
     links: [
       { label: 'Försvarshögskolan', href: 'https://www.fhs.se/', external: true },
-      { label: 'Forskningen bakom', href: 'https://uglsverige.store/forskning', external: true },
     ],
   },
 ]

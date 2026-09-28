@@ -3,6 +3,7 @@ import { useState } from 'react'
 const LINKS = [
   { label: 'Vad är UGL', href: '/#top' },
   { label: 'Kursdatum', href: '/kurser' },
+  { label: 'Kursorter', href: '/ugl' },
   { label: 'Effekter', href: '/#effekten' },
   { label: 'Frågor och svar', href: '/#faq' },
 ]
