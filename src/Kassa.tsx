@@ -5,6 +5,7 @@ import { kr, type Kurs, type Omdome } from './kursdata'
 import Dela from './Dela'
 import { Stjarnor } from './Omdomen'
 import { spara } from './spar'
+import { pixelHandelse } from './Samtycke'
 import type { Bevis } from './bevis'
 
 const EM = { fontFamily: "'Instrument Serif', serif" }
@@ -50,7 +51,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     const r = await posta({ typ: 'intresse', kurser: ordnade.map((k, i) => ({ ...kursData(k), id: k.nyckel, forstahandsval: i === 0 })), meddelande: rader.join('\n') + (f.oppen ? '\n- Öppen för andra veckor också, föreslå gärna datum' : ''), namn: f.namn, epost: f.epost, telefon: f.telefon, samtycke: true })
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
-    spara('intresse_skickad', { veckor: medtagna.length })
+    spara('intresse_skickad', { veckor: medtagna.length }); pixelHandelse('Lead')
     if (!r.mejl) {
       const text = ['Intresseanmälan UGL (ingen plats bokad)', '', 'Namn: ' + f.namn, 'E-post: ' + f.epost, f.telefon ? 'Telefon: ' + f.telefon : '', '', 'Valda veckor:', ...rader].join('\n')
       window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Intresseanmälan UGL, ' + f.namn) + '&body=' + encodeURIComponent(text)
@@ -70,7 +71,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     const r = await posta({ typ: 'bokning', kurser: [{ ...kursData(bokaKurs), id: bokaKurs.nyckel, forstahandsval: true }], namn: b.namn, epost: b.epost, telefon: b.telefon, organisation: b.organisation, meddelande: extra, samtycke: true })
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
-    spara('bokning_skickad', { vecka: bokaKurs.vecka, ort: bokaKurs.ort })
+    spara('bokning_skickad', { vecka: bokaKurs.vecka, ort: bokaKurs.ort }); pixelHandelse('Lead')
     if (!r.mejl) {
       const text = ['Bokning UGL', '', 'Namn: ' + b.namn, 'E-post: ' + b.epost, 'Telefon: ' + b.telefon, 'Organisation: ' + (b.organisation || 'Ej angiven'), '', `Vecka ${bokaKurs.vecka}, ${bokaKurs.anlaggning}, ${bokaKurs.ort} (${bokaKurs.period})`, '', extra].join('\n')
       window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Bokning UGL, ' + b.namn) + '&body=' + encodeURIComponent(text)

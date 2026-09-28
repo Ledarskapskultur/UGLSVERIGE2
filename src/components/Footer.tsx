@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
+import { oppnaSamtycke } from '../Samtycke'
 import Logo from './Logo'
 
 const COLUMNS = [
@@ -84,6 +85,9 @@ export default function Footer() {
             <a href="#" className="hover:text-[#F6E4CF] transition-colors">
               Integritetspolicy
             </a>
+            <button type="button" onClick={oppnaSamtycke} className="hover:text-[#F6E4CF] transition-colors">
+              Cookieinställningar
+            </button>
             <a href="#top" className="hover:text-[#F6E4CF] transition-colors">
               Till toppen
             </a>
