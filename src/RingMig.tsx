@@ -40,7 +40,6 @@ export default function RingMig({ valda }: { valda: Kurs[] }) {
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
     spara('ring_mig_skickad', { tid: f.tid })
-    if (!r.mejl) window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Ring mig om UGL') + '&body=' + encodeURIComponent(`Namn: ${f.namn}\nTelefon: ${f.telefon}\nPassar bäst: ${f.tid}`)
     setKlar(true)
   }
 

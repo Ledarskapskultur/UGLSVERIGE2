@@ -40,7 +40,6 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     setSparar(false)
     if (!r.ok) return setSparaStatus((r.error || 'Något gick fel') + '. Prova igen.')
     spara('veckor_mejlade', { antal: valda.length })
-    if (!r.mejl) window.location.href = 'mailto:' + sparaEpost + '?subject=' + encodeURIComponent('Mina UGL-veckor') + '&body=' + encodeURIComponent(valda.map((k) => `Vecka ${k.vecka}, ${k.period}, ${k.anlaggning}, ${k.ort}`).join('\n') + '\n\nhttps://www.uglsverige.store/kurser?valda=' + valda.map((k) => k.nyckel).join(','))
     setSparat(true)
   }
   // Ett omdome intill knappen: helst fran samma kursgard, annars det hogst betygsatta.
@@ -70,10 +69,6 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
     spara('intresse_skickad', { veckor: medtagna.length }); pixelHandelse('Lead')
-    if (!r.mejl) {
-      const text = ['Intresseanmälan UGL (ingen plats bokad)', '', 'Namn: ' + f.namn, 'E-post: ' + f.epost, f.telefon ? 'Telefon: ' + f.telefon : '', '', 'Valda veckor:', ...rader].join('\n')
-      window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Intresseanmälan UGL, ' + f.namn) + '&body=' + encodeURIComponent(text)
-    }
     setSteg('klart')
   }
 
@@ -90,10 +85,6 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
     spara('bokning_skickad', { vecka: bokaKurs.vecka, ort: bokaKurs.ort }); pixelHandelse('Lead')
-    if (!r.mejl) {
-      const text = ['Bokning UGL', '', 'Namn: ' + b.namn, 'E-post: ' + b.epost, 'Telefon: ' + b.telefon, 'Organisation: ' + (b.organisation || 'Ej angiven'), '', `Vecka ${bokaKurs.vecka}, ${bokaKurs.anlaggning}, ${bokaKurs.ort} (${bokaKurs.period})`, '', extra].join('\n')
-      window.location.href = 'mailto:' + MOTTAGARE + '?subject=' + encodeURIComponent('Bokning UGL, ' + b.namn) + '&body=' + encodeURIComponent(text)
-    }
     setSteg('bokat')
   }
 
