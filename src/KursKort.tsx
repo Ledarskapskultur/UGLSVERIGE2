@@ -11,7 +11,7 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa,
         vald ? 'bg-[#321C04] border-[#321C04] text-[#FFF9F2]' : 'bg-[#FFF9F2] border-[#D9C4AA] text-[#321C04]'
       }`}
     >
-      <div className={`relative aspect-[4/3] ${kompakt ? 'md:aspect-[3/4]' : 'md:aspect-auto md:min-h-[190px]'} rounded-2xl overflow-hidden bg-[#2B2724]`}>
+      <div className={`relative w-full aspect-[4/3] ${kompakt ? 'md:aspect-[3/4] md:self-start' : 'md:aspect-auto md:min-h-[190px] md:self-stretch'} rounded-2xl overflow-hidden bg-[#2B2724]`}>
         <img src={k.bild} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
         {(badge || !k.ledig || tipsaresVecka) && (
           <span className={`absolute top-2 left-2 text-[10px] uppercase tracking-[0.16em] font-medium px-2.5 py-1 rounded-full ${tipsaresVecka ? 'bg-[#9C7A4A] text-[#FFF9F2]' : k.ledig ? 'bg-[#321C04] text-[#F6E4CF]' : 'bg-[#FFF9F2] text-[#321C04]'}`}>
