@@ -4,6 +4,7 @@ import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import Anmalan from './Anmalan'
 import Omdomen, { snitt } from './Omdomen'
+import KursModal from './KursModal'
 import { SAMTAL } from './Kassa'
 import Kassa from './Kassa'
 import { MAX_VALDA } from './forfragan'
@@ -54,6 +55,7 @@ export default function KurserPage() {
   const { kurser, fel } = useKurser()
   const omdomen = useOmdomen()
   const [oppnaIntresse, setOppnaIntresse] = useState(0)
+  const [visa, setVisa] = useState<string | null>(null)
   const betygFor = (anlaggning: string) => {
     const o = omdomen.filter((x) => !x.anlaggning || x.anlaggning === anlaggning)
     return o.length ? { snitt: snitt(o), antal: o.length } : null
@@ -293,7 +295,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onVisa={() => setVisa(k.id)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -313,7 +315,7 @@ export default function KurserPage() {
             </p>
           </div>
           </div>
-          <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
+          <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto no-scrollbar transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
             <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
@@ -374,6 +376,7 @@ export default function KurserPage() {
         </div>
       )}
 
+      {visa && (() => { const k = (kurser || []).find((x) => x.id === visa); return k ? <KursModal k={k} vald={valda.includes(k.id)} fullt={fullt} betyg={betygFor(k.anlaggning)} onToggle={() => toggle(k.id)} onIntresse={() => { setVisa(null); intresse(k.id) }} onTipsa={() => { setVisa(null); if (!valda.includes(k.id) && !fullt) toggle(k.id); setDela('chef') }} onClose={() => setVisa(null)} /> : null })()}
       {dela && <DelaModal flik={dela} setFlik={setDela} valda={valdaKurser} onClose={() => setDela(null)} />}
     </>
   )

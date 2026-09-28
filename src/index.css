@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Skrollbar utan synlig list, t.ex. kassan */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -3,7 +3,7 @@ import { kr, type Kurs } from './kursdata'
 import { Stjarnor } from './Omdomen'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 
-export default function KursKort({ k, vald, fullt, onToggle, onIntresse, betyg, badge, kompakt }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onIntresse: () => void; betyg?: { snitt: number; antal: number } | null; kompakt?: boolean; badge: string | null }) {
+export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa, betyg, badge, kompakt }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onIntresse: () => void; onVisa: () => void; betyg?: { snitt: number; antal: number } | null; kompakt?: boolean; badge: string | null }) {
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
@@ -63,17 +63,16 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, betyg, 
             {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
           </button>
           <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-2.5 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
-          <a
-            href={k.lank}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={onVisa}
             className={`inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${
               vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'
             }`}
           >
             Se kursen
             <ArrowRight size={15} />
-          </a>
+          </button>
         </div>
       </div>
 
@@ -104,9 +103,9 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, betyg, 
               {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
             </button>
             <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
-            <a href={k.lank} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'}`}>
+            <button type="button" onClick={onVisa} className={`inline-flex items-center justify-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'}`}>
               Se kursen <ArrowRight size={15} />
-            </a>
+            </button>
           </div>
         </div>
       )}
