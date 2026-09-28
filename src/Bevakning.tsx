@@ -55,10 +55,10 @@ export function BevakningForm({ morkt, kanal, onKlar }: { morkt?: boolean; kanal
 
 export function BevakningBlock() {
   return (
-    <div className="mt-10 rounded-3xl border border-[#D9C4AA] bg-[#F6E4CF]/60 px-6 py-6 md:px-8 md:py-7">
-      <p className="text-[#321C04]/60 text-[11px] uppercase tracking-[0.25em] font-medium mb-2">Inte rätt vecka ännu?</p>
-      <h3 className="text-[#321C04] text-[26px] leading-[1.1] tracking-tight mb-4" style={EM}>Få nästa lediga platser till mejlen.</h3>
-      <BevakningForm kanal="lista" />
+    <div className="mt-10 rounded-3xl bg-[#2B2724] text-[#FFF9F2] px-6 py-6 md:px-8 md:py-7">
+      <p className="text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.25em] font-medium mb-2">Inte rätt vecka ännu?</p>
+      <h3 className="text-[#FFF9F2] text-[26px] leading-[1.1] tracking-tight mb-4" style={EM}>Få nästa lediga platser till mejlen.</h3>
+      <BevakningForm kanal="lista" morkt />
     </div>
   )
 }
