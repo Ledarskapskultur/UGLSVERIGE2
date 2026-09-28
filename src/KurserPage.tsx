@@ -31,7 +31,7 @@ function manaderFram(d: Date) {
 const flabel = 'block text-[#321C04]/60 text-[11px] uppercase tracking-[0.2em] font-medium mb-2'
 const fselect = 'w-full bg-white border border-[#D9C4AA] rounded-xl px-3 py-2.5 text-[15px] text-[#321C04] focus:outline-none focus:border-[#321C04]'
 const chipS = (on: boolean) =>
-  `px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors ${
+  `chip-s px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors ${
     on ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'text-[#321C04] border-[#321C04]/25 hover:border-[#321C04]/60'
   }`
 const FAQ = [
@@ -221,11 +221,11 @@ export default function KurserPage() {
           </div>
 
           {/* Filter, lista och kassa */}
-          <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
-          <aside className="lg:sticky lg:top-6 bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5 flex flex-col gap-5" aria-label="Filtrera kurser">
+          <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '176px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
+          <aside className={`lg:sticky lg:top-6 bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl flex flex-col transition-[padding] duration-300 ${valda.length ? 'p-4 gap-4 text-[13px]' : 'p-5 gap-5'}`} aria-label="Filtrera kurser" data-kompakt={valda.length ? '1' : undefined}>
             <div>
               <p className={flabel}>När vill du gå?</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className={`grid gap-2 ${valda.length ? 'grid-cols-1' : 'grid-cols-2'}`}>
                 {PERIODER.map((p) => (
                   <button key={p.id} type="button" onClick={() => { setPeriod(period === p.id ? '' : p.id); setManad(''); setVisade(6) }} aria-pressed={period === p.id && !manad} className={`px-2 py-2 rounded-xl text-[12.5px] font-medium border text-center whitespace-nowrap transition-colors ${period === p.id && !manad ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'bg-white text-[#321C04] border-[#D9C4AA] hover:border-[#321C04]'}`}>
                     {p.kort}

@@ -14,3 +14,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
 }
+
+/* Filterpanelen i kompakt lage (nar kassan ar oppen) */
+aside[data-kompakt] select { font-size: 13px; padding: 0.5rem 0.6rem; }
+aside[data-kompakt] .chip-s { font-size: 12px; padding: 0.3rem 0.6rem; }
