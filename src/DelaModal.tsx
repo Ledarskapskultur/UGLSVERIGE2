@@ -22,7 +22,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
 
   const mejl = chef
     ? [
-        `Hej ${f.chefNamn || '[chefens namn]'},`,
+        `Hej ${f.chefNamn || '[mottagarens namn]'},`,
         '',
         `${f.namn || '[ditt namn]'} vill gå UGL, Utveckling av grupp och ledare, Sveriges mest använda ledarskapsutbildning. ${valda.length > 1 ? 'Här är de veckor som passar, i prioritetsordning:' : 'Här är veckan som passar:'}`,
         ...kursrader,
@@ -42,7 +42,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
         `Jag tänkte på dig när jag såg det här. UGL är en femdagarskurs i grupputveckling och ledarskap, och ${valda.length > 1 ? 'de här veckorna' : 'den här veckan'} verkar passa:`,
         ...kursrader,
         '',
-        'Läs mer och boka på uglsverige.se/kurser.',
+        'Läs mer och boka på www.uglsverige.store/kurser.',
         '',
         `Hälsningar\n${f.namn || '[ditt namn]'}`,
       ]
@@ -53,7 +53,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
     e.preventDefault()
     if (!valda.length) return setStatus('Välj minst en vecka först.')
     if (!f.namn.trim() || !f.epost.includes('@')) return setStatus('Fyll i eget namn och e-post.')
-    if (chef && (!f.chefNamn.trim() || !f.chefEpost.includes('@'))) return setStatus('Fyll i chefens namn och e-post.')
+    if (chef && (!f.chefNamn.trim() || !f.chefEpost.includes('@'))) return setStatus('Fyll i mottagarens namn och e-post.')
     if (!chef && !f.kollegaEpost.includes('@')) return setStatus('Fyll i kollegans e-post.')
     if (!f.samtycke) return setStatus('Kryssa i samtycket så att vi får kontakta er.')
     setSkickar(true)
@@ -69,7 +69,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
     setSkickar(false)
     if (!r.ok) return setStatus((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.')
     if (r.mejl) {
-      setKlart(chef ? `Förslaget är skickat till ${f.chefNamn}, med kopia till dig. Vi hör av oss om några dagar om ni inte redan bokat.` : 'Tipset är skickat, med kopia till dig.')
+      setKlart(chef ? `Underlaget är skickat till ${f.chefNamn}, med kopia till dig. Vi hör av oss om några dagar om ni inte redan bokat.` : 'Tipset är skickat, med kopia till dig.')
     } else {
       // Mejlutskick inte aktiverat ännu: uppgifterna är sparade, mejlet går via e-postprogrammet.
       const amne = chef ? `Förslag: UGL, ${valda.map((k) => 'vecka ' + k.vecka).join(', ')}` : 'Tips: UGL, Utveckling av grupp och ledare'
@@ -86,7 +86,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
           <div className="flex gap-6">
             {(['chef', 'tips'] as const).map((t) => (
               <button key={t} type="button" onClick={() => setFlik(t)} className={`pb-4 text-sm md:text-base font-medium border-b-2 -mb-px transition-colors ${flik === t ? 'border-[#321C04] text-[#321C04]' : 'border-transparent text-[#321C04]/50 hover:text-[#321C04]'}`}>
-                {t === 'chef' ? 'Tipsa min chef' : 'Tipsa en kollega'}
+                {t === 'chef' ? 'Skicka underlag' : 'Tipsa en kollega'}
               </button>
             ))}
           </div>
@@ -105,11 +105,11 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
         <form onSubmit={skicka} noValidate className="px-6 md:px-8 py-6 flex flex-col gap-6">
           <div>
             <h3 className="text-2xl md:text-[28px] tracking-tight leading-tight">
-              {chef ? <>Ett färdigt förslag till <em className="not-italic" style={EM}>chefen.</em></> : <>Tipsa någon som borde <em className="not-italic" style={EM}>gå.</em></>}
+              {chef ? <>Ett färdigt <em className="not-italic" style={EM}>beslutsunderlag.</em></> : <>Tipsa någon som borde <em className="not-italic" style={EM}>gå.</em></>}
             </h3>
             <p className="mt-2 text-[#321C04]/75 text-[15px] leading-[1.5] max-w-[60ch]">
               {chef
-                ? 'Vi skriver mejlet med veckor, pris, innehåll och vad kursen ger organisationen. Chefen godkänner med ett svar, och en kopia går till er båda och till oss, så att vi kan hålla platsen.'
+                ? 'Vi skriver mejlet med veckor, pris, innehåll och vad kursen ger organisationen. Mottagaren godkänner med ett svar, och en kopia går till er båda och till oss, så att vi kan hålla platsen.'
                 : 'Ett kort mejl med de valda veckorna och en länk. Kopia går till dig.'}
             </p>
           </div>
@@ -144,8 +144,8 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
           {chef ? (
             <>
               <div className="grid sm:grid-cols-2 gap-5">
-                <div><label className={label}>Chefens namn</label><input className={field} value={f.chefNamn} onChange={(e) => setF({ ...f, chefNamn: e.target.value })} /></div>
-                <div><label className={label}>Chefens e-post</label><input type="email" className={field} value={f.chefEpost} onChange={(e) => setF({ ...f, chefEpost: e.target.value })} /></div>
+                <div><label className={label}>Mottagarens namn</label><input className={field} value={f.chefNamn} onChange={(e) => setF({ ...f, chefNamn: e.target.value })} /></div>
+                <div><label className={label}>Mottagarens e-post</label><input type="email" className={field} value={f.chefEpost} onChange={(e) => setF({ ...f, chefEpost: e.target.value })} /></div>
               </div>
               <div>
                 <span className={label}>Vad ska veckan ge? <span className="normal-case tracking-normal text-[#321C04]/40">(formar mejlet)</span></span>
@@ -179,18 +179,18 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
 
           <label className="flex items-start gap-3 text-sm text-[#321C04]/75 leading-snug">
             <input type="checkbox" checked={f.samtycke} onChange={(e) => setF({ ...f, samtycke: e.target.checked })} className="mt-1 accent-[#321C04]" />
-            {chef ? 'Jag godkänner att UGL Sverige sparar mina och chefens kontaktuppgifter och kontaktar oss om den här förfrågan.' : 'Jag godkänner att UGL Sverige sparar mina kontaktuppgifter för det här tipset.'}
+            {chef ? 'Jag godkänner att UGL Sverige sparar mina och mottagarens kontaktuppgifter och kontaktar oss om den här förfrågan.' : 'Jag godkänner att UGL Sverige sparar mina kontaktuppgifter för det här tipset.'}
           </label>
 
           {status && <p className="text-[#8B5A2B] text-sm">{status}</p>}
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <button type="submit" disabled={skickar} className="inline-flex items-center justify-center gap-2 bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] transition-colors disabled:opacity-60">
-              {skickar ? 'Skickar…' : chef ? 'Skicka förslaget' : 'Skicka tipset'} <ArrowRight size={16} />
+              {skickar ? 'Skickar…' : chef ? 'Skicka underlaget' : 'Skicka tipset'} <ArrowRight size={16} />
             </button>
             {chef && <button type="button" onClick={() => setFlik('tips')} className="text-sm text-[#321C04]/60 hover:text-[#321C04] underline underline-offset-4">Vill du hellre tipsa någon annan?</button>}
           </div>
-          <p className="-mt-3 text-[13px] text-[#321C04]/60">{chef ? 'Kopia till dig och till oss. Vi svarar chefen inom två arbetsdagar om frågor kommer.' : 'Kopia till dig. Mottagaren bokar själv, ingen plats reserveras.'}</p>
+          <p className="-mt-3 text-[13px] text-[#321C04]/60">{chef ? 'Kopia till dig och till oss. Vi svarar mottagaren inom två arbetsdagar om frågor kommer.' : 'Kopia till dig. Mottagaren bokar själv, ingen plats reserveras.'}</p>
         </form>
         )}
       </div>
