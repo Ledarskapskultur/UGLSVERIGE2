@@ -10,6 +10,7 @@ import SaGarDetTill from './SaGarDetTill'
 import Omdomen, { Stjarnor, snitt } from './Omdomen'
 import RingMig, { oppnaRingMig } from './RingMig'
 import { BevakningForm } from './Bevakning'
+import Kortsektion from './components/Kortsektion'
 import { useKurser, useOmdomen, kr } from './kursdata'
 import { useBevis } from './bevis'
 import { useOrter, kurserNara, restid, type Stad } from './orter'
@@ -23,15 +24,14 @@ const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as con
 const BAS = 'https://www.uglsverige.store/assets/'
 const HERO_VIDEO = BAS + 'hero-3247036.mp4'
 const HERO_BILD = BAS + 'ugl-grupp.webp'
-const BILD_LOSNING = BAS + 'ugl-upplevelse.webp'
 const BILD_CTA = BAS + 'ugl-feedback.webp'
-const BILD_PROBLEM = BAS + 'ugl-tid.webp'
+const BILD_PROBLEM = BAS + 'ugl-oppenhet.webp'
 const NARA_KM = 220 // veckor inom det har avstandet raknas som "nara"
 
 const PROBLEM = [
-  { t: 'Gruppen fungerar, men inte fullt ut', d: 'Möten som går på rutin, beslut som fattas utan att någon riktigt står bakom dem och konflikter som ligger kvar under ytan. Det kostar tid varje vecka, och energi hos alla inblandade.' },
-  { t: 'Du leder utan att veta hur du uppfattas', d: 'Feedback på riktigt är sällsynt på en arbetsplats. De flesta ledare får aldrig veta vad andra ser, och fortsätter därför göra samma sak år efter år.' },
-  { t: 'Kurser som inte fastnar', d: 'En dag med modeller och teori glöms bort på vägen hem. Beteenden ändras inte av att man hört om dem, utan av att man prövat dem och fått gensvar.' },
+  { title: 'Gruppen fungerar, men inte fullt ut', description: 'Möten som går på rutin, beslut som fattas utan att någon riktigt står bakom dem och konflikter som ligger kvar under ytan. Det kostar tid varje vecka, och energi hos alla inblandade.', image: BAS + 'ugl-samtal.webp' },
+  { title: 'Du leder utan att veta hur du uppfattas', description: 'Feedback på riktigt är sällsynt på en arbetsplats. De flesta ledare får aldrig veta vad andra ser, och fortsätter därför göra samma sak år efter år.', image: BAS + 'ugl-feedback.webp' },
+  { title: 'Kurser som inte fastnar', description: 'En dag med modeller och teori glöms bort på vägen hem. Beteenden ändras inte av att man hört om dem, utan av att man prövat dem och fått gensvar.', image: BAS + 'ugl-tid.webp' },
 ]
 const VARDE = [
   { i: Eye, t: 'Se dig själv som andra ser dig', d: 'Fem dagar av ärlig återkoppling från människor som inte har något att förlora på att säga som det är.' },
@@ -221,29 +221,25 @@ export default function OrtPage() {
         </div>
       </section>
 
-      {/* 3. Problemet */}
-      <section className="relative z-10 bg-[#FFF9F2] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px]">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-10 lg:gap-20 items-start">
-          <div>
-            <p className={label}>01. Känner du igen dig?</p>
-            <h2 className="text-[#321C04] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[14ch]">Det som kostar mest syns <em className="not-italic" style={EM}>sällan.</em></h2>
-            <p className="mt-6 text-[#321C04]/75 text-base leading-[1.5] max-w-[40ch]">Ett team som går på halvfart kostar en arbetsdag i veckan, år efter år. Det är därför arbetsgivare i {stad.namn} och resten av landet skickar sina ledare på UGL.</p>
-            <div className="mt-8 aspect-[4/3] rounded-3xl overflow-hidden bg-[#2B2724]"><img src={BILD_PROBLEM} alt="" loading="lazy" className="w-full h-full object-cover" style={{ filter: 'sepia(0.15) contrast(1.05)' }} /></div>
-          </div>
-          <ul className="grid sm:grid-cols-3 gap-5">
-            {PROBLEM.map((p, i) => <li key={p.t} className="border-t border-[#321C04]/20 pt-5"><span className="text-[#9C7A4A] text-[22px]" style={EM}>0{i + 1}</span><h3 className="mt-2 text-[#321C04] text-[19px] leading-tight tracking-tight">{p.t}</h3><p className="mt-2 text-[#321C04]/75 text-[14px] leading-[1.5]">{p.d}</p></li>)}
-          </ul>
-        </div>
-      </section>
+      {/* 3. Problemet, i samma design som "Vad veckan ger" pa startsidan */}
+      <Kortsektion
+        rundad
+        eyebrow="01. Känner du igen dig?"
+        heading={<>Det som kostar mest syns <em className="not-italic" style={EM}>sällan.</em></>}
+        items={PROBLEM}
+        bild={BILD_PROBLEM}
+        fot={`Ett team på halvfart kostar en arbetsdag i veckan. Det är därför arbetsgivare i ${stad.namn} skickar sina ledare på UGL.`}
+        cta={`Se veckorna nära ${stad.namn}`}
+        ctaOnClick={tillLista}
+      />
 
-      {/* 4. Lösningen */}
-      <section className="relative z-10 bg-[#2B2724] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px] overflow-hidden">
-        <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(90deg, rgba(43,39,36,0.9) 0%, rgba(43,39,36,0.82) 45%, rgba(43,39,36,0.72) 100%), url("${BILD_LOSNING}")` }} />
-        <div className="relative max-w-6xl mx-auto">
-          <p className="text-[#F6E4CF]/60 text-xs uppercase tracking-[0.25em] font-medium mb-5">02. Vad UGL ger</p>
-          <h2 className="text-[#FFF9F2] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[22ch]">Fem dagar på kursgård. Ett ledarskap som håller <em className="not-italic" style={EM}>i flera år.</em></h2>
+      {/* 4. Lösningen, ljus mellan två mörka */}
+      <section className="relative z-10 bg-[#FFF9F2] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px]">
+        <div className="max-w-6xl mx-auto">
+          <p className={label}>02. Vad UGL ger</p>
+          <h2 className="text-[#321C04] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[22ch]">Fem dagar på kursgård. Ett ledarskap som håller <em className="not-italic" style={EM}>i flera år.</em></h2>
           <ul className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-            {VARDE.map((v) => <li key={v.t} className="flex gap-4"><span className="w-11 h-11 rounded-xl bg-[#F6E4CF]/10 border border-[#F6E4CF]/20 flex items-center justify-center shrink-0 text-[#F6E4CF]"><v.i size={20} strokeWidth={1.6} /></span><div><h3 className="text-[#FFF9F2] text-[18px] leading-tight tracking-tight">{v.t}</h3><p className="mt-2 text-[#F6E4CF]/70 text-[14px] leading-[1.5]">{v.d}</p></div></li>)}
+            {VARDE.map((v) => <li key={v.t} className="flex gap-4"><span className="w-11 h-11 rounded-xl bg-[#F6E4CF] border border-[#D9C4AA] flex items-center justify-center shrink-0 text-[#321C04]"><v.i size={20} strokeWidth={1.6} /></span><div><h3 className="text-[#321C04] text-[18px] leading-tight tracking-tight">{v.t}</h3><p className="mt-2 text-[#321C04]/70 text-[14px] leading-[1.5]">{v.d}</p></div></li>)}
           </ul>
         </div>
       </section>
