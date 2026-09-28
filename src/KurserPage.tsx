@@ -15,6 +15,17 @@ const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as con
 const HERO_IMAGE = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
 const MANADER = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december']
 const manadId = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+const PERIODER = [
+  { id: '3', label: 'Inom 3 månader', kort: '1 till 3 mån', min: 0, max: 3 },
+  { id: '6', label: '4 till 6 månader', kort: '4 till 6 mån', min: 4, max: 6 },
+  { id: '12', label: '7 till 12 månader', kort: '7 till 12 mån', min: 7, max: 12 },
+  { id: '99', label: 'Längre fram', kort: 'Längre fram', min: 13, max: 999 },
+]
+function manaderFram(d: Date) {
+  const nu = new Date()
+  const m = (d.getFullYear() - nu.getFullYear()) * 12 + d.getMonth() - nu.getMonth()
+  return d.getDate() >= nu.getDate() ? m : m - 1
+}
 const flabel = 'block text-[#321C04]/60 text-[11px] uppercase tracking-[0.2em] font-medium mb-2'
 const fselect = 'w-full bg-white border border-[#D9C4AA] rounded-xl px-3 py-2.5 text-[15px] text-[#321C04] focus:outline-none focus:border-[#321C04]'
 const chipS = (on: boolean) =>
@@ -53,7 +64,9 @@ export default function KurserPage() {
     if (window.innerWidth < 1024) setKassa(true)
   }
   const [sok, setSok] = useState('')
+  const [period, setPeriod] = useState('')
   const [manad, setManad] = useState('')
+  const [visaManad, setVisaManad] = useState(false)
   const [region, setRegion] = useState('')
   const [ort, setOrt] = useState('')
   const [pris, setPris] = useState('')
@@ -73,12 +86,12 @@ export default function KurserPage() {
     const ids = [...new Set(kurser.filter((k) => k.start >= idag).map((k) => manadId(k.start)))]
     return ids.map((id) => { const d = new Date(id + '-01T00:00:00'); return { id, label: MANADER[d.getMonth()] + ' ' + d.getFullYear() } })
   }, [kurser])
-  const filtrerat = !!(sok || manad || region || ort || pris || !baraLediga || snabbAktiv)
-  const rensa = () => { setSok(''); setManad(''); setRegion(''); setOrt(''); setPris(''); setBaraLediga(true); setSnabbAktiv(null); setVisade(6) }
+  const filtrerat = !!(sok || period || manad || region || ort || pris || !baraLediga || snabbAktiv)
+  const rensa = () => { setSok(''); setPeriod(''); setManad(''); setRegion(''); setOrt(''); setPris(''); setBaraLediga(true); setSnabbAktiv(null); setVisade(6) }
   const snabb = (q: string) => {
     const av = snabbAktiv === q
-    setSnabbAktiv(av ? null : q); setRegion(''); setManad(''); setVisade(6)
-    if (!av) { if (q === 'snart') setManad(manader[0]?.id ?? ''); else setRegion(q) }
+    setSnabbAktiv(av ? null : q); setRegion(''); setManad(''); setPeriod(''); setVisade(6)
+    if (!av) { if (q === 'snart') setPeriod('3'); else setRegion(q) }
   }
 
   const lista = useMemo(() => {
@@ -87,6 +100,7 @@ export default function KurserPage() {
     idag.setHours(0, 0, 0, 0)
     let f = kurser.filter((k) => k.start >= idag)
     if (manad) f = f.filter((k) => manadId(k.start) === manad)
+    else if (period) { const p = PERIODER.find((x) => x.id === period)!; f = f.filter((k) => { const m = manaderFram(k.start); return m >= p.min && m <= p.max }) }
     if (region) f = f.filter((k) => k.region === region)
     if (ort) f = f.filter((k) => k.ort === ort)
     if (sok.trim()) { const q = sok.trim().toLowerCase(); f = f.filter((k) => [k.ort, k.anlaggning, k.region, ...k.handledare, 'vecka ' + k.vecka].some((t) => t.toLowerCase().includes(q))) }
@@ -95,7 +109,7 @@ export default function KurserPage() {
     if (sort === 'pris') f = [...f].sort((a, b) => (a.total || 1e9) - (b.total || 1e9))
     else if (sort === 'ort') f = [...f].sort((a, b) => a.ort.localeCompare(b.ort, 'sv') || a.start.getTime() - b.start.getTime())
     return f
-  }, [kurser, sok, manad, region, ort, pris, baraLediga, sort])
+  }, [kurser, sok, period, manad, region, ort, pris, baraLediga, sort])
 
   const billigast = useMemo(() => lista.filter((k) => k.total).sort((a, b) => a.total - b.total)[0]?.id ?? null, [lista])
   const valdaKurser = (kurser || []).filter((k) => valda.includes(k.id))
@@ -137,10 +151,13 @@ export default function KurserPage() {
           <div className="max-w-6xl mx-auto">
             <p className="text-[#321C04] text-sm font-medium mb-3">Filtrera efter</p>
             <div className="flex flex-wrap gap-3">
-              <Pill icon={<Calendar size={16} />} aktiv={!!manad} label={manad ? manader.find((m) => m.id === manad)?.label ?? 'Period' : 'Period'}>
-                <select value={manad} onChange={(e) => { setManad(e.target.value); setVisade(6) }} aria-label="Period" className="absolute inset-0 opacity-0 cursor-pointer w-full">
-                  <option value="">Alla perioder</option>
-                  {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+              <Pill icon={<Calendar size={16} />} aktiv={!!(period || manad)} label={manad ? manader.find((m) => m.id === manad)?.label ?? 'När' : period ? PERIODER.find((p) => p.id === period)!.label : 'När vill du gå?'}>
+                <select value={manad ? 'm:' + manad : period} onChange={(e) => { const v = e.target.value; if (v.startsWith('m:')) { setManad(v.slice(2)); setPeriod('') } else { setPeriod(v); setManad('') } setVisade(6) }} aria-label="När vill du gå" className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                  <option value="">Alla datum</option>
+                  {PERIODER.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+                  <optgroup label="Exakt månad">
+                    {manader.map((m) => <option key={m.id} value={'m:' + m.id}>{m.label}</option>)}
+                  </optgroup>
                 </select>
               </Pill>
               <Pill icon={<MapPin size={16} />} aktiv={!!region} label={region || 'Region'}>
@@ -192,11 +209,23 @@ export default function KurserPage() {
           <div id="kurslista" className="mt-12 md:mt-16 flex flex-col gap-8 lg:grid lg:gap-x-6 lg:items-start transition-[grid-template-columns,column-gap] duration-300" style={{ gridTemplateColumns: valda.length ? '230px minmax(0,1fr) 340px' : '230px minmax(0,1fr) 0px' }}>
           <aside className="lg:sticky lg:top-6 bg-[#FFF9F2] border border-[#D9C4AA] rounded-3xl p-5 flex flex-col gap-5" aria-label="Filtrera kurser">
             <div>
-              <label htmlFor="f-manad" className={flabel}>När vill du gå?</label>
-              <select id="f-manad" value={manad} onChange={(e) => { setManad(e.target.value); setVisade(6) }} className={fselect}>
-                <option value="">Alla perioder</option>
-                {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
-              </select>
+              <p className={flabel}>När vill du gå?</p>
+              <div className="grid grid-cols-2 gap-2">
+                {PERIODER.map((p) => (
+                  <button key={p.id} type="button" onClick={() => { setPeriod(period === p.id ? '' : p.id); setManad(''); setVisade(6) }} aria-pressed={period === p.id && !manad} className={`px-2 py-2 rounded-xl text-[12.5px] font-medium border text-center whitespace-nowrap transition-colors ${period === p.id && !manad ? 'bg-[#321C04] text-[#FFF9F2] border-[#321C04]' : 'bg-white text-[#321C04] border-[#D9C4AA] hover:border-[#321C04]'}`}>
+                    {p.kort}
+                  </button>
+                ))}
+              </div>
+              <button type="button" onClick={() => setVisaManad((v) => !v)} className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4">
+                <ChevronDown size={13} className={`transition-transform ${visaManad || manad ? 'rotate-180' : ''}`} /> {manad ? 'Vald månad' : 'Välj exakt månad'}
+              </button>
+              {(visaManad || manad) && (
+                <select id="f-manad" value={manad} onChange={(e) => { setManad(e.target.value); setPeriod(''); setVisade(6) }} className={fselect + ' mt-2'}>
+                  <option value="">Alla månader</option>
+                  {manader.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+                </select>
+              )}
             </div>
             <div>
               <label htmlFor="f-region" className={flabel}>Var vill du gå?</label>
