@@ -159,7 +159,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
               </a>
               <button type="button" disabled={!valda.length} onClick={() => onTipsa('chef')} className="disabled:opacity-40 disabled:cursor-not-allowed w-full text-left grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-xl border border-[#D9C4AA] bg-white/60 px-4 py-4 hover:border-[#321C04] transition-colors">
                 <Send size={30} strokeWidth={1.4} />
-                <span><span className="block text-[19px] leading-tight" style={EM}>Fråga chefen först</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Du får ett färdigt underlag med veckor, pris och vad kursen ger. Chefen godkänner med ett svar.</span></span>
+                <span><span className="block text-[19px] leading-tight" style={EM}>Beslutsunderlag</span><span className="block text-[13px] text-[#321C04]/65 mt-1">Färdigt underlag med veckor, pris och vad kursen ger, att skicka till den som godkänner.</span></span>
                 <ChevronRight size={20} />
               </button>
               <button type="button" disabled={!valda.length} onClick={() => onTipsa('tips')} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1 disabled:opacity-40">Tipsa en kollega om veckorna</button>
