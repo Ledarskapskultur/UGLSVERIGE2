@@ -188,6 +188,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
             </button>
             {chef && <button type="button" onClick={() => setFlik('tips')} className="text-sm text-[#321C04]/60 hover:text-[#321C04] underline underline-offset-4">Vill du hellre tipsa någon annan?</button>}
           </div>
+          <p className="-mt-3 text-[13px] text-[#321C04]/60">{chef ? 'Kopia till dig och till oss. Vi svarar chefen inom två arbetsdagar om frågor kommer.' : 'Kopia till dig. Mottagaren bokar själv, ingen plats reserveras.'}</p>
         </form>
         )}
       </div>

@@ -1,5 +1,5 @@
 /* UGL Sverige, kursdata. Format per rad:
-   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)|pris (valfritt)
+   startdatum|vecka|anlaggning|ort|handledare (semikolon)|logipris|status (L=ledig, F=fullbokad)|pris (valfritt)|platser kvar (valfritt, t.ex. 3)
    Lamnas prisfaltet tomt anvands standardpriset nedan som kursavgift.
    Ar logipriset 0 och prisfaltet ifyllt tolkas det som ett samlat totalpris dar allt ingar.
    Slutdatum = start + 4 dagar. */

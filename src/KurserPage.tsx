@@ -1,13 +1,15 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { ArrowRight, Calendar, ChevronDown, MapPin, Navigation, Search, SlidersHorizontal, X } from 'lucide-react'
+import { ArrowRight, Calendar, ChevronDown, MapPin, Navigation, Phone, Search, SlidersHorizontal, X } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import Anmalan from './Anmalan'
+import Omdomen, { snitt } from './Omdomen'
+import { SAMTAL } from './Kassa'
 import Kassa from './Kassa'
 import { MAX_VALDA } from './forfragan'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import { useKurser } from './kursdata'
+import { useKurser, useOmdomen } from './kursdata'
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 const HERO_IMAGE = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
@@ -39,6 +41,17 @@ function Pill({ icon, label, aktiv, children }: { icon: ReactNode; label: string
 
 export default function KurserPage() {
   const { kurser, fel } = useKurser()
+  const omdomen = useOmdomen()
+  const [oppnaIntresse, setOppnaIntresse] = useState(0)
+  const betygFor = (anlaggning: string) => {
+    const o = omdomen.filter((x) => !x.anlaggning || x.anlaggning === anlaggning)
+    return o.length ? { snitt: snitt(o), antal: o.length } : null
+  }
+  const intresse = (id: string) => {
+    setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
+    setOppnaIntresse((n) => n + 1)
+    if (window.innerWidth < 1024) setKassa(true)
+  }
   const [sok, setSok] = useState('')
   const [manad, setManad] = useState('')
   const [region, setRegion] = useState('')
@@ -116,6 +129,7 @@ export default function KurserPage() {
             <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#321C04]/50" />
             <input value={sok} onChange={(e) => { setSok(e.target.value); setVisade(6) }} placeholder="Sök ort, kursgård eller handledare" aria-label="Sök kurs" className="w-full bg-white text-[#321C04] placeholder:text-[#321C04]/50 rounded-2xl pl-12 pr-5 py-4 text-base shadow-[0_10px_40px_rgba(43,39,36,0.35)] focus:outline-none focus:ring-2 focus:ring-[#F6E4CF]" />
           </form>
+          <a href={SAMTAL} className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm underline underline-offset-4 decoration-white/40"><Phone size={14} /> Vill du hellre prata? Boka ett kort samtal</a>
         </div>
 
         {/* Filterrad */}
@@ -250,7 +264,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -271,13 +285,15 @@ export default function KurserPage() {
           </div>
           </div>
           <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
-            <Kassa valda={valdaKurser} toggle={toggle} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
       </section>
 
       <Anmalan valdaKurser={valdaKurser} toggle={toggle} />
+
+      <Omdomen omdomen={omdomen} />
 
       {/* FAQ */}
       <section id="praktiskt" className="relative z-10 bg-[#F6E4CF] rounded-t-[25px] py-20 md:py-32 px-6 -mt-[25px]">
@@ -324,7 +340,7 @@ export default function KurserPage() {
         <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
           <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
-            <Kassa valda={valdaKurser} toggle={toggle} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}

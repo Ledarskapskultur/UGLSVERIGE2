@@ -29,6 +29,7 @@ export type Kurs = {
   samlat: boolean
   total: number
   ledig: boolean
+  platser: number | null
   period: string
   etikett: string
   bild: string
@@ -62,6 +63,7 @@ export function parseKurser(rader: string): Kurs[] {
         kurspris, logi, samlat,
         total: logi ? kurspris + logi : samlat ? kurspris : 0,
         ledig: d[6] === 'L',
+        platser: d[8] && !isNaN(+d[8]) ? +d[8] : null,
         period: `${fmt(start)} till ${fmt(slut)} ${slut.getFullYear()}`,
         etikett: `Vecka ${d[1]}, ${d[2]}, ${d[3]} (${fmt(start)} ${start.getFullYear()})`,
         bild: `https://www.uglsverige.store/assets/${BILDER[hash(d[2] + d[3]) % BILDER.length]}`,
@@ -71,8 +73,27 @@ export function parseKurser(rader: string): Kurs[] {
     .sort((a, b) => a.start.getTime() - b.start.getTime())
 }
 
+export type Omdome = { datum: string; namn: string; roll: string; betyg: number; text: string; anlaggning: string }
+export function parseOmdomen(rader: string): Omdome[] {
+  return rader.trim().split('\n').filter((r) => r.trim()).map((rad) => {
+    const d = rad.split('|')
+    return { datum: d[0], namn: d[1], roll: d[2] || '', betyg: Math.max(1, Math.min(5, +d[3] || 5)), text: d[4] || '', anlaggning: d[5] || '' }
+  })
+}
+export function useOmdomen() {
+  const [omdomen, setOmdomen] = useState<Omdome[]>([])
+  useEffect(() => {
+    if (window.UGL_OMDOMEN !== undefined) return setOmdomen(parseOmdomen(window.UGL_OMDOMEN))
+    const s = document.createElement('script')
+    s.src = 'https://www.uglsverige.store/omdomen.js'
+    s.onload = () => setOmdomen(parseOmdomen(window.UGL_OMDOMEN || ''))
+    document.head.appendChild(s)
+  }, [])
+  return omdomen
+}
+
 declare global {
-  interface Window { UGL_RADER?: string }
+  interface Window { UGL_RADER?: string; UGL_OMDOMEN?: string }
 }
 
 export function useKurser() {

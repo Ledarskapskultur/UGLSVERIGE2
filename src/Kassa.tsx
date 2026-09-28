@@ -1,14 +1,16 @@
-import { useState, type FormEvent } from 'react'
-import { ArrowLeft, ChevronRight, Pencil, Send, User, Users, X } from 'lucide-react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { ArrowLeft, ChevronRight, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
 import { MOTTAGARE, posta, kursData } from './forfragan'
 import { kr, type Kurs } from './kursdata'
 
 const EM = { fontFamily: "'Instrument Serif', serif" }
 const PORTAL = 'https://www.uglsverige.store/portal'
+export const SAMTAL = 'mailto:kontakt@uglsverige.se?subject=' + encodeURIComponent('Boka ett kort samtal om UGL') + '&body=' + encodeURIComponent('Hej,\n\njag vill boka ett kort samtal om UGL. Jag kan nås på telefon:\nTider som passar:\n')
 const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddelas')
 
-export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean }) {
+export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0 }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number }) {
   const [steg, setSteg] = useState<'val' | 'intresse' | 'klart'>('val')
+  useEffect(() => { if (oppnaIntresse > 0) setSteg('intresse') }, [oppnaIntresse])
   const [forsta, setForsta] = useState<string | null>(null)
   const [bortvalda, setBortvalda] = useState<string[]>([])
   const medtagna = valda.filter((k) => !bortvalda.includes(k.id))
@@ -94,6 +96,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
                 <ChevronRight size={20} />
               </a>
               <button type="button" disabled={!valda.length} onClick={onTipsa} className="w-full inline-flex items-center justify-center gap-2 border border-[#321C04]/30 text-sm font-medium px-5 py-3 rounded-xl hover:border-[#321C04] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"><Send size={15} /> Tipsa om UGL, chefen eller en kollega</button>
+              <a href={SAMTAL} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1"><Phone size={14} /> Osäker? Boka ett kort samtal</a>
             </div>
           </>
         )}
@@ -145,6 +148,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
               <button type="button" onClick={() => setSteg('val')} className="inline-flex items-center gap-2 border border-[#321C04]/30 text-sm font-medium px-5 py-3 rounded-xl hover:border-[#321C04]"><ArrowLeft size={15} /> Tillbaka</button>
               <button type="submit" disabled={skickar} className="flex-1 inline-flex items-center justify-center bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] disabled:opacity-60 transition-colors">{skickar ? 'Skickar…' : 'Skicka intresseanmälan'}</button>
             </div>
+            <p className="mt-3 text-[13px] text-[#321C04]/60">Svar inom två arbetsdagar. Ingen plats bokas förrän du sagt ja.</p>
           </form>
         )}
 

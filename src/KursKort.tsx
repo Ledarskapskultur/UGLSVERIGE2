@@ -1,8 +1,9 @@
 import { ArrowRight, Calendar, Check, MapPin, Users } from 'lucide-react'
 import { kr, type Kurs } from './kursdata'
+import { Stjarnor } from './Omdomen'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 
-export default function KursKort({ k, vald, fullt, onToggle, badge, kompakt }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; kompakt?: boolean; badge: string | null }) {
+export default function KursKort({ k, vald, fullt, onToggle, onIntresse, betyg, badge, kompakt }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onIntresse: () => void; betyg?: { snitt: number; antal: number } | null; kompakt?: boolean; badge: string | null }) {
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
@@ -28,6 +29,17 @@ export default function KursKort({ k, vald, fullt, onToggle, badge, kompakt }: {
             <p className="text-base">Pris meddelas</p>
           ))}
         </div>
+        {(betyg || (k.ledig && k.platser !== null)) && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]">
+            {betyg && <span className={`inline-flex items-center gap-1.5 ${vald ? 'text-[#F6E4CF]' : 'text-[#9C7A4A]'}`}><Stjarnor betyg={betyg.snitt} size={13} /><span className={muted}>{betyg.snitt.toFixed(1).replace('.', ',')} · {betyg.antal} {betyg.antal === 1 ? 'omdöme' : 'omdömen'}</span></span>}
+            {k.ledig && k.platser !== null && (
+              <span className={`inline-flex items-center gap-1.5 font-medium ${k.platser <= 3 ? (vald ? 'text-[#F6C9A8]' : 'text-[#9C3A2E]') : muted}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${k.platser <= 3 ? 'bg-current' : 'bg-current opacity-50'}`} />
+                {k.platser === 1 ? '1 plats kvar' : `${k.platser} platser kvar`}
+              </span>
+            )}
+          </div>
+        )}
         <ul className={`mt-3 flex flex-col gap-1.5 text-[14px] ${muted}`}>
           <li className="flex items-start gap-2.5"><Calendar size={16} className="shrink-0 mt-0.5" />{k.period}</li>
           <li className="flex items-start gap-2.5"><MapPin size={16} className="shrink-0 mt-0.5" />{k.anlaggning}, {k.ort}</li>
@@ -50,6 +62,7 @@ export default function KursKort({ k, vald, fullt, onToggle, badge, kompakt }: {
           >
             {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
           </button>
+          <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-2.5 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
           <a
             href={k.lank}
             target="_blank"
@@ -90,6 +103,7 @@ export default function KursKort({ k, vald, fullt, onToggle, badge, kompakt }: {
             <button type="button" onClick={onToggle} disabled={!k.ledig || (fullt && !vald)} aria-pressed={vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'bg-[#F6E4CF] text-[#321C04] hover:bg-[#FFF9F2]' : 'bg-[#321C04] text-[#FFF9F2] hover:bg-[#2B2724]'}`}>
               {vald ? <><Check size={15} /> Vald</> : !k.ledig ? 'Fullbokad' : fullt ? 'Max tre valda' : 'Välj veckan'}
             </button>
+            <button type="button" onClick={onIntresse} disabled={fullt && !vald} className={`inline-flex items-center justify-center gap-2 text-sm font-medium px-5 py-3 rounded-xl border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${vald ? 'border-[#F6E4CF]/40 text-[#FFF9F2] hover:bg-[#F6E4CF]/10' : 'border-[#321C04]/30 text-[#321C04] hover:border-[#321C04]'}`}>{k.ledig ? 'Jag är intresserad' : 'Ställ mig på kö'}</button>
             <a href={k.lank} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors ${vald ? 'text-[#F6E4CF]/80 hover:text-[#FFF9F2]' : 'text-[#321C04]/70 hover:text-[#321C04]'}`}>
               Se kursen <ArrowRight size={15} />
             </a>
