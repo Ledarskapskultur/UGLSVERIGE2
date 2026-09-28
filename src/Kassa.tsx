@@ -17,10 +17,11 @@ const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddela
 const STEG_BOKA = ['Du fyller i namn och telefon', 'Vi ringer inom två arbetsdagar', 'Bekräftelse och faktura, först då bindande']
 const init = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
-export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0, oppnaBoka = 0, bokaVal, tipsare, omdomen = [], svarar }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: (flik?: 'chef' | 'tips') => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number; oppnaBoka?: number; bokaVal?: string | null; tipsare?: { namn: string; veckor: string[] } | null; omdomen?: Omdome[]; svarar?: Bevis['svarar'] }) {
+export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0, oppnaVal = 0, oppnaBoka = 0, bokaVal, tipsare, omdomen = [], svarar }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: (flik?: 'chef' | 'tips') => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number; oppnaVal?: number; oppnaBoka?: number; bokaVal?: string | null; tipsare?: { namn: string; veckor: string[] } | null; omdomen?: Omdome[]; svarar?: Bevis['svarar'] }) {
   const krock = tipsare ? valda.filter((k) => tipsare.veckor.includes(k.id)) : []
   const [steg, setSteg] = useState<'val' | 'intresse' | 'boka' | 'klart' | 'bokat'>('val')
   useEffect(() => { if (oppnaIntresse > 0) setSteg('intresse') }, [oppnaIntresse])
+  useEffect(() => { if (oppnaVal > 0) setSteg('val') }, [oppnaVal])
   const [bokaId, setBokaId] = useState<string | null>(null)
   useEffect(() => { if (oppnaBoka > 0) { setSteg('boka'); if (bokaVal) setBokaId(bokaVal) } }, [oppnaBoka, bokaVal])
   const bokaKurs = valda.find((k) => k.id === bokaId) ?? valda[valda.length - 1]
@@ -204,8 +205,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
                   <li key={k.id}>
                     <label className={`flex items-center gap-3 py-3 cursor-pointer ${med ? '' : 'opacity-50'}`}>
                       <input type="checkbox" checked={med} onChange={(e) => setBortvalda((b) => (e.target.checked ? b.filter((x) => x !== k.id) : [...b, k.id]))} className="w-4 h-4 accent-[#321C04]" />
-                      <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning}</span></span>
-                      <span className="text-sm shrink-0">{pris(k)}</span>
+                      <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning} · {pris(k)}</span></span>
                     </label>
                   </li>
                 )
@@ -268,8 +268,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
                 <li key={k.id}>
                   <label className="flex items-center gap-3 py-3 cursor-pointer">
                     {valda.length > 1 && <input type="radio" name="boka" checked={bokaKurs?.id === k.id} onChange={() => setBokaId(k.id)} className="w-4 h-4 accent-[#321C04]" />}
-                    <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning}</span></span>
-                    <span className="text-sm shrink-0">{pris(k)}</span>
+                    <span className="flex-1 min-w-0 text-[15px]"><strong className="font-medium">Vecka {k.vecka}</strong>, {k.ort} <span className="block text-[13px] text-[#321C04]/60">{k.period} · {k.anlaggning} · {pris(k)}</span></span>
                   </label>
                 </li>
               ))}

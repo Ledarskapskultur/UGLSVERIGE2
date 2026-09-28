@@ -62,6 +62,7 @@ export default function KurserPage() {
   const [iVy, setIVy] = useState<string | null>(null)
   const [oppnaIntresse, setOppnaIntresse] = useState(0)
   const [oppnaBoka, setOppnaBoka] = useState(0)
+  const [oppnaVal, setOppnaVal] = useState(0)
   const [bokaVal, setBokaVal] = useState<string | null>(null)
   const [visa, setVisa] = useState<string | null>(null)
   const betygFor = (anlaggning: string) => {
@@ -75,10 +76,12 @@ export default function KurserPage() {
     setOppnaBoka((n) => n + 1)
     if (window.innerWidth < 1024) setKassa(true)
   }
+  // Anmal intresse fran ett kort: veckan laggs i urvalet och kassan visar oversikten, sa att
+  // besokaren kan lagga till fler veckor innan formularet. Boka plats gar direkt till bokningen.
   const intresse = (id: string) => {
     spara('intresse_klick', { id })
     setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
-    setOppnaIntresse((n) => n + 1)
+    setOppnaVal((n) => n + 1)
     if (window.innerWidth < 1024) setKassa(true)
   }
   const [sok, setSok] = useState('')
@@ -376,7 +379,7 @@ export default function KurserPage() {
           <BevakningBlock />
           </div>
           <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto no-scrollbar transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setDela(f ?? 'chef') }} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaVal={oppnaVal} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setDela(f ?? 'chef') }} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
@@ -441,7 +444,7 @@ export default function KurserPage() {
         <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
           <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onClose={() => setKassa(false)} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setKassa(false); setDela(f ?? 'chef') }} onAndra={() => setKassa(false)} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaVal={oppnaVal} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onClose={() => setKassa(false)} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setKassa(false); setDela(f ?? 'chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}
