@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { ArrowRight, Check, X } from 'lucide-react'
 import { kr, type Kurs } from './kursdata'
+import Dela from './Dela'
 import { MAX_VALDA, MOTTAGARE, posta, kursData } from './forfragan'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 
@@ -97,6 +98,7 @@ export default function DelaModal({ flik, setFlik, valda, onClose }: { flik: 'ch
             <span className="mx-auto w-14 h-14 rounded-full bg-[#321C04] text-[#F6E4CF] flex items-center justify-center"><Check size={22} /></span>
             <h3 className="mt-6 text-2xl tracking-tight">Klart.</h3>
             <p className="mt-3 text-[#321C04]/75 text-base max-w-[40ch] mx-auto leading-[1.5]">{klart}</p>
+            <div className="mt-8 max-w-md mx-auto text-left"><Dela kurser={valda} av={f.namn} epost={f.epost} kanal="efter-tips" rubrik="Sprid det vidare" /></div>
             <button type="button" onClick={onClose} className="mt-8 inline-flex items-center justify-center gap-2 bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] transition-colors">Stäng</button>
           </div>
         ) : (

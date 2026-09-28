@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Award, BedDouble, BookOpen, Calendar, Check, ExternalLink, MapPin, Send, Users, UtensilsCrossed, X } from 'lucide-react'
 import { kr, type Kurs } from './kursdata'
 import { Stjarnor } from './Omdomen'
+import Dela from './Dela'
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 type Handledare = { roll?: string; text?: string; bild?: string }
@@ -116,6 +117,7 @@ export default function KursModal({ k, vald, fullt, betyg, onToggle, onIntresse,
             <p className="mt-2 text-[15px] font-medium">{k.anlaggning}, {k.ort}</p>
             <p className="mt-1 text-[14px] text-[#321C04]/75 leading-[1.5]">{anl?.text || 'Kursgård med enkelrum, alla måltider och avskilda grupprum. Vägbeskrivning och tider kommer i välkomstbrevet.'}</p>
             <a href={k.lank} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4"><ExternalLink size={14} /> Öppna hela kurssidan</a>
+            <div className="mt-7"><Dela kurser={[k]} kanal="kurspopup" rubrik="Dela veckan" /></div>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { ArrowRight, Calendar, ChevronDown, MapPin, Navigation, Phone, Search, SlidersHorizontal, X } from 'lucide-react'
 import KursKort from './KursKort'
 import DelaModal from './DelaModal'
 import SaGarDetTill from './SaGarDetTill'
 import Omdomen, { snitt } from './Omdomen'
 import KursModal from './KursModal'
+import { lasVia } from './delning'
 import { SAMTAL } from './Kassa'
 import Kassa from './Kassa'
 import { MAX_VALDA } from './forfragan'
@@ -77,6 +78,18 @@ export default function KurserPage() {
   const [snabbAktiv, setSnabbAktiv] = useState<string | null>(null)
   const [visade, setVisade] = useState(6)
   const [valda, setValda] = useState<string[]>([])
+  const [tips, setTips] = useState<{ av: string | null; veckor: string[] } | null>(null)
+  useEffect(() => {
+    if (!kurser) return
+    const { av, valda: nycklar } = lasVia()
+    if (!nycklar.length && !av) return
+    const traff = kurser.filter((k) => nycklar.includes(k.nyckel))
+    setTips({ av, veckor: traff.map((k) => k.id) })
+    if (traff.length && !av) setValda(traff.slice(0, MAX_VALDA).map((k) => k.id))
+    if (!traff.length && !av) return
+    setBaraLediga(false)
+    setTimeout(() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300)
+  }, [kurser])
   const [dela, setDela] = useState<null | 'chef' | 'tips'>(null)
   const [kassa, setKassa] = useState(false)
 
@@ -272,6 +285,19 @@ export default function KurserPage() {
           </aside>
 
           <div>
+          {tips && (tips.av || tips.veckor.length > 0) && (
+            <div className="mb-5 rounded-2xl border border-[#321C04]/20 bg-[#FFF9F2] px-5 py-4 text-[15px] text-[#321C04] leading-[1.5]">
+              {tips.av ? (
+                <>
+                  <strong className="font-medium">{tips.av} tipsade dig om UGL.</strong>{' '}
+                  {tips.veckor.length ? `${tips.av} går ${tips.veckor.length === 1 ? 'veckan' : 'någon av veckorna'} som är markerad nedan. ` : ''}
+                  UGL bygger på att deltagarna inte känner varandra sedan tidigare, så välj gärna en annan vecka. Då har ni varandra att bolla med efteråt.
+                </>
+              ) : (
+                <>De veckor som delades med dig är förvalda i kassan. Ändra fritt.</>
+              )}
+            </div>
+          )}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-[#321C04] text-lg">
               {kurser === null && !fel && 'Hämtar kursdatum…'}
@@ -295,7 +321,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onVisa={() => setVisa(k.id)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onVisa={() => setVisa(k.id)} tipsaresVecka={!!tips?.av && (tips?.veckor.includes(k.id) ?? false)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -316,7 +342,7 @@ export default function KurserPage() {
           </div>
           </div>
           <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto no-scrollbar transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
@@ -371,7 +397,7 @@ export default function KurserPage() {
         <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
           <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}

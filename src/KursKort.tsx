@@ -3,7 +3,7 @@ import { kr, type Kurs } from './kursdata'
 import { Stjarnor } from './Omdomen'
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 
-export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa, betyg, badge, kompakt }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onIntresse: () => void; onVisa: () => void; betyg?: { snitt: number; antal: number } | null; kompakt?: boolean; badge: string | null }) {
+export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa, betyg, badge, kompakt, tipsaresVecka }: { k: Kurs; vald: boolean; fullt: boolean; onToggle: () => void; onIntresse: () => void; onVisa: () => void; tipsaresVecka?: boolean; betyg?: { snitt: number; antal: number } | null; kompakt?: boolean; badge: string | null }) {
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
@@ -13,9 +13,9 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onVisa,
     >
       <div className={`relative aspect-[4/3] ${kompakt ? 'md:aspect-[3/4]' : 'md:aspect-auto md:min-h-[190px]'} rounded-2xl overflow-hidden bg-[#2B2724]`}>
         <img src={k.bild} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-        {(badge || !k.ledig) && (
-          <span className={`absolute top-2 left-2 text-[10px] uppercase tracking-[0.16em] font-medium px-2.5 py-1 rounded-full ${k.ledig ? 'bg-[#321C04] text-[#F6E4CF]' : 'bg-[#FFF9F2] text-[#321C04]'}`}>
-            {k.ledig ? badge : 'Fullbokad'}
+        {(badge || !k.ledig || tipsaresVecka) && (
+          <span className={`absolute top-2 left-2 text-[10px] uppercase tracking-[0.16em] font-medium px-2.5 py-1 rounded-full ${tipsaresVecka ? 'bg-[#9C7A4A] text-[#FFF9F2]' : k.ledig ? 'bg-[#321C04] text-[#F6E4CF]' : 'bg-[#FFF9F2] text-[#321C04]'}`}>
+            {tipsaresVecka ? 'Din kollegas vecka' : k.ledig ? badge : 'Fullbokad'}
           </span>
         )}
       </div>

@@ -2,13 +2,15 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { ArrowLeft, ChevronRight, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
 import { MOTTAGARE, posta, kursData } from './forfragan'
 import { kr, type Kurs } from './kursdata'
+import Dela from './Dela'
 
 const EM = { fontFamily: "'Instrument Serif', serif" }
 const PORTAL = 'https://www.uglsverige.store/portal'
 export const SAMTAL = 'mailto:kontakt@uglsverige.se?subject=' + encodeURIComponent('Boka ett kort samtal om UGL') + '&body=' + encodeURIComponent('Hej,\n\njag vill boka ett kort samtal om UGL. Jag kan nås på telefon:\nTider som passar:\n')
 const pris = (k: Kurs) => (k.total ? kr(k.total) + ' exkl. moms' : 'Pris meddelas')
 
-export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0 }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number }) {
+export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompakt, oppnaIntresse = 0, tipsare }: { valda: Kurs[]; toggle: (id: string) => void; onClose?: () => void; onTipsa: () => void; onAndra: () => void; kompakt?: boolean; oppnaIntresse?: number; tipsare?: { namn: string; veckor: string[] } | null }) {
+  const krock = tipsare ? valda.filter((k) => tipsare.veckor.includes(k.id)) : []
   const [steg, setSteg] = useState<'val' | 'intresse' | 'klart'>('val')
   useEffect(() => { if (oppnaIntresse > 0) setSteg('intresse') }, [oppnaIntresse])
   const [forsta, setForsta] = useState<string | null>(null)
@@ -75,6 +77,9 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
                 </li>
               ))}
             </ul>
+            {krock.length > 0 && tipsare && (
+              <p className="mt-3 text-[13px] text-[#9C3A2E] leading-[1.5]">Vecka {krock.map((k) => k.vecka).join(' och ')} är {tipsare.namn}s vecka. UGL bygger på att man inte känner varandra sedan tidigare, välj gärna en annan vecka.</p>
+            )}
             {valda.length > 0 && (
               <>
                 <button type="button" onClick={onAndra} className="mt-4 inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 decoration-[#321C04]/40 hover:decoration-[#321C04]"><Pencil size={14} /> Ändra urval</button>
@@ -98,6 +103,11 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
               <button type="button" disabled={!valda.length} onClick={onTipsa} className="w-full inline-flex items-center justify-center gap-2 border border-[#321C04]/30 text-sm font-medium px-5 py-3 rounded-xl hover:border-[#321C04] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"><Send size={15} /> Tipsa om UGL, chefen eller en kollega</button>
               <a href={SAMTAL} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1"><Phone size={14} /> Osäker? Boka ett kort samtal</a>
             </div>
+            {valda.length > 0 && (
+              <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
+                <Dela kurser={valda} kanal="kassa" rubrik="Dela urvalet" />
+              </div>
+            )}
           </>
         )}
 
@@ -160,6 +170,10 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
           <div className="py-6">
             <h2 className="text-[30px] leading-[1.1] tracking-tight mb-3" style={EM}>Tack, intresseanmälan är mottagen.</h2>
             <p className="text-[#321C04]/75 max-w-[50ch]">Ingen plats är bokad. Vi hör av oss när det närmar sig, eller när en plats blir ledig på en vecka du valt.</p>
+            <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
+              <p className="text-[15px] text-[#321C04] leading-[1.5] mb-4">Känner du någon som borde gå? Går ni var sin vecka har ni varandra att bolla med efteråt. Du får ett mejl om någon anmäler intresse via din länk.</p>
+              <Dela kurser={medtagna} av={f.namn} epost={f.epost} kanal="efter-intresse" rubrik="Tipsa kollegor och nätverk" />
+            </div>
             <button type="button" onClick={() => (onClose ? onClose() : setSteg('val'))} className="mt-6 inline-flex items-center bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724]">Stäng</button>
           </div>
         )}
