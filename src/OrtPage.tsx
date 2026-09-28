@@ -20,7 +20,12 @@ import { spara } from './spar'
 // Kurserna valjs efter avstand fran staden, sa "UGL Vasteras" visar veckorna i Stockholmsomradet med restid.
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
-const HERO = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
+const BAS = 'https://www.uglsverige.store/assets/'
+const HERO_VIDEO = BAS + 'hero-3247036.mp4'
+const HERO_BILD = BAS + 'ugl-grupp.webp'
+const BILD_LOSNING = BAS + 'ugl-upplevelse.webp'
+const BILD_CTA = BAS + 'ugl-feedback.webp'
+const BILD_PROBLEM = BAS + 'ugl-tid.webp'
 const NARA_KM = 220 // veckor inom det har avstandet raknas som "nara"
 
 const PROBLEM = [
@@ -156,11 +161,11 @@ export default function OrtPage() {
   return (
     <>
       {/* 1. Hero: det enda som skiljer sig mellan orterna, tillsammans med kurslistan */}
-      <section id="top" className="relative overflow-hidden mb-[-25px] bg-[#2B2724]">
-        <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${HERO}")` }} />
-        <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(43,39,36,0.6) 0%, rgba(43,39,36,0.5) 50%, rgba(43,39,36,0.9) 100%)' }} />
+      <section id="top" className="relative min-h-[92vh] overflow-hidden mb-[-25px] bg-[#2B2724] flex flex-col">
+        <video src={HERO_VIDEO} poster={HERO_BILD} autoPlay muted loop playsInline aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" style={{ filter: 'brightness(0.66) contrast(1.18) saturate(1.05) sepia(0.18)' }} />
+        <div aria-hidden="true" className="absolute inset-0" style={{ background: 'radial-gradient(120% 90% at 50% 40%, rgba(43,39,36,0) 40%, rgba(43,39,36,0.55) 100%), linear-gradient(180deg, rgba(43,39,36,0.25) 0%, rgba(43,39,36,0.3) 55%, rgba(43,39,36,0.8) 100%)' }} />
         <Navbar />
-        <div className="relative z-10 max-w-6xl mx-auto px-6 pt-40 pb-16 md:pb-24 grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-10 items-end">
+        <div className="relative z-10 flex-1 w-full max-w-6xl mx-auto px-6 pt-40 pb-14 md:pb-20 grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-10 items-end">
           <div>
             <p className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.25em] font-medium mb-5">Kursorter · {stad.namn}</p>
             <h1 className="text-5xl sm:text-6xl md:text-7xl text-white leading-[1.05] tracking-tight">UGL i <em className="not-italic" style={EM}>{stad.namn}.</em></h1>
@@ -178,7 +183,7 @@ export default function OrtPage() {
               { tal: String(nara.length), text: nara.length === 1 ? 'vecka nära dig' : 'veckor nära dig' },
               { tal: nasta ? restid(nasta.km).replace('ca ', '') : '–', text: 'till närmaste vecka' },
               { tal: fran ? kr(fran).replace(' kr', '') : '–', text: 'kr, pris från, exkl. moms' },
-            ].map((n) => <li key={n.text} className="rounded-2xl bg-[#FFF9F2]/10 backdrop-blur border border-white/15 px-4 py-4"><span className="block text-2xl md:text-3xl text-white leading-none tracking-tight" style={EM}>{n.tal}</span><span className="block mt-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F6E4CF]/70 leading-tight">{n.text}</span></li>)}
+            ].map((n) => <li key={n.text} className="rounded-2xl bg-black/25 backdrop-blur-md border border-white/15 px-4 py-4"><span className="block text-2xl md:text-3xl text-white leading-none tracking-tight" style={EM}>{n.tal}</span><span className="block mt-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F6E4CF]/70 leading-tight">{n.text}</span></li>)}
           </ul>
         </div>
       </section>
@@ -223,6 +228,7 @@ export default function OrtPage() {
             <p className={label}>01. Känner du igen dig?</p>
             <h2 className="text-[#321C04] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[14ch]">Det som kostar mest syns <em className="not-italic" style={EM}>sällan.</em></h2>
             <p className="mt-6 text-[#321C04]/75 text-base leading-[1.5] max-w-[40ch]">Ett team som går på halvfart kostar en arbetsdag i veckan, år efter år. Det är därför arbetsgivare i {stad.namn} och resten av landet skickar sina ledare på UGL.</p>
+            <div className="mt-8 aspect-[4/3] rounded-3xl overflow-hidden bg-[#2B2724]"><img src={BILD_PROBLEM} alt="" loading="lazy" className="w-full h-full object-cover" style={{ filter: 'sepia(0.15) contrast(1.05)' }} /></div>
           </div>
           <ul className="grid sm:grid-cols-3 gap-5">
             {PROBLEM.map((p, i) => <li key={p.t} className="border-t border-[#321C04]/20 pt-5"><span className="text-[#9C7A4A] text-[22px]" style={EM}>0{i + 1}</span><h3 className="mt-2 text-[#321C04] text-[19px] leading-tight tracking-tight">{p.t}</h3><p className="mt-2 text-[#321C04]/75 text-[14px] leading-[1.5]">{p.d}</p></li>)}
@@ -231,8 +237,9 @@ export default function OrtPage() {
       </section>
 
       {/* 4. Lösningen */}
-      <section className="relative z-10 bg-[#2B2724] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px]">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative z-10 bg-[#2B2724] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px] overflow-hidden">
+        <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(90deg, rgba(43,39,36,0.9) 0%, rgba(43,39,36,0.82) 45%, rgba(43,39,36,0.72) 100%), url("${BILD_LOSNING}")` }} />
+        <div className="relative max-w-6xl mx-auto">
           <p className="text-[#F6E4CF]/60 text-xs uppercase tracking-[0.25em] font-medium mb-5">02. Vad UGL ger</p>
           <h2 className="text-[#FFF9F2] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[22ch]">Fem dagar på kursgård. Ett ledarskap som håller <em className="not-italic" style={EM}>i flera år.</em></h2>
           <ul className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
@@ -297,15 +304,17 @@ export default function OrtPage() {
       {omdomen.length > 2 && <Omdomen omdomen={omdomen} />}
 
       {/* 8. Sista uppmaningen */}
-      <section className="relative z-10 bg-[#2B2724] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px]">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
+      <section className="relative z-10 bg-[#2B2724] rounded-t-[25px] py-20 md:py-28 px-6 -mt-[25px] overflow-hidden">
+        <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${BILD_CTA}")` }} />
+        <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(43,39,36,0.86) 0%, rgba(43,39,36,0.76) 45%, rgba(43,39,36,0.66) 100%)' }} />
+        <div className="relative max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
           <div>
             <p className="text-[#F6E4CF]/60 text-xs uppercase tracking-[0.25em] font-medium mb-5">Nästa steg</p>
             <h2 className="text-[#FFF9F2] text-3xl sm:text-4xl lg:text-[42px] leading-[1.08] tracking-tight max-w-[16ch]">Din vecka nära {stad.namn} <em className="not-italic" style={EM}>väntar.</em></h2>
             <p className="mt-6 text-[#F6E4CF]/75 text-base leading-[1.5] max-w-[44ch]">{nasta ? `Nästa lediga vecka är vecka ${nasta.k.vecka}, ${nasta.k.period}, på ${nasta.k.anlaggning}. ` : ''}Boka plats så ringer vi och stämmer av. Inget är bindande förrän du fått bekräftelsen.</p>
             <button type="button" onClick={tillLista} className="mt-8 inline-flex items-center gap-2 bg-[#F6E4CF] text-[#2B2724] text-sm font-medium px-6 py-3.5 rounded-xl hover:bg-[#FFF9F2] transition-colors">Boka plats eller anmäl intresse <ArrowRight size={16} /></button>
           </div>
-          <div className="rounded-3xl border border-[#F6E4CF]/15 bg-[#FFF9F2]/5 p-6 md:p-8">
+          <div className="rounded-3xl border border-[#F6E4CF]/15 bg-[#2B2724]/70 backdrop-blur-md p-6 md:p-8">
             <p className="text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.25em] font-medium mb-2 inline-flex items-center gap-2"><Sparkles size={12} /> Inte rätt vecka ännu?</p>
             <h3 className="text-[#FFF9F2] text-[26px] leading-[1.1] tracking-tight mb-4" style={{ fontFamily: "'Instrument Serif', serif" }}>Få nya veckor nära {stad.namn} till mejlen.</h3>
             <BevakningForm kanal={'ort-' + stad.slug} morkt />
