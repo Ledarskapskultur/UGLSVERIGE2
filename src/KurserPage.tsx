@@ -6,7 +6,7 @@ import SaGarDetTill from './SaGarDetTill'
 import Omdomen, { snitt } from './Omdomen'
 import KursModal from './KursModal'
 import { lasVia } from './delning'
-import { SAMTAL } from './Kassa'
+import RingMig, { oppnaRingMig } from './RingMig'
 import Kassa from './Kassa'
 import { MAX_VALDA } from './forfragan'
 import Navbar from './components/Navbar'
@@ -196,7 +196,7 @@ export default function KurserPage() {
             <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#321C04]/50" />
             <input value={sok} onChange={(e) => { setSok(e.target.value); setVisade(6) }} placeholder="Sök ort, kursgård eller handledare" aria-label="Sök kurs" className="w-full bg-white text-[#321C04] placeholder:text-[#321C04]/50 rounded-2xl pl-12 pr-5 py-4 text-base shadow-[0_10px_40px_rgba(43,39,36,0.35)] focus:outline-none focus:ring-2 focus:ring-[#F6E4CF]" />
           </form>
-          <a href={SAMTAL} className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm underline underline-offset-4 decoration-white/40"><Phone size={14} /> Vill du hellre prata? Boka ett kort samtal</a>
+          <button type="button" onClick={oppnaRingMig} className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm underline underline-offset-4 decoration-white/40"><Phone size={14} /> Vill du hellre prata? Vi ringer upp dig</button>
         </div>
 
         {/* Filterrad */}
@@ -420,6 +420,7 @@ export default function KurserPage() {
 
       {/* Kassa på mobil: knapp och utfällbar panel */}
       <BevakningRuta aktiv={valda.length === 0} />
+      <RingMig valda={valdaKurser} />
       {valda.length === 0 && !kassa && !visa && iVy && (() => { const k = (kurser || []).find((x) => x.id === iVy); return k && k.ledig ? (
         <div className="lg:hidden fixed bottom-4 inset-x-4 z-40 flex justify-center">
           <button type="button" onClick={() => boka(k.id)} className="inline-flex items-center gap-3 bg-[#2B2724] text-[#FFF9F2] text-sm font-medium pl-5 pr-4 py-3 rounded-full shadow-[0_8px_30px_rgba(43,39,36,0.35)] max-w-full">

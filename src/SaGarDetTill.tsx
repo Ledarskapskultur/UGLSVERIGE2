@@ -1,12 +1,12 @@
 import { ArrowRight, Phone } from 'lucide-react'
-import { SAMTAL } from './Kassa'
+import { oppnaRingMig } from './RingMig'
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 const BILD = 'https://www.uglsverige.store/assets/ugl-samtal.webp'
 const STEG = [
   { n: '01', t: 'Boka plats eller anmäl intresse', d: 'Boka när du vet vilken vecka. Anmäl intresse om du vill hålla upp till tre veckor öppna. Inget är bindande ännu.' },
   { n: '02', t: 'Vi hörs kort', d: 'Inom två arbetsdagar stämmer vi av att veckan passar och att gruppen blir rätt sammansatt.' },
-  { n: '03', t: 'Bekräftelse och faktura', d: 'Först då är platsen din. Välkomstbrev med kursgård, tider och resväg kommer före kursstart.' },
+  { n: '03', t: 'Bekräftelse och faktura', d: 'Först då är platsen din. Välkomstbrev med kursgård, tider och resväg kommer före kursstart. Ingen sista anmälningsdag: det går att boka fram till dagen före kursstart, så länge det finns platser.' },
 ]
 
 export default function SaGarDetTill({ antal, onVidare }: { antal: number; onVidare: () => void }) {
@@ -34,7 +34,7 @@ export default function SaGarDetTill({ antal, onVidare }: { antal: number; onVid
                 Välj veckor i listan <ArrowRight size={16} />
               </button>
             )}
-            <a href={SAMTAL} className="inline-flex items-center gap-2 text-[#F6E4CF]/85 hover:text-[#FFF9F2] text-sm font-medium underline underline-offset-4 decoration-[#F6E4CF]/40"><Phone size={14} /> Boka ett kort samtal</a>
+            <button type="button" onClick={oppnaRingMig} className="inline-flex items-center gap-2 text-[#F6E4CF]/85 hover:text-[#FFF9F2] text-sm font-medium underline underline-offset-4 decoration-[#F6E4CF]/40"><Phone size={14} /> Vi ringer upp dig</button>
           </div>
         </div>
         <ul className="border-t border-[#F6E4CF]/20">

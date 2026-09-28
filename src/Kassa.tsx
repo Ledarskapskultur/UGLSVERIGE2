@@ -1,11 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { ArrowLeft, CalendarCheck, ChevronDown, ChevronRight, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
+import { ArrowLeft, CalendarCheck, ChevronDown, ChevronRight, Mail, Pencil, Phone, Send, User, Users, X } from 'lucide-react'
 import { MOTTAGARE, posta, kursData } from './forfragan'
 import { kr, type Kurs, type Omdome } from './kursdata'
 import Dela from './Dela'
 import { Stjarnor } from './Omdomen'
 import { spara } from './spar'
 import { pixelHandelse } from './Samtycke'
+import { oppnaRingMig } from './RingMig'
 import type { Bevis } from './bevis'
 
 const EM = { fontFamily: "'Instrument Serif', serif" }
@@ -25,6 +26,22 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
   const bokaKurs = valda.find((k) => k.id === bokaId) ?? valda[valda.length - 1]
   const [b, setB] = useState({ namn: '', epost: '', telefon: '', organisation: '', fakturering: '', meddelande: '', samtycke: false })
   const [merFalt, setMerFalt] = useState(false)
+  const [sparaEpost, setSparaEpost] = useState('')
+  const [sparat, setSparat] = useState(false)
+  const [sparar, setSparar] = useState(false)
+  const [sparaStatus, setSparaStatus] = useState<string | null>(null)
+  // Mejla mig veckorna: lagsta troskeln, bara e-post. Sparas som bevakning med kurser.
+  const mejlaVeckor = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!sparaEpost.includes('@')) return setSparaStatus('Fyll i en giltig e-postadress.')
+    setSparar(true); setSparaStatus(null)
+    const r = await posta({ typ: 'bevakning', kurser: valda.map((k) => ({ ...kursData(k), id: k.nyckel })), epost: sparaEpost, meddelande: 'Mejla mig veckorna', samtycke: true, kanal: 'spara' })
+    setSparar(false)
+    if (!r.ok) return setSparaStatus((r.error || 'Något gick fel') + '. Prova igen.')
+    spara('veckor_mejlade', { antal: valda.length })
+    if (!r.mejl) window.location.href = 'mailto:' + sparaEpost + '?subject=' + encodeURIComponent('Mina UGL-veckor') + '&body=' + encodeURIComponent(valda.map((k) => `Vecka ${k.vecka}, ${k.period}, ${k.anlaggning}, ${k.ort}`).join('\n') + '\n\nhttps://www.uglsverige.store/kurser?valda=' + valda.map((k) => k.nyckel).join(','))
+    setSparat(true)
+  }
   // Ett omdome intill knappen: helst fran samma kursgard, annars det hogst betygsatta.
   const citat = [...omdomen].filter((o) => o.text).sort((a, b) => (b.anlaggning === bokaKurs?.anlaggning ? 1 : 0) - (a.anlaggning === bokaKurs?.anlaggning ? 1 : 0) || b.betyg - a.betyg)[0]
   const [forsta, setForsta] = useState<string | null>(null)
@@ -146,8 +163,26 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
                 <ChevronRight size={20} />
               </button>
               <button type="button" disabled={!valda.length} onClick={() => onTipsa('tips')} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1 disabled:opacity-40">Tipsa en kollega om veckorna</button>
-              <a href={SAMTAL} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1"><Phone size={14} /> Osäker? Boka ett kort samtal</a>
+              <button type="button" onClick={oppnaRingMig} className="w-full inline-flex items-center justify-center gap-2 text-sm text-[#321C04]/70 hover:text-[#321C04] underline underline-offset-4 py-1"><Phone size={14} /> Osäker? Vi ringer upp dig</button>
             </div>
+            {valda.length > 0 && (
+              <form onSubmit={mejlaVeckor} noValidate className="mt-6 pt-5 border-t border-[#D9C4AA]">
+                <p className={eyebrow}>Inte redo än?</p>
+                {sparat ? (
+                  <p className="text-[15px] leading-[1.5]">Veckorna är på väg till {sparaEpost}. Länken i mejlet öppnar samma urval.</p>
+                ) : (
+                  <>
+                    <p className="text-[15px] leading-[1.5] mb-3">Mejla mig de här veckorna, så bestämmer jag senare.</p>
+                    <div className="flex gap-2">
+                      <input type="email" value={sparaEpost} onChange={(e) => setSparaEpost(e.target.value)} placeholder="namn@foretag.se" autoComplete="email" aria-label="E-post" className="flex-1 min-w-0 bg-white/60 border border-[#D9C4AA] focus:border-[#321C04] rounded-xl px-3 py-2.5 text-[15px] outline-none placeholder:text-[#321C04]/40" />
+                      <button type="submit" disabled={sparar} className="inline-flex items-center gap-1.5 bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-[#2B2724] disabled:opacity-60"><Mail size={14} /> Skicka</button>
+                    </div>
+                    {sparaStatus && <p className="mt-2 text-[13px] text-[#9C3A2E]">{sparaStatus}</p>}
+                    <p className="mt-2 text-[12px] text-[#321C04]/55">Ett mejl med veckorna och en länk tillbaka hit. Inget bokas, ingen lista.</p>
+                  </>
+                )}
+              </form>
+            )}
             {valda.length > 0 && (
               <div className="mt-6 pt-5 border-t border-[#D9C4AA]">
                 <Dela kurser={valda} kanal="kassa" rubrik="Dela urvalet" />
@@ -264,6 +299,7 @@ export default function Kassa({ valda, toggle, onClose, onTipsa, onAndra, kompak
               <button type="submit" disabled={skickar} className="flex-1 inline-flex items-center justify-center bg-[#321C04] text-[#FFF9F2] text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#2B2724] disabled:opacity-60 transition-colors">{skickar ? 'Skickar…' : 'Skicka bokning'}</button>
             </div>
             <p className="mt-3 text-[13px] text-[#321C04]/60">Betalning mot faktura när platsen är bekräftad. Inget betalas nu. Resten tar vi i samtalet.</p>
+            <p className="mt-1.5 text-[13px] text-[#321C04]/60">Ingen sista anmälningsdag. Det går att boka fram till dagen före kursstart, så länge det finns platser kvar.</p>
             {citat && (
               <figure className="mt-5 pt-4 border-t border-[#D9C4AA]">
                 <Stjarnor betyg={citat.betyg} size={13} className="text-[#9C7A4A]" />
