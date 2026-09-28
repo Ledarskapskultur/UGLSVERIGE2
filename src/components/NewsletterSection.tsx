@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from 'react'
+import { MOTTAGARE, posta } from '../forfragan'
+import { spara } from '../spar'
 import { ArrowRight, Check } from 'lucide-react'
 
 const BG_IMAGE = 'https://www.uglsverige.store/assets/ugl-feedback.webp'
@@ -40,8 +42,9 @@ export default function NewsletterSection() {
     if (!form.region) return setError('Välj del av landet.')
     if (form.interests.length === 0) return setError('Välj minst ett alternativ.')
     setStatus('sending')
-    // TODO: koppla till mottagare (Supabase, formulärtjänst eller nyhetsbrevsverktyg)
-    await new Promise((r) => setTimeout(r, 700))
+    const r = await posta({ typ: 'bevakning', kurser: [], namn: form.name, epost: form.email, organisation: form.organisation, meddelande: 'Region: ' + form.region + '\nVill ha: ' + form.interests.join(', '), samtycke: true, kanal: 'nyhetsbrev' })
+    if (!r.ok) { setStatus('idle'); return setError((r.error || 'Något gick fel') + '. Prova igen, eller mejla ' + MOTTAGARE + '.') }
+    spara('bevakning', { kanal: 'nyhetsbrev', region: form.region })
     setStatus('done')
   }
 

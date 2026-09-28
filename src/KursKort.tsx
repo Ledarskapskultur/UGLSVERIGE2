@@ -7,6 +7,7 @@ export default function KursKort({ k, vald, fullt, onToggle, onIntresse, onBoka,
   const muted = vald ? 'text-[#F6E4CF]/70' : 'text-[#321C04]/70'
   return (
     <article
+      data-kurs={k.id}
       className={`rounded-3xl border p-4 md:p-5 grid gap-4 md:gap-5 items-stretch transition-colors ${kompakt ? 'md:grid-cols-[120px_minmax(0,1fr)]' : 'md:grid-cols-[180px_minmax(0,1fr)_210px]'} ${
         vald ? 'bg-[#321C04] border-[#321C04] text-[#FFF9F2]' : 'bg-[#FFF9F2] border-[#D9C4AA] text-[#321C04]'
       }`}

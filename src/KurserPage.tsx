@@ -12,6 +12,9 @@ import { MAX_VALDA } from './forfragan'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { useKurser, useOmdomen } from './kursdata'
+import { useBevis } from './bevis'
+import { BevakningBlock, BevakningRuta } from './Bevakning'
+import { spara } from './spar'
 
 const EM = { fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' as const }
 const HERO_IMAGE = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
@@ -55,6 +58,8 @@ function Pill({ icon, label, aktiv, children }: { icon: ReactNode; label: string
 export default function KurserPage() {
   const { kurser, fel } = useKurser()
   const omdomen = useOmdomen()
+  const bevis = useBevis()
+  const [iVy, setIVy] = useState<string | null>(null)
   const [oppnaIntresse, setOppnaIntresse] = useState(0)
   const [oppnaBoka, setOppnaBoka] = useState(0)
   const [bokaVal, setBokaVal] = useState<string | null>(null)
@@ -64,12 +69,14 @@ export default function KurserPage() {
     return o.length ? { snitt: snitt(o), antal: o.length } : null
   }
   const boka = (id: string) => {
+    spara('boka_klick', { id })
     setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
     setBokaVal(id)
     setOppnaBoka((n) => n + 1)
     if (window.innerWidth < 1024) setKassa(true)
   }
   const intresse = (id: string) => {
+    spara('intresse_klick', { id })
     setValda((v) => (v.includes(id) || v.length >= MAX_VALDA ? v : [...v, id]))
     setOppnaIntresse((n) => n + 1)
     if (window.innerWidth < 1024) setKassa(true)
@@ -134,6 +141,18 @@ export default function KurserPage() {
   }, [kurser, sok, period, manad, region, ort, pris, baraLediga, sort])
 
   const billigast = useMemo(() => lista.filter((k) => k.total).sort((a, b) => a.total - b.total)[0]?.id ?? null, [lista])
+  // Mobil: vilket kort som ar mest i bild styr den fasta bokningsknappen.
+  useEffect(() => {
+    if (window.innerWidth >= 1024 || !('IntersectionObserver' in window)) return
+    const synliga = new Map<string, number>()
+    const io = new IntersectionObserver((poster) => {
+      for (const e of poster) { const id = (e.target as HTMLElement).dataset.kurs!; if (e.isIntersecting) synliga.set(id, e.intersectionRatio); else synliga.delete(id) }
+      const basta = [...synliga.entries()].sort((a, b) => b[1] - a[1])[0]
+      setIVy(basta ? basta[0] : null)
+    }, { threshold: [0.25, 0.5, 0.75] })
+    document.querySelectorAll<HTMLElement>('[data-kurs]').forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [lista, visade])
   const valdaKurser = (kurser || []).filter((k) => valda.includes(k.id))
   const toggle = (id: string) => setValda((v) => (v.includes(id) ? v.filter((x) => x !== id) : v.length >= MAX_VALDA ? v : [...v, id]))
   const fullt = valda.length >= MAX_VALDA
@@ -161,6 +180,18 @@ export default function KurserPage() {
             Fem sammanhängande dagar på kursgård, 8 till 12 deltagare och två handledare certifierade av Försvarshögskolan.
             Anmälan är inte bindande förrän den bekräftats.
           </p>
+          {(() => {
+            const tal = bevis.nyckeltal.length ? bevis.nyckeltal : omdomen.length >= 3 ? [
+              { tal: snitt(omdomen).toFixed(1).replace('.', ','), text: 'i snittbetyg av 5' },
+              { tal: String(omdomen.length), text: 'omdömen från deltagare' },
+              { tal: Math.round((omdomen.filter((o) => o.betyg >= 4).length / omdomen.length) * 100) + ' %', text: 'rekommenderar kursen' },
+            ] : []
+            return tal.length ? (
+              <ul className="flex flex-wrap justify-center gap-x-10 gap-y-3 mt-1">
+                {tal.map((n) => <li key={n.text} className="text-center"><span className="block text-3xl md:text-4xl text-white leading-none tracking-tight" style={EM}>{n.tal}</span><span className="block mt-1.5 text-[12px] uppercase tracking-[0.16em] text-[#F6E4CF]/70">{n.text}</span></li>)}
+              </ul>
+            ) : null
+          })()}
           <form onSubmit={(e) => { e.preventDefault(); document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} className="mt-2 w-full max-w-[560px] relative">
             <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#321C04]/50" />
             <input value={sok} onChange={(e) => { setSok(e.target.value); setVisade(6) }} placeholder="Sök ort, kursgård eller handledare" aria-label="Sök kurs" className="w-full bg-white text-[#321C04] placeholder:text-[#321C04]/50 rounded-2xl pl-12 pr-5 py-4 text-base shadow-[0_10px_40px_rgba(43,39,36,0.35)] focus:outline-none focus:ring-2 focus:ring-[#F6E4CF]" />
@@ -203,6 +234,9 @@ export default function KurserPage() {
                 </button>
               )}
             </div>
+            {bevis.kunder.length > 0 && (
+              <p className="mt-5 text-[13px] text-[#321C04]/70 leading-[1.6]"><span className="uppercase tracking-[0.18em] text-[11px] font-medium text-[#321C04]/55 mr-3">Deltagare från</span>{bevis.kunder.join(' · ')}</p>
+            )}
           </div>
         </div>
       </section>
@@ -320,7 +354,7 @@ export default function KurserPage() {
 
           <div className="mt-6 flex flex-col gap-4 md:gap-5">
             {lista.slice(0, visade).map((k, i) => (
-              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onBoka={() => boka(k.id)} onVisa={() => setVisa(k.id)} tipsaresVecka={!!tips?.av && (tips?.veckor.includes(k.id) ?? false)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
+              <KursKort key={k.id} k={k} vald={valda.includes(k.id)} fullt={fullt} kompakt={valda.length > 0} onToggle={() => toggle(k.id)} onIntresse={() => intresse(k.id)} onBoka={() => boka(k.id)} onVisa={() => { spara('se_kursen', { id: k.id }); setVisa(k.id) }} tipsaresVecka={!!tips?.av && (tips?.veckor.includes(k.id) ?? false)} betyg={betygFor(k.anlaggning)} badge={i === 0 && sort === 'datum' ? 'Närmast i tiden' : billigast === k.id ? 'Lägst totalpris' : null} />
             ))}
           </div>
           {kurser && lista.length === 0 && (
@@ -339,9 +373,10 @@ export default function KurserPage() {
               Alla priser anges exklusive moms. Kurserna i Jönköping har ett samlat pris där allt ingår.
             </p>
           </div>
+          <BevakningBlock />
           </div>
           <aside className={`hidden lg:block lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto no-scrollbar transition-opacity duration-300 ${valda.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-hidden={valda.length === 0}>
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onTipsa={() => setDela('chef')} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setDela(f ?? 'chef') }} onAndra={() => document.getElementById('kurslista')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
           </aside>
           </div>
         </div>
@@ -384,6 +419,15 @@ export default function KurserPage() {
       <Footer />
 
       {/* Kassa på mobil: knapp och utfällbar panel */}
+      <BevakningRuta aktiv={valda.length === 0} />
+      {valda.length === 0 && !kassa && !visa && iVy && (() => { const k = (kurser || []).find((x) => x.id === iVy); return k && k.ledig ? (
+        <div className="lg:hidden fixed bottom-4 inset-x-4 z-40 flex justify-center">
+          <button type="button" onClick={() => boka(k.id)} className="inline-flex items-center gap-3 bg-[#2B2724] text-[#FFF9F2] text-sm font-medium pl-5 pr-4 py-3 rounded-full shadow-[0_8px_30px_rgba(43,39,36,0.35)] max-w-full">
+            <span className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.2em] whitespace-nowrap">Vecka {k.vecka}, {k.ort}</span>
+            Boka plats <ArrowRight size={15} />
+          </button>
+        </div>
+      ) : null })()}
       {valda.length > 0 && !kassa && (
         <div className="lg:hidden fixed bottom-4 inset-x-4 z-40 flex justify-center">
           <button type="button" onClick={() => setKassa(true)} className="inline-flex items-center gap-3 bg-[#2B2724] text-[#FFF9F2] text-sm font-medium pl-5 pr-4 py-3 rounded-full shadow-[0_8px_30px_rgba(43,39,36,0.35)]">
@@ -396,7 +440,7 @@ export default function KurserPage() {
         <div className="lg:hidden fixed inset-0 z-50" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-[#2B2724]/70 backdrop-blur-sm" onClick={() => setKassa(false)} />
           <div className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto p-3">
-            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} onClose={() => setKassa(false)} onTipsa={() => { setKassa(false); setDela('chef') }} onAndra={() => setKassa(false)} />
+            <Kassa valda={valdaKurser} toggle={toggle} oppnaIntresse={oppnaIntresse} oppnaBoka={oppnaBoka} bokaVal={bokaVal} tipsare={tips?.av ? { namn: tips.av, veckor: tips.veckor } : null} omdomen={omdomen} svarar={bevis.svarar} onClose={() => setKassa(false)} onTipsa={(f) => { spara('tipsa_klick', { flik: f ?? 'chef' }); setKassa(false); setDela(f ?? 'chef') }} onAndra={() => setKassa(false)} />
           </div>
         </div>
       )}
