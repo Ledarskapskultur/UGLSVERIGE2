@@ -21,11 +21,12 @@
       <h1>Administration</h1>
       <p class="lead">Bjud in arrangörer och arbetsgivare, sätt avtalen, granska nya kurser och följ intäkterna. Den här vyn ligger ett steg ovanför arrangörernas egen portal.</p>
       <form id="login-form">
-        <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@uglsverige.store" autocomplete="email"></div>
-        <div class="field"><label for="log-nyckel">Adminnyckel</label><input id="log-nyckel" type="password" placeholder="Samma som UGL_ADMIN_NYCKEL i Supabase" autocomplete="current-password"></div>
+        <div class="field"><label for="log-epost">E-post</label><input id="log-epost" type="email" placeholder="fornamn@uglsverige.store" autocomplete="email" required></div>
+        <div class="field"><label for="log-nyckel">Lösenord</label><input id="log-nyckel" type="password" autocomplete="current-password" required></div>
+        <p id="log-fel" hidden style="color:#B3261E;font-size:.95rem;margin:.25rem 0 0"></p>
         <button class="button" type="submit">Logga in</button>
       </form>
-      <p class="login-not">Med nyckel visas riktiga leads från sajten. Utan nyckel visas demodata.</p>
+      <p class="login-not">Logga in med e-post och lösenord för att se leads från sajten.</p>
     </div>
     <aside class="login-bild">
       <ul class="login-punkter">
@@ -64,6 +65,6 @@
     <ul id="notis-lista"></ul>
   </div>
 
-  <script src="admin.js?v=4"></script>
+  <script src="admin.js?v=5"></script>
 </body>
 </html>

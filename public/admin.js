@@ -205,18 +205,20 @@
   var S=null,nastaId=200;
   /* ---------- Riktiga leads fran Supabase (kraver adminnyckel) ---------- */
   var LEADS_API='https://nepnzqvxnkxvyyfdymui.supabase.co/functions/v1/ugl-admin';
-  function nyckel(){try{return localStorage.getItem('ugl-admin-nyckel')||''}catch(e){return ''}}
+  var INLOGG={epost:'',nyckel:''};
+  function authHead(){return {'x-admin-nyckel':INLOGG.nyckel,'x-admin-epost':INLOGG.epost}}
   var leadsLive=false;
+  /* cb(ok, felmeddelande) */
   function hamtaLeads(cb){
-    var k=nyckel();if(!k){leadsLive=false;if(cb)cb(false);return}
-    fetch(LEADS_API,{headers:{'x-admin-nyckel':k}}).then(function(r){return r.json()}).then(function(j){
-      if(!j.ok){leadsLive=false;toast(j.error==='Fel nyckel'?'Fel adminnyckel, visar demodata.':'Kunde inte hämta leads: '+(j.error||'okänt fel'));if(cb)cb(false);return}
+    if(!INLOGG.nyckel||!INLOGG.epost){leadsLive=false;if(cb)cb(false,'Ange e-post och lösenord.');return}
+    fetch(LEADS_API,{headers:authHead()}).then(function(r){return r.json()}).then(function(j){
+      if(!j.ok){leadsLive=false;if(cb)cb(false,j.error||'Okänt fel');return}
       S.leads=j.leads;leadsLive=true;if(cb)cb(true);
-    }).catch(function(){leadsLive=false;toast('Ingen kontakt med servern, visar demodata.');if(cb)cb(false)});
+    }).catch(function(){leadsLive=false;if(cb)cb(false,'Ingen kontakt med servern. Försök igen om en stund.')});
   }
   function synkaLead(l){
     if(!leadsLive)return;
-    fetch(LEADS_API,{method:'POST',headers:{'Content-Type':'application/json','x-admin-nyckel':nyckel()},
+    fetch(LEADS_API,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},authHead()),
       body:JSON.stringify({id:l.id,status:l.status,anteckning:l.not||'',bokad:l.bokad||null,kontakter:l.kontakter||[]})})
       .then(function(r){return r.json()}).then(function(j){if(!j.ok)toast('Kunde inte spara till servern: '+(j.error||''))})
       .catch(function(){toast('Kunde inte spara till servern.')});
@@ -967,11 +969,21 @@
   /* ---------- Inloggning ---------- */
   $('login-form').addEventListener('submit',function(e){
     e.preventDefault();
+    var fel=$('log-fel'),knapp=e.target.querySelector('button[type=submit]');
+    fel.hidden=true;
+    INLOGG.epost=$('log-epost').value.trim();
+    INLOGG.nyckel=$('log-nyckel').value.trim();
+    if(!INLOGG.epost||!INLOGG.nyckel){fel.textContent='Ange både e-post och lösenord.';fel.hidden=false;return}
     S=las()||JSON.parse(JSON.stringify(DEMO));
-    var ep=$('log-epost').value.trim();
-    if(ep&&ep.indexOf('@')>0){S.jag.namn=S.jag.namn;S.plattform.epost=ep}
-    var ny=$('log-nyckel').value.trim();
-    try{if(ny)localStorage.setItem('ugl-admin-nyckel',ny)}catch(e){}
+    S.plattform.epost=INLOGG.epost;
+    knapp.disabled=true;knapp.textContent='Loggar in…';
+    hamtaLeads(function(ok,msg){
+      knapp.disabled=false;knapp.textContent='Logga in';
+      if(!ok){fel.textContent=msg||'Fel e-post eller lösenord.';fel.hidden=false;$('log-nyckel').value='';return}
+      oppnaApp();
+    });
+  });
+  function oppnaApp(){
     spara();
     $('kund-logga').textContent=S.plattform.kort;
     $('kund-namn').textContent=S.plattform.namn;
@@ -980,16 +992,19 @@
     $('anv-roll').textContent=S.jag.roll;
     $('anv-init').textContent=init(S.jag.namn);
     $('login').hidden=true;$('app').hidden=false;
-    $('vy').addEventListener('click',radKlick);
-    $('vy').addEventListener('keydown',function(ev){
-      if(ev.key!=='Enter'&&ev.key!==' ')return;
-      if(!ev.target.getAttribute||!ev.target.getAttribute('data-oppna'))return;
-      ev.preventDefault();radKlick(ev);
-    });
+    if(!oppnaApp.lyssnar){
+      oppnaApp.lyssnar=true;
+      $('vy').addEventListener('click',radKlick);
+      $('vy').addEventListener('keydown',function(ev){
+        if(ev.key!=='Enter'&&ev.key!==' ')return;
+        if(!ev.target.getAttribute||!ev.target.getAttribute('data-oppna'))return;
+        ev.preventDefault();radKlick(ev);
+      });
+    }
     rita();
-    hamtaLeads(function(ok){if(ok){rita();toast(S.leads.length+' leads hämtade från sajten.')}});
-  });
-  $('logga-ut').addEventListener('click',function(){$('app').hidden=true;$('login').hidden=false});
+    toast(S.leads.length+' leads hämtade från sajten.');
+  }
+  $('logga-ut').addEventListener('click',function(){INLOGG={epost:'',nyckel:''};leadsLive=false;$('log-nyckel').value='';$('app').hidden=true;$('login').hidden=false});
   $('notis-knapp').addEventListener('click',function(){$('notis-panel').hidden=!$('notis-panel').hidden});
   $('notis-stang').addEventListener('click',function(){$('notis-panel').hidden=true});
   window.addEventListener('hashchange',function(){if(!$('app').hidden)rita()});
