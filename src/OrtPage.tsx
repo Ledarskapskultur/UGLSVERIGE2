@@ -87,7 +87,16 @@ export default function OrtPage() {
     return [...m.entries()].sort((a, b) => a[1] - b[1])
   }, [nara])
   const nasta = nara[0]
-  const fran = nara.length ? Math.min(...nara.filter((x) => x.k.total).map((x) => x.k.total)) : 0
+  // Hero: de tre narmaste lediga veckorna inom tva manader, annars de tre narmaste overhuvudtaget.
+  const tvaMan = new Date(); tvaMan.setMonth(tvaMan.getMonth() + 2)
+  const inomTva = nara.filter((x) => x.k.start <= tvaMan)
+  const heroVeckor = (inomTva.length >= 3 ? inomTva : nara).slice(0, 3)
+  const heroRubrik = inomTva.length >= 3 ? 'Lediga veckor inom två månader' : 'Nästa lediga veckor'
+  const tillVecka = (id: string) => {
+    spara('hero_vecka', { id, stad: stad?.slug ?? '' })
+    setVisade((v) => Math.max(v, nara.findIndex((x) => x.k.id === id) + 1))
+    setTimeout(() => document.querySelector(`[data-kurs="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
+  }
 
   // Titel och beskrivning per stad, for sokmotorer och delning.
   useEffect(() => {
@@ -171,20 +180,29 @@ export default function OrtPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl text-white leading-[1.05] tracking-tight">UGL i <em className="not-italic" style={EM}>{stad.namn}.</em></h1>
             <p className="mt-6 text-white/85 text-base md:text-lg max-w-[50ch] leading-[1.5]">
               Fem dagar som förändrar hur du leder och hur du fungerar i grupp, utan att du behöver lämna vardagen i mer än en vecka.
-              {nasta ? <> Närmaste vecka med lediga platser: <strong className="font-medium text-white">vecka {nasta.k.vecka}</strong> på {nasta.k.anlaggning}, {restid(nasta.km)} från {stad.namn}.</> : null}
+              {nasta ? <> Närmaste kursgård ligger {restid(nasta.km)} från {stad.namn}, och det går att boka fram till dagen före kursstart.</> : null}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button type="button" onClick={tillLista} className="inline-flex items-center gap-2 bg-[#F6E4CF] text-[#2B2724] text-sm font-medium px-6 py-3.5 rounded-xl hover:bg-[#FFF9F2] transition-colors">Se veckorna nära {stad.namn} <ArrowRight size={16} /></button>
               <button type="button" onClick={oppnaRingMig} className="inline-flex items-center gap-2 border border-white/40 text-white text-sm font-medium px-6 py-3.5 rounded-xl hover:bg-white/10 transition-colors"><Phone size={15} /> Vi ringer upp dig</button>
             </div>
           </div>
-          <ul className="grid grid-cols-3 gap-3 lg:gap-4">
-            {[
-              { tal: String(nara.length), text: nara.length === 1 ? 'vecka nära dig' : 'veckor nära dig' },
-              { tal: nasta ? restid(nasta.km).replace('ca ', '') : '–', text: 'till närmaste vecka' },
-              { tal: fran ? kr(fran).replace(' kr', '') : '–', text: 'kr, pris från, exkl. moms' },
-            ].map((n) => <li key={n.text} className="rounded-2xl bg-black/25 backdrop-blur-md border border-white/15 px-4 py-4"><span className="block text-2xl md:text-3xl text-white leading-none tracking-tight" style={EM}>{n.tal}</span><span className="block mt-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F6E4CF]/70 leading-tight">{n.text}</span></li>)}
-          </ul>
+          <div>
+            <p className="text-[#F6E4CF]/70 text-[11px] uppercase tracking-[0.2em] font-medium mb-3">{heroRubrik}</p>
+            <ul className="grid grid-cols-3 gap-3 lg:gap-4">
+              {heroVeckor.map(({ k, km }) => (
+                <li key={k.id}>
+                  <button type="button" onClick={() => tillVecka(k.id)} className="w-full h-full text-left rounded-2xl bg-black/25 backdrop-blur-md border border-white/15 hover:border-[#F6E4CF]/60 hover:bg-black/35 transition-colors px-4 py-4">
+                    <span className="block text-2xl md:text-[28px] text-white leading-none tracking-tight" style={EM}>Vecka {k.vecka}</span>
+                    <span className="block mt-2 text-[12px] text-[#FFF9F2]/90 leading-snug">{k.period.replace(/ \d{4}$/, '')}</span>
+                    <span className="block mt-1.5 text-[11px] text-[#F6E4CF]/70 leading-snug">{k.anlaggning}, {restid(km)}</span>
+                    <span className="block mt-2 text-[13px] text-white font-medium">{k.total ? kr(k.total) : 'Pris meddelas'} <span className="text-[#F6E4CF]/60 font-normal">exkl. moms</span></span>
+                  </button>
+                </li>
+              ))}
+              {heroVeckor.length === 0 && <li className="col-span-3 text-[#F6E4CF]/80 text-sm">Inga lediga veckor just nu. Bevaka orten längre ner på sidan.</li>}
+            </ul>
+          </div>
         </div>
       </section>
 
