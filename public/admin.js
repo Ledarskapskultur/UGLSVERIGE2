@@ -221,7 +221,7 @@
     if(!INLOGG.nyckel||!INLOGG.epost){leadsLive=false;if(cb)cb(false,'Ange e-post och lösenord.');return}
     fetch(LEADS_API,{headers:authHead()}).then(function(r){return r.json()}).then(function(j){
       if(!j.ok){leadsLive=false;if(cb)cb(false,j.error||'Okänt fel');return}
-      S.leads=j.leads;S.delningar=j.delningar||[];leadsLive=true;if(cb)cb(true);
+      S.leads=j.leads;S.delningar=j.delningar||[];S.leverantorer=j.leverantorer||[];S.handledare=j.handledare||[];S.kursleverantor=j.kursleverantor||{};S.bokningar=j.bokningar||[];leadsLive=true;if(cb)cb(true);
     }).catch(function(){leadsLive=false;if(cb)cb(false,'Ingen kontakt med servern. Försök igen om en stund.')});
   }
   function synkaLead(l){
@@ -233,7 +233,7 @@
   }
   /* Bara riktig data: tomt skal, leads och delningar fylls fran servern. Inget sparas i webblasaren. */
   function tomtSkal(){
-    var s={plattform:JSON.parse(JSON.stringify(DEMO.plattform)),jag:JSON.parse(JSON.stringify(DEMO.jag)),leads:[],delningar:[]};
+    var s={plattform:JSON.parse(JSON.stringify(DEMO.plattform)),jag:JSON.parse(JSON.stringify(DEMO.jag)),leads:[],delningar:[],leverantorer:[],handledare:[],kursleverantor:{},bokningar:[]};
     ['arrangorer','granskning','foretag','inbjudningar','fakturor','statistik','admins','manader','orter','tratt'].forEach(function(f){s[f]=[]});
     return s;
   }
@@ -741,6 +741,7 @@
       '<button class="mini mini-primar" id="nk-lagg">Lägg till kontakt</button></div>';
     kropp+='<div class="field field-wide"><label for="l-not">Anteckning om kunden</label><textarea id="l-not" rows="2">'+esc(l.not||'')+'</textarea></div>';
     var fot='<button class="button" id="l-spara">Spara</button>'+
+      (l.status!=='vunnen'&&l.kurser&&l.kurser.length>1?'<select id="l-kursval" class="fot-val">'+l.kurser.map(function(k){return '<option value="'+esc(k.id)+'">Vecka '+k.vecka+', '+esc(k.anlaggning)+'</option>'}).join('')+'</select>':'')+
       (l.status!=='vunnen'?'<button class="button button-outline-dark" id="l-bokad">Markera som bokad</button>':'')+
       '<button class="button button-outline-dark" id="l-mejl">Skicka mejl</button>';
     modal(skal(esc(l.namn),kropp,fot,true));
@@ -749,20 +750,20 @@
       if(!n){toast('Skriv en kort notering om vad som hände.');return}
       l.kontakter=kontakter(l);
       l.kontakter.push({d:$('nk-datum').value||idagISO(),kanal:$('nk-kanal').value,riktning:$('nk-rikt').value,not:n});
-      l.status=$('nk-status').value;
-      if(l.status==='vunnen'&&!l.bokad)l.bokad=$('nk-datum').value||idagISO();
-      l.not=$('l-not').value.trim();
+      var nyStatus=$('nk-status').value;l.not=$('l-not').value.trim();
+      if(nyStatus==='vunnen'&&l.status!=='vunnen'){bekrafta(l,null,function(){stang();leadModal(id)});return}
+      l.status=nyStatus;
       spara();synkaLead(l);stang();toast('Kontakten är loggad.');leadModal(id);
     });
     $('l-spara').addEventListener('click',function(){
-      l.status=$('nk-status').value;l.not=$('l-not').value.trim();
-      if(l.status==='vunnen'&&!l.bokad)l.bokad=idagISO();
+      var nyStatus=$('nk-status').value;l.not=$('l-not').value.trim();
+      if(nyStatus==='vunnen'&&l.status!=='vunnen'){bekrafta(l,null,function(){stang();rita()});return}
+      l.status=nyStatus;
       spara();synkaLead(l);stang();toast('Kundkortet är uppdaterat.');rita()});
     if($('l-bokad'))$('l-bokad').addEventListener('click',function(){
-      l.status='vunnen';l.bokad=idagISO();
-      l.kontakter=kontakter(l);
-      l.kontakter.push({d:idagISO(),kanal:'mejl',riktning:'in',not:'Bokade plats'});
-      spara();synkaLead(l);stang();toast('Bokningen är registrerad. Ledtiden blev '+dagar(ledtid(l))+'.');rita()});
+      l.kontakter=kontakter(l);l.not=$('l-not').value.trim();
+      l.kontakter.push({d:idagISO(),kanal:'mejl',riktning:'ut',not:'Bokningen bekräftad, leverantör och handledare meddelade'});
+      bekrafta(l,$('l-kursval')?$('l-kursval').value:null,function(){stang();rita()});});
     $('l-mejl').addEventListener('click',function(){stang();if(leadsLive&&l.epost){location.href='mailto:'+l.epost+'?subject='+encodeURIComponent('UGL, '+(l.kurs||'din förfrågan'))}else toast('I skarpt läge öppnas ett mejl till '+l.epost+'.')});
   }
 
@@ -845,17 +846,167 @@
     });
   }
 
+  /* ---------- Kurser, leverantorer och handledare (riktig data) ---------- */
+  function slugg(s){return s.toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+  function parseKurser(rader){
+    return (rader||'').trim().split('\n').filter(function(r){return r.trim()}).map(function(rad){
+      var d=rad.split('|');var start=new Date(d[0]+'T00:00:00');var slut=new Date(start.getTime()+4*864e5);
+      return {nyckel:d[0]+'-'+slugg(d[2]),start:d[0],vecka:+d[1],anlaggning:d[2],ort:d[3],
+        handledare:d[4]?d[4].split(';').map(function(x){return x.trim()}).filter(Boolean):[],
+        ledig:d[6]==='L',platser:d[8]&&!isNaN(+d[8])?+d[8]:null,
+        period:start.getDate()+' '+MANADER[start.getMonth()]+' till '+slut.getDate()+' '+MANADER[slut.getMonth()]+' '+slut.getFullYear()};
+    }).sort(function(a,b){return a.start<b.start?-1:1});
+  }
+  var KURSER=parseKurser(window.UGL_RADER);
+  function kursAv(nyckel){return KURSER.filter(function(k){return k.nyckel===nyckel})[0]}
+  function levAv(id){return (S.leverantorer||[]).filter(function(x){return x.id===id})[0]}
+  function levForKurs(nyckel){var id=(S.kursleverantor||{})[nyckel];return id?levAv(id):null}
+  function hlEpost(namn){var h=(S.handledare||[]).filter(function(x){return x.namn===namn})[0];return h?h.epost:''}
+  function bokningarFor(nyckel){return (S.bokningar||[]).filter(function(b){return b.kurs_id===nyckel})}
+  function alltHandledare(){
+    var m={};KURSER.forEach(function(k){k.handledare.forEach(function(n){m[n]=(m[n]||0)+1})});
+    (S.handledare||[]).forEach(function(h){if(!(h.namn in m))m[h.namn]=0});
+    return Object.keys(m).sort(function(a,b){return a.localeCompare(b,'sv')}).map(function(n){return {namn:n,veckor:m[n],epost:hlEpost(n)}});
+  }
+  function api(body,cb){
+    fetch(LEADS_API,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},authHead()),body:JSON.stringify(body)})
+      .then(function(r){return r.json()}).then(function(j){if(!j.ok){toast('Kunde inte spara: '+(j.error||''));cb(null)}else cb(j)})
+      .catch(function(){toast('Ingen kontakt med servern.');cb(null)});
+  }
+
+  function vKurser(){
+    var idag=idagISO();
+    var kommande=KURSER.filter(function(k){return k.start>=idag});
+    var utan=kommande.filter(function(k){return !levForKurs(k.nyckel)}).length;
+    var bokade=(S.bokningar||[]).length;
+    var h='<div class="vy-head"><div><h1>Kursveckor</h1><p class="lead">Varje vecka har en leverantör som får bokningarna, och handledare som meddelas. Klicka på en vecka för deltagarlistan.</p></div></div>';
+    h+='<div class="kpi-rad">'+kpi(kommande.length,'kommande veckor')+kpi(utan,'utan leverantör','sätt leverantör i listan')+
+      kpi(bokade,'bokade deltagare','via adminsidan')+kpi((S.leverantorer||[]).length,'leverantörer')+'</div>';
+    h+='<div class="panel"><div class="tab-svep"><table class="tab"><thead><tr><th>Vecka</th><th>Anläggning</th><th>Handledare</th><th>Leverantör</th><th class="hoger">Bokade</th><th>Status</th><th></th></tr></thead><tbody>'+
+      kommande.map(function(k){
+        var lev=levForKurs(k.nyckel),b=bokningarFor(k.nyckel);
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="kurs:'+k.nyckel+'"><td><b>Vecka '+k.vecka+'</b><small>'+esc(k.period)+'</small></td>'+
+          '<td><b>'+esc(k.anlaggning)+'</b><small>'+esc(k.ort)+'</small></td>'+
+          '<td>'+k.handledare.map(function(n){return '<span class="hl-namn'+(hlEpost(n)?'':' hl-saknar')+'" title="'+(hlEpost(n)?esc(hlEpost(n)):'Mejl saknas')+'">'+esc(n)+'</span>'}).join('<br>')+'</td>'+
+          '<td><select class="lev-val" data-kurs="'+k.nyckel+'"><option value="">Ingen vald</option>'+(S.leverantorer||[]).map(function(l){
+            return '<option value="'+l.id+'"'+(lev&&lev.id===l.id?' selected':'')+'>'+esc(l.namn)+'</option>'}).join('')+'</select></td>'+
+          '<td class="hoger">'+b.length+(k.platser!=null?'<small>'+k.platser+' kvar</small>':'')+'</td>'+
+          '<td>'+(k.ledig?'<span class="chip-status st-bekraftad">Ledig</span>':'<span class="chip-status st-ingen">Fullbokad</span>')+'</td>'+
+          '<td class="tab-atg">'+pil()+'</td></tr>';
+      }).join('')+'</tbody></table></div></div>';
+    return h;
+  }
+  function kursModal(nyckel){
+    var k=kursAv(nyckel);if(!k)return;
+    var lev=levForKurs(nyckel),b=bokningarFor(nyckel);
+    var kropp='<dl class="avtal-lista">'+rad('Period',k.period)+rad('Ort',k.ort)+
+      rad('Leverantör',lev?lev.namn+(lev.epost?' ('+lev.epost+')':''):'Ingen vald')+
+      '<div><dt>Handledare</dt><dd>'+(k.handledare.length?k.handledare.map(function(n){return esc(n)+(hlEpost(n)?' ('+esc(hlEpost(n))+')':' (mejl saknas)')}).join('<br>'):'Inga angivna')+'</dd></div>'+
+      rad('Platser kvar',k.platser!=null?String(k.platser):'Ej angivet')+'</dl>';
+    kropp+='<div class="tidslinje-blk"><h4>Bokade deltagare ('+b.length+')</h4>'+
+      (b.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Namn</th><th>Organisation</th><th>Bokad</th><th>Leverantör</th><th>Handledare</th></tr></thead><tbody>'+
+        b.map(function(x){return '<tr><td><b>'+esc(x.namn)+'</b><small>'+esc(x.epost)+(x.telefon?' · '+esc(x.telefon):'')+'</small></td><td>'+esc(x.organisation||'-')+'</td>'+
+          '<td>'+dat(String(x.skapad).slice(0,10))+'</td><td>'+(x.leverantor_meddelad?'<span class="chip-status st-bekraftad">Meddelad</span>':'<span class="chip-status st-ingen">Ej meddelad</span>')+'</td>'+
+          '<td>'+(x.handledare_meddelade?'<span class="chip-status st-bekraftad">Meddelade</span>':'<span class="chip-status st-ingen">Ej meddelade</span>')+'</td></tr>'}).join('')+'</tbody></table></div>'
+        :'<p class="tom">Inga bokade deltagare än. Bokningar läggs till när du markerar ett lead som bokat.</p>')+'</div>';
+    modal(skal('Vecka '+k.vecka+', '+esc(k.anlaggning),kropp,'',true));
+  }
+
+  function vLeverantorer(){
+    var lev=S.leverantorer||[];
+    var h='<div class="vy-head"><div><h1>Leverantörer</h1><p class="lead">Företagen som genomför veckorna, till exempel Rezon. Mejladressen här får bokningarna.</p></div>'+
+      '<button class="button" id="ny-lev">Ny leverantör</button></div>';
+    h+='<div class="panel">'+(lev.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Leverantör</th><th>Kontakt</th><th>E-post</th><th class="hoger">Veckor</th><th class="hoger">Bokade</th><th></th></tr></thead><tbody>'+
+      lev.map(function(l){
+        var veckor=Object.keys(S.kursleverantor||{}).filter(function(n){return S.kursleverantor[n]===l.id}).length;
+        var bok=(S.bokningar||[]).filter(function(b){return b.leverantor_id===l.id}).length;
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="leverantor:'+l.id+'"><td><b>'+esc(l.namn)+'</b></td><td>'+esc(l.kontakt||'-')+(l.telefon?'<small>'+esc(l.telefon)+'</small>':'')+'</td>'+
+          '<td>'+esc(l.epost||'-')+'</td><td class="hoger">'+veckor+'</td><td class="hoger">'+bok+'</td><td class="tab-atg">'+pil()+'</td></tr>'}).join('')+'</tbody></table></div>'
+      :'<p class="tom">Inga leverantörer än. Lägg till den första, sedan väljer du leverantör per vecka under Kursveckor.</p>')+'</div>';
+    return h;
+  }
+  function leverantorModal(id){
+    var l=id?levAv(id):{namn:'',epost:'',kontakt:'',telefon:'',anteckning:''};if(!l)return;
+    var kropp='<div class="form-grid">'+falt('lv-namn','Företag',l.namn)+falt('lv-kontakt','Kontaktperson',l.kontakt)+
+      falt('lv-epost','E-post för bokningar',l.epost,'email')+falt('lv-tel','Telefon',l.telefon)+'</div>'+
+      '<div class="field field-wide"><label for="lv-not">Anteckning</label><textarea id="lv-not" rows="2">'+esc(l.anteckning||'')+'</textarea></div>';
+    var fot='<button class="button" id="lv-spara">Spara</button>'+(id?'<button class="button button-outline-dark" id="lv-bort">Ta bort</button>':'');
+    modal(skal(id?esc(l.namn):'Ny leverantör',kropp,fot,false));
+    $('lv-spara').addEventListener('click',function(){
+      var namn=$('lv-namn').value.trim(),ep=$('lv-epost').value.trim();
+      if(!namn){toast('Ange företagets namn.');return}
+      if(ep&&ep.indexOf('@')<1){toast('E-postadressen ser fel ut.');return}
+      api({atgard:'leverantor',id:id||'',namn:namn,epost:ep,kontakt:$('lv-kontakt').value.trim(),telefon:$('lv-tel').value.trim(),anteckning:$('lv-not').value.trim()},function(j){
+        if(!j)return;
+        S.leverantorer=(S.leverantorer||[]).filter(function(x){return x.id!==j.leverantor.id}).concat([j.leverantor]).sort(function(a,b){return a.namn.localeCompare(b.namn,'sv')});
+        stang();toast('Leverantören är sparad.');rita();
+      });
+    });
+    if($('lv-bort'))$('lv-bort').addEventListener('click',function(){
+      if(!confirm('Ta bort '+l.namn+'? Veckor som pekar på leverantören blir utan.'))return;
+      api({atgard:'leverantor_bort',id:id},function(j){if(!j)return;
+        S.leverantorer=S.leverantorer.filter(function(x){return x.id!==id});
+        Object.keys(S.kursleverantor||{}).forEach(function(n){if(S.kursleverantor[n]===id)delete S.kursleverantor[n]});
+        stang();toast('Leverantören är borttagen.');rita()});
+    });
+  }
+
+  function vHandledare(){
+    var alla=alltHandledare(),saknar=alla.filter(function(h){return h.veckor&&!h.epost}).length;
+    var h='<div class="vy-head"><div><h1>Handledare</h1><p class="lead">Namnen kommer från kursdatan. Lägg in mejl så meddelas handledarna när en deltagare bokas på deras vecka.</p></div></div>';
+    h+='<div class="kpi-rad">'+kpi(alla.length,'handledare')+kpi(saknar,'saknar mejl','på kommande veckor')+'</div>';
+    h+='<div class="panel"><div class="tab-svep"><table class="tab"><thead><tr><th>Namn</th><th class="hoger">Veckor</th><th>E-post</th><th></th></tr></thead><tbody>'+
+      alla.map(function(x){return '<tr><td><b>'+esc(x.namn)+'</b></td><td class="hoger">'+x.veckor+'</td>'+
+        '<td><input class="hl-epost" type="email" data-namn="'+esc(x.namn)+'" value="'+esc(x.epost)+'" placeholder="fornamn@exempel.se"></td>'+
+        '<td class="tab-atg"><button type="button" class="mini hl-spara" data-namn="'+esc(x.namn)+'">Spara</button></td></tr>'}).join('')+'</tbody></table></div></div>';
+    return h;
+  }
+  function bindaKurser(){
+    document.querySelectorAll('.lev-val').forEach(function(sel){sel.addEventListener('change',function(){
+      var n=sel.getAttribute('data-kurs'),v=sel.value;
+      api({atgard:'kurs',kurs_id:n,leverantor_id:v||null},function(j){if(!j)return;S.kursleverantor=S.kursleverantor||{};if(v)S.kursleverantor[n]=v;else delete S.kursleverantor[n];toast('Leverantör sparad för veckan.')});
+    })});
+    document.querySelectorAll('.hl-spara').forEach(function(b){b.addEventListener('click',function(){
+      var n=b.getAttribute('data-namn'),inp=document.querySelector('.hl-epost[data-namn="'+n.replace(/"/g,'\\"')+'"]'),ep=inp?inp.value.trim():'';
+      if(ep&&ep.indexOf('@')<1){toast('E-postadressen ser fel ut.');return}
+      api({atgard:'handledare',namn:n,epost:ep},function(j){if(!j)return;
+        S.handledare=(S.handledare||[]).filter(function(x){return x.namn!==n}).concat([j.handledare]);toast('Sparat för '+n+'.')});
+    })});
+    if($('ny-lev'))$('ny-lev').addEventListener('click',function(){leverantorModal('')});
+  }
+  /* Bekrafta bokning: leadet blir bokat, bokningen laggs pa kursen, leverantor och handledare mejlas. */
+  function bekrafta(l,kursNyckel,efter){
+    var kv=(l.kurser||[]).filter(function(k){return k.id===kursNyckel})[0]||(l.kurser||[])[0];
+    if(!kv){toast('Leadet har ingen kursvecka. Välj status Bokad manuellt.');return}
+    var kd=kursAv(kv.id);
+    var kurs={id:kv.id,vecka:kv.vecka,anlaggning:kv.anlaggning,ort:kv.ort||(kd?kd.ort:''),period:kv.period||(kd?kd.period:''),handledare:kd?kd.handledare:[]};
+    api({atgard:'bekrafta',id:l.id,kurs:kurs,kontakter:l.kontakter||[],anteckning:l.not||''},function(j){
+      if(!j)return;
+      l.status='vunnen';l.bokad=l.bokad||idagISO();
+      S.bokningar=(S.bokningar||[]).filter(function(b){return b.id!==j.bokning.id}).concat([j.bokning]);
+      var msg=[];
+      if(j.leverantor)msg.push(j.leverantor.skickat?j.leverantor.namn+' meddelad':j.leverantor.namn+' saknar mejl');else msg.push('Ingen leverantör vald för veckan');
+      var hlOk=j.handledare.filter(function(h){return h.skickat}).map(function(h){return h.namn}),hlNej=j.handledare.filter(function(h){return !h.skickat}).map(function(h){return h.namn});
+      if(hlOk.length)msg.push('Handledare meddelade: '+hlOk.join(', '));
+      if(hlNej.length)msg.push('Saknar mejl: '+hlNej.join(', '));
+      toast('Bokad på vecka '+kurs.vecka+'. '+msg.join('. ')+'.');
+      if(efter)efter();
+    });
+  }
+
   /* ---------- Ram ---------- */
   /* Bara vyer med riktig data visas. Arrangorer, granskning, arbetsgivare, ekonomi och inbjudningar kopplas pa nar de har data. */
-  var MENY=[['oversikt','Översikt'],['leads','Leads'],['statistik','Statistik'],['installningar','Inställningar']];
+  var MENY=[['oversikt','Översikt'],['leads','Leads'],['kurser','Kursveckor'],['leverantorer','Leverantörer'],['handledare','Handledare'],['statistik','Statistik'],['installningar','Inställningar']];
   var VYER={oversikt:vOversikt,arrangorer:vArrangorer,granskning:vGranskning,foretag:vForetag,
-            leads:vLeads,statistik:vStatistik,ekonomi:vEkonomi,inbjudningar:vInbjudningar,installningar:vInstallningar};
+            leads:vLeads,kurser:vKurser,leverantorer:vLeverantorer,handledare:vHandledare,statistik:vStatistik,ekonomi:vEkonomi,inbjudningar:vInbjudningar,installningar:vInstallningar};
 
   var OPPNA={
     arrangor:function(id){arrangorModal(id)},
     granska:function(id){granskaModal(id)},
     foretag:function(id){foretagModal(id)},
     lead:function(id){leadModal(id)},
+    kurs:function(id){kursModal(id)},
+    leverantor:function(id){leverantorModal(id)},
     faktura:function(id){fakturaModal(id)},
     vy:function(v){rita(v)}
   };
@@ -900,6 +1051,7 @@
   }
 
   function binda(){
+    bindaKurser();
     ['bjud-in','bjud-in2'].forEach(function(id){if($(id))$(id).addEventListener('click',function(){bjudInModal('arrangor')})});
     if($('bjud-arr'))$('bjud-arr').addEventListener('click',function(){bjudInModal('arrangor')});
     if($('bjud-ftg'))$('bjud-ftg').addEventListener('click',function(){bjudInModal('foretag')});
