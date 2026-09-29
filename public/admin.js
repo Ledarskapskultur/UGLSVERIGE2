@@ -43,7 +43,7 @@
   /* ---------- Demodata ---------- */
   var DEMO={
     plattform:{namn:'UGL Sverige',kort:'US',epost:'info@uglsverige.store'},
-    jag:{namn:'Carl-Fredrik Zettermark',roll:'Plattformsansvarig'},
+    jag:{namn:'Carl-Fredrik Zetterman',roll:'Plattformsansvarig'},
     arrangorer:[
       {id:1,namn:'Rezon',kort:'RE',orgnr:'556123-4567',ort:'Stockholm',kontakt:'Maria Ek',epost:'maria@rezon.se',telefon:'08-123 45 67',status:'aktiv',sedan:'2025-01-15',
        avtal:{mall:'Standard',provision:12,avgift:0,start:'2026-01-01',slut:'2026-12-31',uppsagning:'3 månader',status:'aktivt'}},
@@ -197,7 +197,7 @@
       {steg:'Bekräftad bokning',antal:96}
     ],
     admins:[
-      {id:1,namn:'Carl-Fredrik Zettermark',epost:'carl-fredrik@ledarskapskultur.se',roll:'Ägare'},
+      {id:1,namn:'Carl-Fredrik Zetterman',epost:'carl-fredrik@ledarskapskultur.se',roll:'Ägare'},
       {id:2,namn:'Demo Support',epost:'support@uglsverige.store',roll:'Admin'}
     ]
   };
@@ -984,8 +984,7 @@
     });
   });
   function oppnaApp(){
-    spara();
-    $('kund-logga').textContent=S.plattform.kort;
+    spara();    $('kund-logga').textContent=S.plattform.kort;
     $('kund-namn').textContent=S.plattform.namn;
     $('kund-typ').textContent='Administration';
     $('anv-namn').textContent=S.jag.namn;
