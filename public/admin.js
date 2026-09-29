@@ -22,7 +22,15 @@
   var ISTATUS={skickad:['Skickad','st-utkast'],oppnad:['Öppnad','st-forfragan'],aktiverad:['Aktiverad','st-bekraftad'],utgangen:['Utgången','st-ingen']};
   var LSTATUS={ny:['Ny','st-forfragan'],kontaktad:['Kontaktad','st-utkast'],vunnen:['Bokad','st-bekraftad'],tappad:['Tappad','st-ingen']};
   var FSTATUS={utkast:['Underlag','st-utkast'],skickad:['Skickad','st-forfragan'],betald:['Betald','st-bekraftad'],forfallen:['Förfallen','st-ingen']};
-  var LTYP={intresse:'Intresselista',chef:'Beslutsunderlag',bokning:'Bokningsförfrågan',tips:'Tipsade en kollega',samtal:'Ring mig',bevakning:'Bevakning'};
+  var LTYP={bokning:'Bokning',samtal:'Ring mig',intresse:'Intresse',chef:'Beslutsunderlag',tips:'Tips',bevakning:'Bevakning'};
+  var LTYPKLASS={bokning:'st-bekraftad',samtal:'st-forfragan',intresse:'st-utkast',chef:'st-genomford',tips:'st-ingen',bevakning:'st-ingen'};
+  var LTYPORD={bokning:0,samtal:1,intresse:2,chef:3,tips:4,bevakning:5};
+  function typChip(l){return '<span class="chip-status '+(LTYPKLASS[l.typ]||'st-ingen')+'">'+(LTYP[l.typ]||esc(l.typ))+'</span>'}
+  function typInfo(l){
+    if(l.typ==='samtal')return l.meddelande?esc(l.meddelande.replace(/^Passar bäst:\s*/i,''))+(l.telefon?', '+esc(l.telefon):''):esc(l.telefon||'');
+    if(l.typ==='chef')return l.mottagare?'Till '+esc(l.mottagare):'';
+    return esc(l.kurs||'');
+  }
   var KALLA={webb:'Sajten',linkedin:'LinkedIn',google:'Google',nyhetsbrev:'Nyhetsbrev',rekommendation:'Rekommendation',
              massa:'Mässa och event',chefsutskick:'Skickat till chef',arbetsgivarportal:'Arbetsgivarportal',direkt:'Direkt till sajten'};
   var KANAL={webb:'Webbformulär',mejl:'Mejl',telefon:'Telefon',mote:'Möte',linkedin:'LinkedIn',nyhetsbrev:'Nyhetsbrev'};
@@ -332,10 +340,10 @@
     h+='</div>';
     var senaste=S.leads.slice().sort(function(a,b){return a.datum<b.datum?1:-1}).slice(0,8);
     h+='<div class="panel"><div class="panel-head"><h2>Senast inkomna</h2><a class="text-link" href="#leads">Se alla</a></div>'+
-      (senaste.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Typ</th><th>Kurs</th><th>Inkom</th><th>Status</th><th></th></tr></thead><tbody>'+
+      (senaste.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Typ</th><th>Gäller</th><th>Inkom</th><th>Status</th><th></th></tr></thead><tbody>'+
       senaste.map(function(l){
         return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc(l.epost)+'</small></td>'+
-          '<td>'+(LTYP[l.typ]||esc(l.typ))+'</td><td>'+esc(l.kurs||'-')+'</td>'+
+          '<td>'+typChip(l)+'</td><td>'+(typInfo(l)||'-')+'</td>'+
           '<td>'+dat(l.datum)+'<small>'+dagar(dagarSedan(l.datum))+' sedan</small></td>'+
           '<td>'+chip(l.status,LSTATUS)+'</td><td class="tab-atg">'+pil()+'</td></tr>';
       }).join('')+'</tbody></table></div>':'<p class="tom">Inga förfrågningar än. De dyker upp här så fort någon fyller i ett formulär på sajten.</p>')+'</div>';
@@ -403,6 +411,7 @@
       return (leadFilter==='alla'||l.typ===leadFilter)&&(leadKalla==='alla'||l.kalla===leadKalla)});
     lista.sort(leadSort==='tyst'?function(a,b){return tystDagar(b)-tystDagar(a)}
       :leadSort==='varde'?function(a,b){return (b.varde||0)-(a.varde||0)}
+      :leadSort==='typ'?function(a,b){var d=(a.typ in LTYPORD?LTYPORD[a.typ]:9)-(b.typ in LTYPORD?LTYPORD[b.typ]:9);return d||(forstaKontakt(a)<forstaKontakt(b)?1:-1)}
       :function(a,b){return forstaKontakt(a)<forstaKontakt(b)?1:-1});
     var v=vunna();
     var h='<div class="vy-head"><div><h1>Leads och kundresa</h1><p class="lead">Varje kontakt loggas, så du ser var personen kom in, hur många beröringar det tog och hur lång tid det gick till bokning.</p></div>'+
@@ -420,12 +429,13 @@
       Object.keys(KALLA).filter(function(k){return S.leads.some(function(l){return l.kalla===k})}).map(function(k){
         return '<button type="button" class="fchip'+(leadKalla===k?' ar-pa':'')+'" data-lkalla="'+k+'">'+KALLA[k]+'</button>'}).join('')+
       '<span class="filter-sort">Sortera<select id="l-sort">'+
-      [['datum','Senast inkommen'],['tyst','Längst utan kontakt'],['varde','Högst värde']].map(function(o){
+      [['datum','Senast inkommen'],['typ','Typ: bokning, ring mig, intresse'],['tyst','Längst utan kontakt'],['varde','Högst värde']].map(function(o){
         return '<option value="'+o[0]+'"'+(leadSort===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></span></div>';
-    h+=lista.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Källa</th><th class="hoger">Kontakter</th>'+
+    h+=lista.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Typ</th><th>Källa</th><th class="hoger">Kontakter</th>'+
       '<th>Första kontakt</th><th>Senaste</th><th class="hoger">Ledtid</th><th class="hoger">Värde</th><th>Status</th><th></th></tr></thead><tbody>'+
       lista.map(function(l){var t=ledtid(l),ty=tystDagar(l);
-        return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc(l.roll)+', '+esc(l.org)+'</small></td>'+
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc([l.roll,l.org].filter(Boolean).join(', ')||l.epost||'')+'</small></td>'+
+          '<td>'+typChip(l)+(typInfo(l)?'<small>'+typInfo(l)+'</small>':'')+'</td>'+
           '<td>'+(KALLA[l.kalla]||'-')+(l.kampanj?'<small>'+esc(l.kampanj)+'</small>':'')+'</td>'+
           '<td class="hoger">'+antalKontakter(l)+'</td>'+
           '<td>'+dat(forstaKontakt(l))+'<small>'+dagar(alderDagar(l))+' sedan</small></td>'+
