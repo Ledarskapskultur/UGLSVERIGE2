@@ -213,7 +213,7 @@
     if(!INLOGG.nyckel||!INLOGG.epost){leadsLive=false;if(cb)cb(false,'Ange e-post och lösenord.');return}
     fetch(LEADS_API,{headers:authHead()}).then(function(r){return r.json()}).then(function(j){
       if(!j.ok){leadsLive=false;if(cb)cb(false,j.error||'Okänt fel');return}
-      S.leads=j.leads;leadsLive=true;if(cb)cb(true);
+      S.leads=j.leads;S.delningar=j.delningar||[];leadsLive=true;if(cb)cb(true);
     }).catch(function(){leadsLive=false;if(cb)cb(false,'Ingen kontakt med servern. Försök igen om en stund.')});
   }
   function synkaLead(l){
@@ -223,9 +223,15 @@
       .then(function(r){return r.json()}).then(function(j){if(!j.ok)toast('Kunde inte spara till servern: '+(j.error||''))})
       .catch(function(){toast('Kunde inte spara till servern.')});
   }
-  function las(){try{var r=localStorage.getItem('ugl-admin-demo');if(r)return komplettera(JSON.parse(r))}catch(e){}return null}
-  function spara(){try{localStorage.setItem('ugl-admin-demo',JSON.stringify(S))}catch(e){}}
-  function nollstall(){S=JSON.parse(JSON.stringify(DEMO));spara()}
+  /* Bara riktig data: tomt skal, leads och delningar fylls fran servern. Inget sparas i webblasaren. */
+  function tomtSkal(){
+    var s={plattform:JSON.parse(JSON.stringify(DEMO.plattform)),jag:JSON.parse(JSON.stringify(DEMO.jag)),leads:[],delningar:[]};
+    ['arrangorer','granskning','foretag','inbjudningar','fakturor','statistik','admins','manader','orter','tratt'].forEach(function(f){s[f]=[]});
+    return s;
+  }
+  function las(){return null}
+  function spara(){}
+  function nollstall(){}
   function komplettera(s){
     if(!s||typeof s!=='object')return null;
     ['arrangorer','granskning','foretag','leads','inbjudningar','fakturor','statistik','admins','manader','orter','tratt'].forEach(function(f){
@@ -306,34 +312,33 @@
   }
 
   /* ---------- Vyer ---------- */
+  function antalTyp(t){return S.leads.filter(function(l){return l.typ===t}).length}
   function vOversikt(){
-    var aktiva=S.arrangorer.filter(function(a){return a.status==='aktiv'}).length;
-    var kurser=S.statistik.reduce(function(n,s){return n+s.kurser},0);
-    var bokade=S.statistik.reduce(function(n,s){return n+s.bokade},0);
-    var platser=S.statistik.reduce(function(n,s){return n+s.platser},0);
+    var nya=S.leads.filter(function(l){return l.status==='ny'}).length;
+    var veckan=S.leads.filter(function(l){return dagarSedan(l.datum)<=7}).length;
+    var del=S.delningar||[];
     var h='<div class="vy-head"><div><h1>Hej '+S.jag.namn.split(' ')[0]+'.</h1>'+
-      '<p class="lead">Så ser plattformen ut just nu. Allt som behöver din uppmärksamhet ligger överst.</p></div>'+
-      '<button class="button" id="bjud-in">Bjud in ny part</button></div>';
-    h+='<div class="kpi-rad">'+kpi(aktiva,'aktiva arrangörer',S.arrangorer.length+' totalt')+
-      kpi(kurser,'kurser i utbudet')+
-      kpi(bokade+' / '+platser,'platser bokade',platser?Math.round(bokade/platser*100)+' procent beläggning':'')+
-      kpi(kr(totalProvision()),'provision i år','exkl. moms')+'</div>';
+      '<p class="lead">Så ser det ut just nu. Allt kommer från formulären på sajten, inget är påhittat.</p></div>'+
+      '<a class="button" href="#leads">Till leads</a></div>';
+    h+='<div class="kpi-rad">'+kpi(nya,'nya, ej kontaktade',veckan+' inkomna senaste veckan')+
+      kpi(antalTyp('bokning'),'bokningsförfrågningar',antalTyp('intresse')+' intresseanmälningar')+
+      kpi(antalTyp('samtal'),'vill bli uppringda',antalTyp('bevakning')+' bevakar veckor')+
+      kpi(del.length,'delade länkar',del.reduce(function(n,d){return n+(d.anmalningar||0)},0)+' anmälningar via länk')+'</div>';
     var p=attGora();
     h+='<div class="panel"><div class="panel-head"><h2>Att göra</h2><span class="pf">'+(p.length?p.length+' punkter':'Inget just nu')+'</span></div>';
     h+=p.length?'<ul class="attgora">'+p.map(function(x){
       return '<li class="ag-'+x.niva+'" data-oppna="vy:'+x.vy+'"><div><b>'+x.rubrik+'</b><span>'+x.text+'</span></div>'+pil()+'</li>'}).join('')+'</ul>'
       :'<p class="tom">Ingenting väntar på dig.</p>';
     h+='</div>';
-    h+='<div class="panel"><div class="panel-head"><h2>Arrangörer</h2><a class="text-link" href="#arrangorer">Se alla</a></div>'+
-      '<div class="tab-svep"><table class="tab"><thead><tr><th>Arrangör</th><th>Kurser</th><th class="hoger">Beläggning</th><th class="hoger">Provision i år</th><th>Avtal</th><th></th></tr></thead><tbody>'+
-      S.arrangorer.map(function(a){var s=stat(a.id);
-        return '<tr class="rad-oppna" tabindex="0" data-oppna="arrangor:'+a.id+'"><td><div class="td-anl">'+logga(a)+
-          '<span><b>'+esc(a.namn)+'</b><small>'+esc(a.ort)+'</small></span></div></td>'+
-          '<td>'+s.kurser+'</td>'+
-          '<td class="hoger">'+(s.platser?Math.round(s.bokade/s.platser*100)+' %':'-')+'</td>'+
-          '<td class="hoger">'+kr(provisionFor(a))+'</td>'+
-          '<td>'+chip(a.avtal.status,ASTATUS)+'</td><td class="tab-atg">'+pil()+'</td></tr>';
-      }).join('')+'</tbody></table></div></div>';
+    var senaste=S.leads.slice().sort(function(a,b){return a.datum<b.datum?1:-1}).slice(0,8);
+    h+='<div class="panel"><div class="panel-head"><h2>Senast inkomna</h2><a class="text-link" href="#leads">Se alla</a></div>'+
+      (senaste.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Person</th><th>Typ</th><th>Kurs</th><th>Inkom</th><th>Status</th><th></th></tr></thead><tbody>'+
+      senaste.map(function(l){
+        return '<tr class="rad-oppna" tabindex="0" data-oppna="lead:'+l.id+'"><td><b>'+esc(l.namn)+'</b><small>'+esc(l.epost)+'</small></td>'+
+          '<td>'+(LTYP[l.typ]||esc(l.typ))+'</td><td>'+esc(l.kurs||'-')+'</td>'+
+          '<td>'+dat(l.datum)+'<small>'+dagar(dagarSedan(l.datum))+' sedan</small></td>'+
+          '<td>'+chip(l.status,LSTATUS)+'</td><td class="tab-atg">'+pil()+'</td></tr>';
+      }).join('')+'</tbody></table></div>':'<p class="tom">Inga förfrågningar än. De dyker upp här så fort någon fyller i ett formulär på sajten.</p>')+'</div>';
     return h;
   }
 
@@ -472,18 +477,12 @@
   }
 
   function vInstallningar(){
-    var h='<div class="vy-head"><div><h1>Inställningar</h1><p class="lead">Plattformens uppgifter, avtalsmallar och vilka kollegor som når adminsidan.</p></div></div>';
-    h+='<div class="panel"><h2>Avtalsmallar</h2><p class="tom">Mallarna används när du bjuder in en arrangör. Du kan alltid justera villkoren för en enskild arrangör.</p>'+
-      '<div class="mallar">'+MALLAR.map(function(m){
-        var antal=S.arrangorer.filter(function(a){return a.avtal.mall===m.namn}).length;
-        return '<article class="mall"><h3>'+m.namn+'</h3><p class="mall-tal">'+m.provision+' %'+(m.avgift?' + '+kr(m.avgift):'')+'</p>'+
-          '<p>'+m.text+'</p><span class="mall-antal">'+antal+' arrangörer</span></article>'}).join('')+'</div></div>';
-    h+='<div class="panel"><div class="panel-head"><h2>Administratörer</h2><button class="mini" id="bjud-admin">Bjud in kollega</button></div>'+
-      '<div class="tab-svep"><table class="tab"><thead><tr><th>Namn</th><th>E-post</th><th>Behörighet</th></tr></thead><tbody>'+
-      S.admins.map(function(a){return '<tr><td><span class="n-init liten">'+init(a.namn)+'</span><b>'+esc(a.namn)+'</b></td>'+
-        '<td>'+esc(a.epost)+'</td><td>'+esc(a.roll)+'</td></tr>'}).join('')+'</tbody></table></div></div>';
-    h+='<div class="panel"><h2>Demodata</h2><p class="tom">Prototypen sparar allt lokalt i din webbläsare. Återställ när du vill börja om.</p>'+
-      '<button class="button button-outline-dark" id="nollstall">Återställ demodata</button></div>';
+    var h='<div class="vy-head"><div><h1>Inställningar</h1><p class="lead">Inloggning och var datan ligger.</p></div></div>';
+    h+='<div class="panel"><h2>Inloggning</h2>'+
+      '<div class="tab-svep"><table class="tab"><thead><tr><th>E-post</th><th>Lösenord</th></tr></thead><tbody>'+
+      '<tr><td>'+esc(INLOGG.epost)+'</td><td>Sparat i databasen. Vill du byta e-post eller lösenord ändras raden i tabellen ugl_installningar.</td></tr>'+
+      '</tbody></table></div></div>';
+    h+='<div class="panel"><h2>Data</h2><p class="tom">Leads och delningar hämtas från databasen varje gång du loggar in. Status, anteckningar och kontakter du skriver här sparas tillbaka direkt. Inget sparas i webbläsaren.</p></div>';
     return h;
   }
 
@@ -511,38 +510,22 @@
         '<span class="st-tal">'+x[falt]+' '+enhet+'<small>'+Math.round(x[falt]/sum*100)+' %</small></span></div>'}).join('')+'</div>';
   }
   function vStatistik(){
-    var man=S.manader,ar=man.filter(function(x){return x.m.slice(0,4)==='2026'});
-    var bokade=ar.reduce(function(n,x){return n+x.bokade},0);
-    var intresse=ar.reduce(function(n,x){return n+x.intresse},0);
-    var platser=S.statistik.reduce(function(n,s){return n+s.platser},0);
-    var brutto=S.statistik.reduce(function(n,s){return n+s.omsattning},0);
-    var alla=S.statistik.reduce(function(n,s){return n+s.bokade},0);
-    var h='<div class="vy-head"><div><h1>Statistik</h1><p class="lead">Hur plattformen utvecklas över tid, var kurserna går och hur många av de intresserade som blir deltagare.</p></div></div>';
-    h+='<div class="kpi-rad">'+kpi(bokade,'bokade platser i år')+
-      kpi(intresse,'intresseanmälningar i år')+
-      kpi(intresse?Math.round(bokade/intresse*100)+' %':'-','av intresset blir bokning')+
-      kpi(alla?kr(Math.round(brutto/alla)):'-','snittvärde per plats')+'</div>';
-    h+='<div class="panel"><h2>Bokade platser per månad</h2>'+
-      '<p class="tom">Rullande tolv månader. Sommaren är låg, våren och hösten bär året.</p>'+
-      kolumner(man,'bokade','Bokade platser, senaste tolv månaderna')+'</div>';
-    h+='<div class="panel"><h2>Fördelning per arrangör</h2>'+
-      '<p class="tom">Andel av alla bokade platser.</p>'+
-      andelsstaplar(S.arrangorer.map(function(a){return {namn:a.namn,bokade:stat(a.id).bokade}})
-        .sort(function(a,b){return b.bokade-a.bokade}),'bokade','namn','platser')+'</div>';
-    h+='<div class="panel"><h2>Var kurserna går</h2>'+
-      andelsstaplar(S.orter.slice().sort(function(a,b){return b.bokade-a.bokade}),'bokade','ort','platser')+'</div>';
-    var t=S.tratt;
-    h+='<div class="panel"><h2>Från besök till bokning</h2>'+
-      '<p class="tom">Senaste tolv månaderna. Varje steg visar hur många som gick vidare från steget innan.</p>'+
-      '<ol class="tratt">'+t.map(function(x,i){
-        var b=Math.round(x.antal/t[0].antal*100);
-        var fran=i?Math.round(x.antal/t[i-1].antal*100):100;
-        return '<li><span class="tr-namn">'+x.steg+'</span>'+
-          '<span class="tr-spar"><span class="tr-fyll" style="width:'+Math.max(b,3)+'%"></span></span>'+
-          '<span class="tr-tal">'+x.antal+(i?'<small>'+fran+' % vidare</small>':'<small>av dem som tittat</small>')+'</span></li>'}).join('')+
-      '</ol></div>';
+    var v=vunna(),del=S.delningar||[];
+    var h='<div class="vy-head"><div><h1>Statistik</h1><p class="lead">Vad som kommer in via sajten, var det kommer ifrån och hur mycket av det som blir bokning.</p></div></div>';
+    h+='<div class="kpi-rad">'+kpi(S.leads.length,'förfrågningar totalt')+
+      kpi(v.length,'blev bokning')+
+      kpi(S.leads.length?Math.round(v.length/S.leads.length*100)+' %':'-','konvertering')+
+      kpi(v.length?kr(v.reduce(function(n,l){return n+(l.varde||0)},0)):'-','bokat värde','exkl. moms')+'</div>';
+    var typer=Object.keys(LTYP).map(function(t){return {namn:LTYP[t],antal:antalTyp(t)}}).filter(function(x){return x.antal});
+    h+='<div class="panel"><h2>Vad folk gör på sajten</h2><p class="tom">Alla förfrågningar fördelade per typ.</p>'+
+      (typer.length?andelsstaplar(typer.sort(function(a,b){return b.antal-a.antal}),'antal','namn','st'):'<p class="tom">Inget än.</p>')+'</div>';
+    var kurs={};
+    S.leads.forEach(function(l){(l.kurser||[]).forEach(function(k){var n='Vecka '+k.vecka+', '+(k.anlaggning||'');kurs[n]=(kurs[n]||0)+1})});
+    var kursl=Object.keys(kurs).map(function(k){return {namn:k,antal:kurs[k]}}).sort(function(a,b){return b.antal-a.antal}).slice(0,10);
+    h+='<div class="panel"><h2>Mest efterfrågade veckor</h2><p class="tom">Hur många förfrågningar som nämner veckan, inklusive alternativ.</p>'+
+      (kursl.length?andelsstaplar(kursl,'antal','namn','st'):'<p class="tom">Inget än.</p>')+'</div>';
     h+='<div class="panel"><h2>Var kunderna kommer ifrån</h2>'+
-      '<p class="tom">Källa, hur många som blev bokning och hur lång tid det tog. Grunden för var marknadsföringen ska ligga.</p>'+
+      '<p class="tom">Källa, hur många som blev bokning och hur lång tid det tog.</p>'+
       '<div class="tab-svep"><table class="tab"><thead><tr><th>Källa</th><th class="hoger">Leads</th><th class="hoger">Bokningar</th>'+
       '<th class="hoger">Konvertering</th><th class="hoger">Snitt kontakter</th><th class="hoger">Snitt ledtid</th><th class="hoger">Värde</th></tr></thead><tbody>'+
       kallStat().map(function(x){
@@ -552,42 +535,36 @@
           '<td class="hoger">'+(x.leads?Math.round(x.kontakter/x.leads*10)/10:0).toString().replace('.',',')+'</td>'+
           '<td class="hoger">'+(x.ledtid?dagar(x.ledtid):'-')+'</td>'+
           '<td class="hoger">'+(x.varde?kr(x.varde):'-')+'</td></tr>'}).join('')+'</tbody></table></div></div>';
-    var vun=vunna();
-    h+='<div class="panel"><h2>Hur lång tid en bokning tar</h2>'+
-      '<p class="tom">Dagar från första kontakt till bokad plats. Snittet är '+dagar(snittLedtid())+'.</p>'+
-      andelsstaplar(spann(vun.map(ledtid).filter(function(x){return x!=null}),[7,30,90],
-        ['Inom en vecka','8 till 30 dagar','31 till 90 dagar','Mer än 90 dagar']),'antal','namn','bokningar')+'</div>';
-    h+='<div class="panel"><h2>Antal kontakter innan bokning</h2>'+
-      '<p class="tom">Snittet är '+String(snittKontakter()).replace('.',',')+' kontakter. Det säger hur mycket uppföljning som behövs.</p>'+
-      andelsstaplar(spann(vun.map(antalKontakter),[1,2,3,4],
-        ['En kontakt','Två','Tre','Fyra','Fem eller fler']),'antal','namn','bokningar')+'</div>';
-    var kanalmix={};
-    vun.forEach(function(l){kontakter(l).forEach(function(x){kanalmix[x.kanal]=(kanalmix[x.kanal]||0)+1})});
-    h+='<div class="panel"><h2>Kanaler i affärer som blev av</h2>'+
-      '<p class="tom">Alla kontakter i de bokningar som gick igenom, fördelade per kanal.</p>'+
-      andelsstaplar(Object.keys(kanalmix).map(function(k){return {namn:KANAL[k]||k,antal:kanalmix[k]}})
-        .sort(function(a,b){return b.antal-a.antal}),'antal','namn','kontakter')+'</div>';
+    var kamp={};
+    S.leads.forEach(function(l){if(l.kampanj)kamp[l.kampanj]=(kamp[l.kampanj]||0)+1});
+    var kampl=Object.keys(kamp).map(function(k){return {namn:k,antal:kamp[k]}}).sort(function(a,b){return b.antal-a.antal});
+    if(kampl.length)h+='<div class="panel"><h2>Ingång på sajten</h2><p class="tom">Vilken sida eller knapp förfrågan kom från.</p>'+andelsstaplar(kampl,'antal','namn','st')+'</div>';
+    var dk={};
+    del.forEach(function(d){var k=d.kanal||'okänd';dk[k]=dk[k]||{namn:k,antal:0,anm:0};dk[k].antal++;dk[k].anm+=d.anmalningar||0});
+    var dkl=Object.keys(dk).map(function(k){return dk[k]}).sort(function(a,b){return b.antal-a.antal});
+    h+='<div class="panel"><h2>Delningar</h2><p class="tom">Länkar som besökare delat, per kanal, och hur många anmälningar de gett.</p>'+
+      (dkl.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Kanal</th><th class="hoger">Delningar</th><th class="hoger">Anmälningar via länk</th></tr></thead><tbody>'+
+        dkl.map(function(x){return '<tr><td><b>'+esc(x.namn)+'</b></td><td class="hoger">'+x.antal+'</td><td class="hoger">'+x.anm+'</td></tr>'}).join('')+'</tbody></table></div>'
+        :'<p class="tom">Inga delningar än.</p>')+'</div>';
+    if(v.length){
+      h+='<div class="panel"><h2>Hur lång tid en bokning tar</h2>'+
+        '<p class="tom">Dagar från första kontakt till bokad plats. Snittet är '+dagar(snittLedtid())+'.</p>'+
+        andelsstaplar(spann(v.map(ledtid).filter(function(x){return x!=null}),[7,30,90],
+          ['Inom en vecka','8 till 30 dagar','31 till 90 dagar','Mer än 90 dagar']),'antal','namn','bokningar')+'</div>';
+      h+='<div class="panel"><h2>Antal kontakter innan bokning</h2>'+
+        '<p class="tom">Snittet är '+String(snittKontakter()).replace('.',',')+' kontakter.</p>'+
+        andelsstaplar(spann(v.map(antalKontakter),[1,2,3,4],
+          ['En kontakt','Två','Tre','Fyra','Fem eller fler']),'antal','namn','bokningar')+'</div>';
+    }
     var koh={};
     S.leads.forEach(function(l){var m=forstaKontakt(l).slice(0,7);
       koh[m]=koh[m]||{m:m,leads:0,vunna:0};koh[m].leads++;if(l.status==='vunnen')koh[m].vunna++});
     var kohl=Object.keys(koh).sort().map(function(k){return koh[k]});
     h+='<div class="panel"><h2>Leads per månad och hur många som bokade</h2>'+
-      '<div class="tab-svep"><table class="tab"><thead><tr><th>Månad</th><th class="hoger">Nya leads</th><th class="hoger">Blev bokning</th><th class="hoger">Konvertering</th></tr></thead><tbody>'+
+      (kohl.length?'<div class="tab-svep"><table class="tab"><thead><tr><th>Månad</th><th class="hoger">Nya leads</th><th class="hoger">Blev bokning</th><th class="hoger">Konvertering</th></tr></thead><tbody>'+
       kohl.map(function(x){return '<tr><td><b>'+MANADER[+x.m.slice(5)-1]+' '+x.m.slice(0,4)+'</b></td>'+
         '<td class="hoger">'+x.leads+'</td><td class="hoger">'+x.vunna+'</td>'+
-        '<td class="hoger">'+Math.round(x.vunna/x.leads*100)+' %</td></tr>'}).join('')+'</tbody></table></div></div>';
-    h+='<div class="panel"><h2>Beläggning per arrangör</h2><div class="tab-svep"><table class="tab"><thead><tr><th>Arrangör</th>'+
-      '<th class="hoger">Kurser</th><th class="hoger">Platser</th><th class="hoger">Bokade</th><th class="hoger">Beläggning</th><th class="hoger">Förmedlat värde</th></tr></thead><tbody>'+
-      S.arrangorer.map(function(a){var s=stat(a.id);
-        return '<tr><td><div class="td-anl">'+logga(a)+'<span><b>'+esc(a.namn)+'</b></span></div></td>'+
-          '<td class="hoger">'+s.kurser+'</td><td class="hoger">'+s.platser+'</td><td class="hoger">'+s.bokade+'</td>'+
-          '<td class="hoger">'+(s.platser?Math.round(s.bokade/s.platser*100)+' %':'-')+'</td>'+
-          '<td class="hoger">'+kr(s.omsattning)+'</td></tr>'}).join('')+
-      '<tr class="tab-summa"><td><b>Totalt</b></td><td class="hoger">'+S.statistik.reduce(function(n,s){return n+s.kurser},0)+'</td>'+
-      '<td class="hoger">'+platser+'</td><td class="hoger">'+alla+'</td>'+
-      '<td class="hoger">'+(platser?Math.round(alla/platser*100)+' %':'-')+'</td>'+
-      '<td class="hoger">'+kr(brutto)+'</td></tr>'+
-      '</tbody></table></div></div>';
+        '<td class="hoger">'+Math.round(x.vunna/x.leads*100)+' %</td></tr>'}).join('')+'</tbody></table></div>':'<p class="tom">Inget än.</p>')+'</div>';
     return h;
   }
 
@@ -714,15 +691,15 @@
     var l=S.leads.filter(function(x){return x.id===id})[0];
     var t=ledtid(l),k=kontakter(l);
     var kropp='<div class="detalj-topp"><span class="n-init stor">'+init(l.namn)+'</span>'+
-      '<div><b>'+esc(l.namn)+'</b><small>'+esc(l.roll)+', '+esc(l.org)+'</small>'+
+      '<div><b>'+esc(l.namn)+'</b><small>'+esc([l.roll,l.org].filter(Boolean).join(', ')||LTYP[l.typ]||'')+'</small>'+
       '<small>'+esc(l.epost)+(l.telefon?' · '+esc(l.telefon):'')+'</small></div>'+
       '<div class="detalj-status">'+chip(l.status,LSTATUS)+'<small>'+(KALLA[l.kalla]||'')+'</small></div></div>';
     kropp+='<div class="kpi-rad kpi-tat">'+kpi(antalKontakter(l),'kontakter')+
       kpi(alderDagar(l),'dagar sedan första')+
       kpi(t!=null?t:tystDagar(l),t!=null?'dagar till bokning':'dagar sedan senaste')+
       kpi(l.varde?kr(l.varde):'-','värde')+'</div>';
-    kropp+='<dl class="avtal-lista">'+rad('Organisation',l.org)+rad('Bransch',l.bransch||'-')+
-      rad('Storlek',l.storlek?l.storlek+' anställda':'-')+
+    kropp+='<dl class="avtal-lista">'+(l.org?rad('Organisation',l.org):'')+(l.bransch?rad('Bransch',l.bransch):'')+
+      (l.storlek?rad('Storlek',l.storlek+' anställda'):'')+
       rad('Kanal in',LTYP[l.typ])+
       rad('Kampanj',l.kampanj||'Ingen')+
       rad('Kurs',(l.kurs||'Ingen vecka vald')+(l.kursdatum?', '+dat(l.kursdatum):''))+
@@ -859,9 +836,8 @@
   }
 
   /* ---------- Ram ---------- */
-  var MENY=[['oversikt','Översikt'],['arrangorer','Arrangörer'],['granskning','Kurser att granska'],
-            ['foretag','Arbetsgivare'],['leads','Leads'],['statistik','Statistik'],['ekonomi','Ekonomi'],
-            ['inbjudningar','Inbjudningar'],['installningar','Inställningar']];
+  /* Bara vyer med riktig data visas. Arrangorer, granskning, arbetsgivare, ekonomi och inbjudningar kopplas pa nar de har data. */
+  var MENY=[['oversikt','Översikt'],['leads','Leads'],['statistik','Statistik'],['installningar','Inställningar']];
   var VYER={oversikt:vOversikt,arrangorer:vArrangorer,granskning:vGranskning,foretag:vForetag,
             leads:vLeads,statistik:vStatistik,ekonomi:vEkonomi,inbjudningar:vInbjudningar,installningar:vInstallningar};
 
@@ -888,7 +864,7 @@
       '<span class="meny-avdelare"></span><a href="/kurser" class="meny-extern">Publikt kursutbud &#8599;</a>'+
       '<a href="/leverantor" class="meny-extern">Leverantörsportal &#8599;</a>'+
       '<a href="/portal" class="meny-extern">Arbetsgivarportal &#8599;</a>'+
-      '<span class="meny-version">Prototyp, bygge '+BYGGE+'</span>';
+      '<span class="meny-version">Bygge '+BYGGE+'</span>';
   }
   function antalKo(){
     var n=S.granskning.filter(function(g){return g.status==='vantar'}).length;
@@ -903,7 +879,7 @@
     document.querySelectorAll('#meny a[data-vy]').forEach(function(a){a.classList.toggle('ar-pa',a.getAttribute('data-vy')===vy)});
     try{$('vy').innerHTML=VYER[vy]()}
     catch(fel){$('vy').innerHTML='<div class="panel"><h2>Något gick fel i den här vyn</h2>'+
-      '<p class="tom">Återställ demodata så fungerar den igen.</p><button class="button" id="nollstall">Återställ demodata</button></div>'}
+      '<p class="tom">Ladda om sidan och logga in igen.</p></div>'}
     var n=attGora();
     $('notis-prick').hidden=!n.length;
     $('notis-lista').innerHTML=n.length?n.map(function(x){
@@ -918,7 +894,6 @@
     if($('bjud-arr'))$('bjud-arr').addEventListener('click',function(){bjudInModal('arrangor')});
     if($('bjud-ftg'))$('bjud-ftg').addEventListener('click',function(){bjudInModal('foretag')});
     if($('bjud-admin'))$('bjud-admin').addEventListener('click',function(){bjudInModal('admin')});
-    if($('nollstall'))$('nollstall').addEventListener('click',function(){nollstall();toast('Demodata återställd.');rita('oversikt')});
     if($('nytt-underlag'))$('nytt-underlag').addEventListener('click',function(){
       var d=new Date(),per=MANADER[d.getMonth()].charAt(0).toUpperCase()+MANADER[d.getMonth()].slice(1)+' '+d.getFullYear();
       var nya=0;
@@ -974,7 +949,7 @@
     INLOGG.epost=$('log-epost').value.trim();
     INLOGG.nyckel=$('log-nyckel').value.trim();
     if(!INLOGG.epost||!INLOGG.nyckel){fel.textContent='Ange både e-post och lösenord.';fel.hidden=false;return}
-    S=las()||JSON.parse(JSON.stringify(DEMO));
+    S=tomtSkal();
     S.plattform.epost=INLOGG.epost;
     knapp.disabled=true;knapp.textContent='Loggar in…';
     hamtaLeads(function(ok,msg){
