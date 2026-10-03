@@ -11,38 +11,6 @@ const BILD_GRUPP = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
 const BILD_SAMTAL = 'https://www.uglsverige.store/assets/ugl-samtal.webp'
 const BILD_HANDLEDARE = 'https://www.uglsverige.store/assets/ugl-handledare.webp'
 
-// Snabbfakta: det besökaren vill veta innan hen läser vidare. fran = startvärde för uppräkningen.
-const FAKTA = [
-  {
-    enhet: 'dagar',
-    till: 5,
-    fran: 0,
-    visa: (n: number) => String(n),
-    text: 'i följd, måndag till fredag',
-  },
-  {
-    enhet: 'deltagare',
-    till: 12,
-    fran: 0,
-    visa: (n: number) => `8–${Math.max(8, n)}`,
-    text: 'som inte känner varandra',
-  },
-  {
-    enhet: 'handledare',
-    till: 2,
-    fran: 0,
-    visa: (n: number) => String(n),
-    text: 'certifierade av FHS',
-  },
-  {
-    enhet: 'sedan',
-    till: 1981,
-    fran: 1900,
-    visa: (n: number) => String(n),
-    text: 'har kursen utvecklats och prövats',
-  },
-]
-
 const STEG = [
   {
     nr: '01',
@@ -202,121 +170,299 @@ function Rakna({
 const in_ = (syns: boolean, extra = '') =>
   `transition-all duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] ${syns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${extra}`
 
-export default function AboutSection() {
+// Veckan i fyra siffror: glaskort över bild, med stor siffra som index och en ruta som säger vad det betyder.
+const GLASKORT = [
+  {
+    etikett: 'Tid',
+    till: 5,
+    fran: 0,
+    visa: (n: number) => String(n),
+    enhet: 'dagar',
+    titel: 'Fem dagar i följd',
+    text: 'Måndag till fredag på kursgård, med boende och alla måltider. Du är borta från vardagen hela veckan.',
+    betyder: 'Tid att landa, pröva och se mönster som en endagsutbildning aldrig hinner med.',
+  },
+  {
+    etikett: 'Gruppen',
+    till: 12,
+    fran: 0,
+    visa: (n: number) => `8–${Math.max(8, n)}`,
+    enhet: 'deltagare',
+    titel: 'En liten grupp främlingar',
+    text: 'Ni känner inte varandra när veckan börjar. Gruppen formas på plats, och det är den ni lär er av.',
+    betyder: 'Ingen roll att försvara, så du kan pröva nya sätt att vara.',
+  },
+  {
+    etikett: 'Stödet',
+    till: 2,
+    fran: 0,
+    visa: (n: number) => String(n),
+    enhet: 'handledare',
+    titel: 'Certifierade handledare',
+    text: 'Handledarna är utbildade och certifierade av Försvarshögskolan och följer gruppen hela veckan.',
+    betyder: 'Någon som hjälper er stanna upp och förstå vad som händer i gruppen.',
+  },
+  {
+    etikett: 'Grunden',
+    till: 1981,
+    fran: 1900,
+    visa: (n: number) => String(n),
+    enhet: 'sedan',
+    titel: 'Prövad sedan 1981',
+    text: 'Sveriges mest använda ledarskapsutbildning. Effekten har utvärderats av Karolinska Institutet.',
+    betyder: 'Ett beprövat upplägg med forskning bakom, inte ett experiment.',
+  },
+]
+
+function VadArUgl() {
   const [ingressRef, ingressSyns] = useSyns<HTMLDivElement>(0.3)
-  const [bildRef, bildAndel] = useScrollAndel<HTMLDivElement>(1, 0.2)
-  const [faktaRef, faktaSyns] = useSyns<HTMLDListElement>(0.4)
+  const [panelRef, panelAndel] = useScrollAndel<HTMLDivElement>(1, 0.2)
+  const [kortRef, kortSyns] = useSyns<HTMLDivElement>(0.25)
+  const spar = useRef<HTMLDivElement | null>(null)
+  const [aktiv, setAktiv] = useState(0)
+  const [kanVanster, setKanVanster] = useState(false)
+  const [kanHoger, setKanHoger] = useState(true)
+  const ingressOrd = 'En vecka där du lär dig hur grupper fungerar genom att vara'.split(' ')
+
+  // Håll koll på vilket kort som ligger först i spåret.
+  useEffect(() => {
+    const el = spar.current
+    if (!el) return
+    const uppdatera = () => {
+      const kort = [...el.children] as HTMLElement[]
+      const vanster = el.getBoundingClientRect().left
+      let basta = 0
+      let minst = Infinity
+      kort.forEach((k, i) => {
+        const d = Math.abs(k.getBoundingClientRect().left - vanster)
+        if (d < minst) {
+          minst = d
+          basta = i
+        }
+      })
+      const slut = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4
+      setAktiv(slut && el.scrollLeft > 4 ? kort.length - 1 : basta)
+      setKanVanster(el.scrollLeft > 4)
+      setKanHoger(!slut)
+    }
+    uppdatera()
+    el.addEventListener('scroll', uppdatera, { passive: true })
+    window.addEventListener('resize', uppdatera)
+    return () => {
+      el.removeEventListener('scroll', uppdatera)
+      window.removeEventListener('resize', uppdatera)
+    }
+  }, [])
+
+  const tillKort = (i: number) => {
+    const el = spar.current
+    if (!el) return
+    const k = el.children[Math.max(0, Math.min(GLASKORT.length - 1, i))] as HTMLElement | undefined
+    if (!k) return
+    el.scrollTo({ left: k.offsetLeft - el.offsetLeft, behavior: lugn() ? 'auto' : 'smooth' })
+  }
+
+  return (
+    <section id="om-ugl" className="relative z-10 bg-[#F6E4CF] rounded-t-[25px] pt-20 md:pt-32 pb-28 md:pb-36 px-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Ingress */}
+        <div ref={ingressRef} className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-start">
+          <div className={in_(ingressSyns)}>
+            <p className={EYEBROW}>Kort om UGL</p>
+            <h2 className={`${H2} max-w-[14ch]`}>
+              Vad är{' '}
+              <em className="not-italic" style={EM}>
+                UGL?
+              </em>
+            </h2>
+          </div>
+          <div>
+            <p className="text-[#321C04] text-xl sm:text-2xl lg:text-[28px] leading-[1.3] tracking-tight max-w-[30ch]">
+              {ingressOrd.map((o, i) => (
+                <span
+                  key={i}
+                  className="inline-block transition-all duration-700 ease-out"
+                  style={{
+                    transitionDelay: `${150 + i * 55}ms`,
+                    opacity: ingressSyns ? 1 : 0,
+                    transform: ingressSyns ? 'none' : 'translateY(0.5em)',
+                    filter: ingressSyns ? 'none' : 'blur(4px)',
+                  }}
+                >
+                  {o}&nbsp;
+                </span>
+              ))}
+              <em
+                className="not-italic inline-block transition-all duration-700 ease-out"
+                style={{
+                  ...EM,
+                  transitionDelay: `${150 + ingressOrd.length * 55 + 120}ms`,
+                  opacity: ingressSyns ? 1 : 0,
+                  transform: ingressSyns ? 'none' : 'translateY(0.5em) scale(0.9)',
+                }}
+              >
+                i en.
+              </em>
+            </p>
+            <p className={in_(ingressSyns, `${P} mt-6 delay-700`)}>
+              UGL, Utveckling av grupp och ledare, är Sveriges mest använda ledarskapsutbildning. Det är ingen
+              föreläsning. Du bor på kursgård med en liten grupp och lär dig av det som händer mellan er, med stöd av
+              två handledare.
+            </p>
+          </div>
+        </div>
+
+        {/* Bildpanel med glaskort */}
+        <div
+          ref={panelRef}
+          className="relative mt-14 md:mt-20 rounded-[28px] overflow-hidden bg-[#2B2724] text-[#FFF9F2]"
+        >
+          <img
+            src={BILD_GRUPP}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover will-change-transform"
+            style={{
+              transform: `scale(${1.12 - panelAndel * 0.12})`,
+              filter: 'sepia(0.15) saturate(0.9)',
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(43,39,36,0.55) 0%, rgba(43,39,36,0.72) 45%, rgba(43,39,36,0.9) 100%)',
+            }}
+          />
+
+          <div ref={kortRef} className="relative p-6 sm:p-8 md:p-12">
+            <div className="flex items-end justify-between gap-6">
+              <div className={in_(kortSyns)}>
+                <p className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.25em] font-medium mb-4">
+                  Veckan i fyra siffror
+                </p>
+                <p className="text-[#FFF9F2] text-2xl sm:text-3xl md:text-[38px] leading-[1.1] tracking-tight max-w-[18ch]">
+                  Det här får du{' '}
+                  <em className="not-italic" style={EM}>
+                    under veckan.
+                  </em>
+                </p>
+              </div>
+              <div className="hidden sm:flex gap-2 shrink-0">
+                {[
+                  { riktning: -1, etikett: 'Föregående', aktiv: kanVanster, d: 'M10 3L5 8l5 5' },
+                  { riktning: 1, etikett: 'Nästa', aktiv: kanHoger, d: 'M6 3l5 5-5 5' },
+                ].map((p) => (
+                  <button
+                    key={p.etikett}
+                    type="button"
+                    aria-label={p.etikett}
+                    disabled={!p.aktiv}
+                    onClick={() => tillKort(aktiv + p.riktning)}
+                    className="w-11 h-11 rounded-full border border-[#F6E4CF]/30 bg-white/5 backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:bg-[#F6E4CF] hover:text-[#2B2724] disabled:opacity-30 disabled:hover:bg-white/5 disabled:hover:text-[#FFF9F2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F6E4CF]"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+                      <path d={p.d} />
+                    </svg>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Kortspår, dra i sidled eller använd pilarna */}
+            <div
+              ref={spar}
+              role="region"
+              aria-label="Veckan i fyra siffror"
+              tabIndex={0}
+              className="mt-8 md:mt-10 -mx-6 sm:-mx-8 md:-mx-12 px-6 sm:px-8 md:px-12 flex gap-4 md:gap-5 overflow-x-auto snap-x snap-mandatory scroll-px-6 sm:scroll-px-8 md:scroll-px-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-none"
+            >
+              {GLASKORT.map((k, i) => (
+                <article
+                  key={k.titel}
+                  style={{
+                    transitionDelay: kortSyns ? `${200 + i * 120}ms` : '0ms',
+                  }}
+                  className={`snap-start shrink-0 w-[86%] sm:w-[62%] lg:w-[44%] rounded-2xl border border-[#F6E4CF]/20 bg-white/[0.07] backdrop-blur-md p-6 md:p-7 flex flex-col transition-all duration-700 ease-out hover:bg-white/[0.11] hover:border-[#F6E4CF]/35 ${
+                    kortSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-[#F6E4CF]/70 text-[11px] uppercase tracking-[0.2em] font-medium pt-2">
+                      {k.etikett}
+                    </span>
+                    <span className="text-right">
+                      <span
+                        className="block text-[#F6E4CF] text-5xl md:text-6xl leading-none tracking-tight tabular-nums"
+                        style={EM}
+                      >
+                        <Rakna fran={k.fran} till={k.till} visa={k.visa} igang={kortSyns} />
+                      </span>
+                      <span className="block mt-1 text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.2em]">
+                        {k.enhet}
+                      </span>
+                    </span>
+                  </div>
+                  <h3 className="mt-6 text-[#FFF9F2] text-xl md:text-2xl leading-tight tracking-tight font-medium">
+                    {k.titel}
+                  </h3>
+                  <p className="mt-3 text-[#F6E4CF]/80 text-[15px] leading-[1.55]">{k.text}</p>
+                  <div className="mt-auto pt-6">
+                    <div className="rounded-xl border border-[#F6E4CF]/15 bg-black/10 px-4 py-3.5">
+                      <p className="text-[#F6E4CF]/60 text-[10px] uppercase tracking-[0.2em] font-medium">
+                        Det betyder för dig
+                      </p>
+                      <p className="mt-1.5 text-[#FFF9F2]/90 text-sm leading-[1.5]">{k.betyder}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Stegindikator */}
+            <div className="mt-8 flex items-center justify-between gap-6">
+              <div className="flex items-center gap-2">
+                {GLASKORT.map((k, i) => (
+                  <button
+                    key={k.titel}
+                    type="button"
+                    aria-label={`Visa ${k.titel}`}
+                    aria-current={aktiv === i}
+                    onClick={() => tillKort(i)}
+                    className="py-2"
+                  >
+                    <span
+                      className={`block h-[3px] rounded-full transition-all duration-500 ${
+                        aktiv === i ? 'w-10 bg-[#F6E4CF]' : 'w-5 bg-[#F6E4CF]/30 hover:bg-[#F6E4CF]/60'
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+              <p className="text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.2em] whitespace-nowrap">
+                Dra för att bläddra
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default function AboutSection() {
   const [stegRef, stegAndel] = useScrollAndel<HTMLOListElement>(0.75, 0.45)
   const [stegRubrikRef, stegRubrikSyns] = useSyns<HTMLDivElement>(0.3)
   const [malRef, malSyns] = useSyns<HTMLDivElement>(0.2)
   const [slutRef, slutSyns] = useSyns<HTMLDivElement>(0.3)
   const [bentoRef, bentoSyns] = useSyns<HTMLDivElement>(0.1)
   const aktivtSteg = Math.min(STEG.length - 1, Math.floor(stegAndel * STEG.length * 0.999))
-  const ingressOrd = 'En vecka där du lär dig hur grupper fungerar genom att vara'.split(' ')
 
   return (
     <>
-      <section id="om-ugl" className="relative z-10 bg-[#F6E4CF] rounded-t-[25px] pt-20 md:pt-32 pb-28 md:pb-36 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col gap-16 md:gap-24">
-          {/* Ingress: svaret först, ord för ord */}
-          <div
-            ref={ingressRef}
-            className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-start"
-          >
-            <div className={in_(ingressSyns)}>
-              <p className={EYEBROW}>Kort om UGL</p>
-              <h2 className={`${H2} max-w-[14ch]`}>
-                Vad är{' '}
-                <em className="not-italic" style={EM}>
-                  UGL?
-                </em>
-              </h2>
-              <dl
-                ref={faktaRef}
-                className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-px bg-[#321C04]/15 rounded-2xl overflow-hidden border border-[#321C04]/15"
-              >
-                {FAKTA.map((f, i) => (
-                  <div
-                    key={f.enhet}
-                    className="bg-[#F6E4CF] p-4 lg:p-3.5 xl:p-4 transition-all duration-700 ease-out"
-                    style={{
-                      transitionDelay: `${i * 110}ms`,
-                      opacity: faktaSyns ? 1 : 0,
-                      transform: faktaSyns ? 'none' : 'translateY(16px)',
-                    }}
-                  >
-                    <dt className="text-[#321C04]/60 text-[10px] uppercase tracking-[0.18em] font-medium">{f.enhet}</dt>
-                    <dd className="mt-2 text-[#321C04] text-3xl leading-none tracking-tight tabular-nums" style={EM}>
-                      <Rakna fran={f.fran} till={f.till} visa={f.visa} igang={faktaSyns} />
-                    </dd>
-                    <dd className="mt-2 text-[#321C04]/75 text-xs leading-snug">{f.text}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-            <div>
-              <p className="text-[#321C04] text-xl sm:text-2xl lg:text-[28px] leading-[1.3] tracking-tight max-w-[30ch]">
-                {ingressOrd.map((o, i) => (
-                  <span
-                    key={i}
-                    className="inline-block transition-all duration-700 ease-out"
-                    style={{
-                      transitionDelay: `${150 + i * 55}ms`,
-                      opacity: ingressSyns ? 1 : 0,
-                      transform: ingressSyns ? 'none' : 'translateY(0.5em)',
-                      filter: ingressSyns ? 'none' : 'blur(4px)',
-                    }}
-                  >
-                    {o}&nbsp;
-                  </span>
-                ))}
-                <em
-                  className="not-italic inline-block transition-all duration-700 ease-out"
-                  style={{
-                    ...EM,
-                    transitionDelay: `${150 + ingressOrd.length * 55 + 120}ms`,
-                    opacity: ingressSyns ? 1 : 0,
-                    transform: ingressSyns ? 'none' : 'translateY(0.5em) scale(0.9)',
-                  }}
-                >
-                  i en.
-                </em>
-              </p>
-              <p className={in_(ingressSyns, `${P} mt-6 delay-700`)}>
-                UGL, Utveckling av grupp och ledare, är Sveriges mest använda ledarskapsutbildning. Det är ingen
-                föreläsning. Du bor på kursgård med en liten grupp och lär dig av det som händer mellan er, med stöd av
-                två handledare.
-              </p>
-            </div>
-          </div>
-
-          {/* Bild med mjuk zoom när den scrollas fram */}
-          <div>
-            <div
-              ref={bildRef}
-              className="relative rounded-3xl overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-[#EBD3B6]"
-            >
-              <img
-                src={BILD_GRUPP}
-                alt="En UGL-grupp sitter i ring på en kursgård och samtalar"
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover will-change-transform"
-                style={{
-                  transform: `scale(${1.14 - bildAndel * 0.14}) translateY(${(0.5 - bildAndel) * 4}%)`,
-                  filter: 'sepia(0.12) saturate(0.95)',
-                }}
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(50,28,4,0) 45%, rgba(50,28,4,0.35) 100%)',
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <VadArUgl />
 
       {/* Sektion 2: Passar det mig? */}
       <section
