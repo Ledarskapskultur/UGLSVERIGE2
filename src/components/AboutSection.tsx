@@ -9,6 +9,7 @@ const EM = {
 }
 const BILD_GRUPP = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
 const BILD_SAMTAL = 'https://www.uglsverige.store/assets/ugl-samtal.webp'
+const BILD_HANDLEDARE = 'https://www.uglsverige.store/assets/ugl-handledare.webp'
 
 // Snabbfakta: det besökaren vill veta innan hen läser vidare. fran = startvärde för uppräkningen.
 const FAKTA = [
@@ -63,18 +64,52 @@ const STEG = [
 const FOR_DIG = [
   {
     nr: '01',
+    etikett: 'Samarbete',
     roll: 'Medarbetare och specialist',
     text: 'Du vill samarbeta bättre, våga säga ifrån och förstå varför vissa möten skaver.',
   },
   {
     nr: '02',
+    etikett: 'Ny i rollen',
     roll: 'Ny chef eller projektledare',
     text: 'Du har fått ansvar för en grupp och vill ha trygghet i rollen från början.',
   },
   {
     nr: '03',
+    etikett: 'Nya ögon',
     roll: 'Erfaren chef',
     text: 'Du vill se ditt eget ledarskap med nya ögon och leda gruppen utifrån var den är.',
+  },
+]
+
+// Utseende per ruta i bento-gridet: bred ljus, mörk och beige.
+const BENTO = [
+  {
+    ruta: 'bg-[#FFF9F2] border border-[#D9C4AA] md:col-span-2',
+    svag: 'text-[#321C04]/45',
+    etikett: 'bg-[#F6E4CF] text-[#321C04]',
+    rubrik: 'text-[#321C04]',
+    text: 'text-[#321C04]/80',
+    spar: 'bg-[#D9C4AA]/60',
+    fyll: 'bg-[#321C04]',
+  },
+  {
+    ruta: 'bg-[#2B2724]',
+    svag: 'text-[#F6E4CF]/45',
+    etikett: 'bg-[#F6E4CF]/15 text-[#F6E4CF]',
+    rubrik: 'text-[#FFF9F2]',
+    text: 'text-[#F6E4CF]/80',
+    spar: 'bg-[#F6E4CF]/15',
+    fyll: 'bg-[#F6E4CF]',
+  },
+  {
+    ruta: 'bg-[#F6E4CF] border border-[#D9C4AA]',
+    svag: 'text-[#321C04]/45',
+    etikett: 'bg-[#FFF9F2] text-[#321C04]',
+    rubrik: 'text-[#321C04]',
+    text: 'text-[#321C04]/80',
+    spar: 'bg-[#D9C4AA]/60',
+    fyll: 'bg-[#321C04]',
   },
 ]
 
@@ -175,6 +210,7 @@ export default function AboutSection() {
   const [stegRubrikRef, stegRubrikSyns] = useSyns<HTMLDivElement>(0.3)
   const [malRef, malSyns] = useSyns<HTMLDivElement>(0.2)
   const [slutRef, slutSyns] = useSyns<HTMLDivElement>(0.3)
+  const [bentoRef, bentoSyns] = useSyns<HTMLDivElement>(0.1)
   const aktivtSteg = Math.min(STEG.length - 1, Math.floor(stegAndel * STEG.length * 0.999))
   const ingressOrd = 'En vecka där du lär dig hur grupper fungerar genom att vara'.split(' ')
 
@@ -287,42 +323,91 @@ export default function AboutSection() {
         id="malgrupp"
         className="relative z-10 bg-[#EBD3B6] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-28 md:pb-36 px-6"
       >
-        <div className="max-w-6xl mx-auto ">
-          {/* Passar det mig? */}
-          <div ref={malRef} className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-start">
-            <div className={in_(malSyns)}>
+        <div className="max-w-6xl mx-auto">
+          {/* Rubrik */}
+          <div
+            ref={malRef}
+            className={`flex flex-col md:flex-row md:items-end md:justify-between gap-6 ${in_(malSyns)}`}
+          >
+            <div>
               <p className={EYEBROW}>Passar det mig?</p>
               <h2 className={`${H2} max-w-[12ch]`}>
                 <em className="not-italic" style={EM}>
                   Målgrupp.
                 </em>
               </h2>
-              <p className="mt-5 text-[#321C04]/80 text-base leading-[1.55] max-w-[34ch]">
-                Du behöver inte vara chef. UGL handlar om att leda sig själv lika mycket som andra.
-              </p>
             </div>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {FOR_DIG.map((d, i) => (
+            <p className="text-[#321C04]/80 text-base leading-[1.55] max-w-[40ch]">
+              Tre vanliga ingångar till veckan. Känner du igen dig i någon av dem är du rätt.
+            </p>
+          </div>
+
+          {/* Bento-grid */}
+          <div
+            ref={bentoRef}
+            className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[250px] gap-4"
+          >
+            {/* Stor bildruta */}
+            <div
+              style={{ transitionDelay: bentoSyns ? '100ms' : '0ms' }}
+              className={`group relative overflow-hidden rounded-3xl min-h-[340px] md:col-span-2 lg:row-span-2 transition-all duration-700 ease-out ${
+                bentoSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
+              <img
+                src={BILD_HANDLEDARE}
+                alt="Två personer i samtal på en kursgård"
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                style={{ filter: 'sepia(0.12) saturate(0.95)' }}
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{ background: 'linear-gradient(180deg, rgba(43,39,36,0.05) 30%, rgba(43,39,36,0.82) 100%)' }}
+              />
+              <div className="absolute inset-x-0 bottom-0 p-7 md:p-9">
+                <p className="text-[#FFF9F2] text-3xl md:text-[40px] leading-[1.05] tracking-tight" style={EM}>
+                  Du behöver inte vara chef.
+                </p>
+                <p className="mt-3 text-[#F6E4CF]/85 text-base leading-[1.5] max-w-[38ch]">
+                  UGL handlar om att leda sig själv lika mycket som andra.
+                </p>
+              </div>
+            </div>
+
+            {FOR_DIG.map((d, i) => {
+              const stil = BENTO[i]
+              return (
                 <div
                   key={d.roll}
-                  style={{
-                    transitionDelay: malSyns ? `${150 + i * 120}ms` : '0ms',
-                  }}
-                  className={`group rounded-2xl bg-[#FFF9F2] border border-[#D9C4AA] p-6 flex flex-col transition-all duration-700 ease-out hover:-translate-y-1 hover:border-[#321C04]/40 hover:shadow-[0_18px_40px_rgba(50,28,4,0.10)] ${
-                    malSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  style={{ transitionDelay: bentoSyns ? `${220 + i * 120}ms` : '0ms' }}
+                  className={`group relative rounded-3xl p-7 flex flex-col overflow-hidden transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(50,28,4,0.14)] ${stil.ruta} ${
+                    bentoSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <span className="text-[#321C04]/45 text-xs tracking-[0.2em] font-medium">{d.nr}</span>
-                  <h3 className="mt-3 text-[#321C04] text-lg leading-snug font-medium">{d.roll}</h3>
-                  <p className="mt-3 text-[#321C04]/80 text-[15px] leading-[1.5]">{d.text}</p>
-                  <div className="mt-auto pt-5">
-                    <span className="block h-[2px] w-full bg-[#D9C4AA]/60 rounded-full overflow-hidden">
-                      <span className="block h-full w-0 bg-[#321C04] rounded-full transition-all duration-500 ease-out group-hover:w-full" />
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs tracking-[0.2em] font-medium ${stil.svag}`}>{d.nr}</span>
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.18em] font-medium px-3 py-1 rounded-full ${stil.etikett}`}
+                    >
+                      {d.etikett}
                     </span>
                   </div>
+                  <h3
+                    className={`mt-auto pt-6 text-xl md:text-2xl leading-tight tracking-tight font-medium ${stil.rubrik}`}
+                  >
+                    {d.roll}
+                  </h3>
+                  <p className={`mt-3 text-[15px] leading-[1.5] max-w-[42ch] ${stil.text}`}>{d.text}</p>
+                  <span className={`mt-5 block h-[2px] w-full rounded-full overflow-hidden ${stil.spar}`}>
+                    <span
+                      className={`block h-full w-0 rounded-full transition-all duration-500 ease-out group-hover:w-full ${stil.fyll}`}
+                    />
+                  </span>
                 </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
         </div>
       </section>
