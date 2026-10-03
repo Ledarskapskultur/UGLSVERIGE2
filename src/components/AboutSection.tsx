@@ -9,6 +9,11 @@ const EM = {
 }
 const BILD_GRUPP = 'https://www.uglsverige.store/assets/ugl-grupp.webp'
 const BILD_SAMTAL = 'https://www.uglsverige.store/assets/ugl-samtal.webp'
+const STEGBILD = [
+  'https://www.uglsverige.store/assets/ugl-hero.webp',
+  'https://www.uglsverige.store/assets/ugl-oppenhet.webp',
+  BILD_SAMTAL,
+]
 const BILD_HANDLEDARE = 'https://www.uglsverige.store/assets/ugl-handledare.webp'
 
 const STEG = [
@@ -492,7 +497,7 @@ function VadArUgl() {
 }
 
 export default function AboutSection() {
-  const [stegRef, stegAndel] = useScrollAndel<HTMLOListElement>(0.75, 0.45)
+  const [stegRef, stegAndel] = useScrollAndel<HTMLOListElement>(0.85, 0.4)
   const [stegRubrikRef, stegRubrikSyns] = useSyns<HTMLDivElement>(0.3)
   const [malRef, malSyns] = useSyns<HTMLDivElement>(0.2)
   const [slutRef, slutSyns] = useSyns<HTMLDivElement>(0.3)
@@ -603,9 +608,12 @@ export default function AboutSection() {
         className="relative z-10 bg-[#FFF9F2] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-20 md:pb-28 px-6"
       >
         <div className="max-w-6xl mx-auto">
-          {/* Så går veckan till: rubrik och bild står still, stegen fylls i takt med scrollen */}
-          <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-10 md:gap-16 items-start">
-            <div ref={stegRubrikRef} className={`md:sticky md:top-28 ${in_(stegRubrikSyns)}`}>
+          {/* Rubrik och ingress */}
+          <div
+            ref={stegRubrikRef}
+            className={`grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-end ${in_(stegRubrikSyns)}`}
+          >
+            <div>
               <p className={EYEBROW}>Så fungerar det</p>
               <h2 className={`${H2} max-w-[12ch]`}>
                 Lärandet sker{' '}
@@ -613,70 +621,86 @@ export default function AboutSection() {
                   i gruppen.
                 </em>
               </h2>
-              <div className="hidden md:block mt-10 rounded-2xl overflow-hidden aspect-[4/3] max-w-[380px] bg-[#EBD3B6]">
-                <img
-                  src={BILD_SAMTAL}
-                  alt="Deltagare i samtal under en UGL-vecka"
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out"
-                  style={{
-                    transform: `scale(${1.08 - stegAndel * 0.08})`,
-                    filter: 'sepia(0.12) saturate(0.95)',
-                  }}
-                />
-              </div>
             </div>
+            <p className={`${P} md:pb-1`}>
+              Det finns inga föreläsningar att anteckna. Ni gör saker tillsammans, och det som händer i gruppen är det
+              ni lär er av. Så går det till, i tre steg.
+            </p>
+          </div>
 
-            <ol ref={stegRef} className="relative flex flex-col pl-8 md:pl-10">
-              {/* Linje som fylls */}
-              <span
-                aria-hidden="true"
-                className="absolute left-[7px] md:left-[9px] top-2 bottom-2 w-[2px] bg-[#321C04]/12 rounded-full"
-              />
-              <span
-                aria-hidden="true"
-                className="absolute left-[7px] md:left-[9px] top-2 w-[2px] bg-[#321C04] rounded-full"
-                style={{
-                  height: `calc(${stegAndel * 100}% - 16px)`,
-                  maxHeight: 'calc(100% - 16px)',
-                }}
-              />
-              {STEG.map((s, i) => {
-                const pa = i <= aktivtSteg && stegAndel > 0.02
-                return (
-                  <li key={s.nr} className={`relative py-7 ${i ? 'border-t border-[#321C04]/12' : 'pt-0'}`}>
-                    <span
-                      aria-hidden="true"
-                      className={`absolute -left-8 md:-left-10 ${i ? 'top-9' : 'top-2'} w-4 h-4 md:w-5 md:h-5 rounded-full border-2 transition-all duration-500 ${
-                        pa ? 'bg-[#321C04] border-[#321C04] scale-100' : 'bg-[#FFF9F2] border-[#321C04]/30 scale-90'
+          {/* Vågrät tidslinje som fylls när du scrollar. På mobilen går den lodrätt. */}
+          <ol ref={stegRef} className="relative mt-14 md:mt-20 grid md:grid-cols-3 gap-12 md:gap-8">
+            <span
+              aria-hidden="true"
+              className="hidden md:block absolute left-0 right-0 top-[9px] h-[2px] bg-[#321C04]/12 rounded-full"
+            />
+            <span
+              aria-hidden="true"
+              className="hidden md:block absolute left-0 top-[9px] h-[2px] bg-[#321C04] rounded-full"
+              style={{ width: `${stegAndel * 100}%` }}
+            />
+            <span
+              aria-hidden="true"
+              className="md:hidden absolute left-[9px] top-2 bottom-2 w-[2px] bg-[#321C04]/12 rounded-full"
+            />
+            <span
+              aria-hidden="true"
+              className="md:hidden absolute left-[9px] top-2 w-[2px] bg-[#321C04] rounded-full"
+              style={{ height: `${stegAndel * 100}%`, maxHeight: 'calc(100% - 16px)' }}
+            />
+            {STEG.map((s, i) => {
+              const pa = i <= aktivtSteg && stegAndel > 0.02
+              return (
+                <li
+                  key={s.nr}
+                  style={{ transitionDelay: stegRubrikSyns ? `${200 + i * 140}ms` : '0ms' }}
+                  className={`group relative pl-10 md:pl-0 md:pt-12 transition-all duration-700 ease-out ${
+                    stegRubrikSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`absolute left-0 top-0 w-5 h-5 rounded-full border-2 transition-all duration-500 ${
+                      pa ? 'bg-[#321C04] border-[#321C04] scale-100' : 'bg-[#FFF9F2] border-[#321C04]/30 scale-90'
+                    }`}
+                  />
+                  <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#EBD3B6]">
+                    <img
+                      src={STEGBILD[i]}
+                      alt=""
+                      loading="lazy"
+                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1200ms] ease-out group-hover:scale-105 ${
+                        pa ? 'scale-100' : 'scale-[1.04]'
                       }`}
+                      style={{
+                        filter: pa ? 'sepia(0.1) saturate(0.95)' : 'sepia(0.35) saturate(0.6) brightness(1.05)',
+                      }}
                     />
                     <span
-                      className={`text-xs tracking-[0.2em] font-medium transition-colors duration-500 ${pa ? 'text-[#321C04]/70' : 'text-[#321C04]/35'}`}
+                      className="absolute top-3 left-4 text-[#FFF9F2] text-4xl leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+                      style={EM}
                     >
                       {s.nr}
                     </span>
-                    <h3
-                      className={`mt-2 text-xl md:text-[26px] leading-tight tracking-tight font-medium transition-colors duration-500 ${
-                        pa ? 'text-[#321C04]' : 'text-[#321C04]/45'
-                      }`}
-                    >
-                      {s.titel}
-                    </h3>
-                    <p
-                      className={`mt-3 text-base sm:text-[17px] leading-[1.55] max-w-[55ch] transition-all duration-700 ${
-                        pa
-                          ? 'text-[#321C04]/85 opacity-100 translate-y-0'
-                          : 'text-[#321C04]/60 opacity-60 translate-y-1'
-                      }`}
-                    >
-                      {s.text}
-                    </p>
-                  </li>
-                )
-              })}
-            </ol>
-          </div>
+                  </div>
+                  <h3
+                    className={`mt-5 text-xl md:text-[24px] leading-tight tracking-tight font-medium transition-colors duration-500 ${
+                      pa ? 'text-[#321C04]' : 'text-[#321C04]/50'
+                    }`}
+                  >
+                    {s.titel}
+                  </h3>
+                  <p
+                    className={`mt-3 text-[15px] md:text-base leading-[1.55] transition-colors duration-500 ${
+                      pa ? 'text-[#321C04]/80' : 'text-[#321C04]/55'
+                    }`}
+                  >
+                    {s.text}
+                  </p>
+                </li>
+              )
+            })}
+          </ol>
 
           {/* Trovärdighet och vidare */}
           <div
