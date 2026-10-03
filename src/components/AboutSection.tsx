@@ -174,6 +174,7 @@ export default function AboutSection() {
   const [stegRef, stegAndel] = useScrollAndel<HTMLOListElement>(0.75, 0.45)
   const [stegRubrikRef, stegRubrikSyns] = useSyns<HTMLDivElement>(0.3)
   const [malRef, malSyns] = useSyns<HTMLDivElement>(0.2)
+  const [slutRef, slutSyns] = useSyns<HTMLDivElement>(0.3)
   const aktivtSteg = Math.min(STEG.length - 1, Math.floor(stegAndel * STEG.length * 0.999))
   const ingressOrd = 'En vecka där du lär dig hur grupper fungerar genom att vara'.split(' ')
 
@@ -281,10 +282,55 @@ export default function AboutSection() {
         </div>
       </section>
 
-      {/* Sektion 2: Lärandet sker i gruppen */}
+      {/* Sektion 2: Passar det mig? */}
+      <section
+        id="malgrupp"
+        className="relative z-10 bg-[#EBD3B6] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-28 md:pb-36 px-6"
+      >
+        <div className="max-w-6xl mx-auto ">
+          {/* Passar det mig? */}
+          <div ref={malRef} className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-start">
+            <div className={in_(malSyns)}>
+              <p className={EYEBROW}>Passar det mig?</p>
+              <h2 className={`${H2} max-w-[12ch]`}>
+                <em className="not-italic" style={EM}>
+                  Målgrupp.
+                </em>
+              </h2>
+              <p className="mt-5 text-[#321C04]/80 text-base leading-[1.55] max-w-[34ch]">
+                Du behöver inte vara chef. UGL handlar om att leda sig själv lika mycket som andra.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {FOR_DIG.map((d, i) => (
+                <div
+                  key={d.roll}
+                  style={{
+                    transitionDelay: malSyns ? `${150 + i * 120}ms` : '0ms',
+                  }}
+                  className={`group rounded-2xl bg-[#FFF9F2] border border-[#D9C4AA] p-6 flex flex-col transition-all duration-700 ease-out hover:-translate-y-1 hover:border-[#321C04]/40 hover:shadow-[0_18px_40px_rgba(50,28,4,0.10)] ${
+                    malSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
+                >
+                  <span className="text-[#321C04]/45 text-xs tracking-[0.2em] font-medium">{d.nr}</span>
+                  <h3 className="mt-3 text-[#321C04] text-lg leading-snug font-medium">{d.roll}</h3>
+                  <p className="mt-3 text-[#321C04]/80 text-[15px] leading-[1.5]">{d.text}</p>
+                  <div className="mt-auto pt-5">
+                    <span className="block h-[2px] w-full bg-[#D9C4AA]/60 rounded-full overflow-hidden">
+                      <span className="block h-full w-0 bg-[#321C04] rounded-full transition-all duration-500 ease-out group-hover:w-full" />
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sektion 3: Lärandet sker i gruppen */}
       <section
         id="sa-fungerar"
-        className="relative z-10 bg-[#FFF9F2] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-28 md:pb-36 px-6"
+        className="relative z-10 bg-[#FFF9F2] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-20 md:pb-28 px-6"
       >
         <div className="max-w-6xl mx-auto">
           {/* Så går veckan till: rubrik och bild står still, stegen fylls i takt med scrollen */}
@@ -361,55 +407,11 @@ export default function AboutSection() {
               })}
             </ol>
           </div>
-        </div>
-      </section>
-
-      {/* Sektion 3: Passar det mig? */}
-      <section
-        id="malgrupp"
-        className="relative z-10 bg-[#EBD3B6] rounded-t-[25px] -mt-[25px] pt-20 md:pt-28 pb-20 md:pb-28 px-6"
-      >
-        <div className="max-w-6xl mx-auto flex flex-col gap-14 md:gap-20">
-          {/* Passar det mig? */}
-          <div ref={malRef} className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-8 md:gap-16 items-start">
-            <div className={in_(malSyns)}>
-              <p className={EYEBROW}>Passar det mig?</p>
-              <h2 className={`${H2} max-w-[12ch]`}>
-                <em className="not-italic" style={EM}>
-                  Målgrupp.
-                </em>
-              </h2>
-              <p className="mt-5 text-[#321C04]/80 text-base leading-[1.55] max-w-[34ch]">
-                Du behöver inte vara chef. UGL handlar om att leda sig själv lika mycket som andra.
-              </p>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {FOR_DIG.map((d, i) => (
-                <div
-                  key={d.roll}
-                  style={{
-                    transitionDelay: malSyns ? `${150 + i * 120}ms` : '0ms',
-                  }}
-                  className={`group rounded-2xl bg-[#FFF9F2] border border-[#D9C4AA] p-6 flex flex-col transition-all duration-700 ease-out hover:-translate-y-1 hover:border-[#321C04]/40 hover:shadow-[0_18px_40px_rgba(50,28,4,0.10)] ${
-                    malSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                >
-                  <span className="text-[#321C04]/45 text-xs tracking-[0.2em] font-medium">{d.nr}</span>
-                  <h3 className="mt-3 text-[#321C04] text-lg leading-snug font-medium">{d.roll}</h3>
-                  <p className="mt-3 text-[#321C04]/80 text-[15px] leading-[1.5]">{d.text}</p>
-                  <div className="mt-auto pt-5">
-                    <span className="block h-[2px] w-full bg-[#D9C4AA]/60 rounded-full overflow-hidden">
-                      <span className="block h-full w-0 bg-[#321C04] rounded-full transition-all duration-500 ease-out group-hover:w-full" />
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Trovärdighet och vidare */}
           <div
-            className={`flex flex-col md:flex-row md:items-center gap-4 md:gap-8 pt-8 border-t border-[#321C04]/15 ${in_(malSyns, 'delay-500')}`}
+            ref={slutRef}
+            className={`mt-16 md:mt-24 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 pt-8 border-t border-[#321C04]/15 ${in_(slutSyns)}`}
           >
             <p className="text-[#321C04]/70 text-sm leading-relaxed max-w-[70ch]">
               Konceptet ägs av{' '}
