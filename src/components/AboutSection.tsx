@@ -170,6 +170,8 @@ function Rakna({
 const in_ = (syns: boolean, extra = '') =>
   `transition-all duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] ${syns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${extra}`
 
+const INTERVALL_VAD = 6000
+
 // Veckan i fyra siffror: glaskort över bild, med stor siffra som index och en ruta som säger vad det betyder.
 const GLASKORT = [
   {
@@ -218,48 +220,40 @@ function VadArUgl() {
   const [ingressRef, ingressSyns] = useSyns<HTMLDivElement>(0.3)
   const [panelRef, panelAndel] = useScrollAndel<HTMLDivElement>(1, 0.2)
   const [kortRef, kortSyns] = useSyns<HTMLDivElement>(0.25)
-  const spar = useRef<HTMLDivElement | null>(null)
+  const panelEl = useRef<HTMLDivElement | null>(null)
   const [aktiv, setAktiv] = useState(0)
-  const [kanVanster, setKanVanster] = useState(false)
-  const [kanHoger, setKanHoger] = useState(true)
+  const [pausad, setPausad] = useState(false)
+  const [hovrar, setHovrar] = useState(false)
+  const [iBild, setIBild] = useState(false)
+  const [omgang, setOmgang] = useState(0)
+  const autoplay = !lugn()
+  const spelar = autoplay && !pausad && !hovrar && iBild
   const ingressOrd = 'En vecka där du lär dig hur grupper fungerar genom att vara'.split(' ')
 
-  // Håll koll på vilket kort som ligger först i spåret.
+  // Autoplay går bara när panelen syns på skärmen.
   useEffect(() => {
-    const el = spar.current
+    const el = panelEl.current
     if (!el) return
-    const uppdatera = () => {
-      const kort = [...el.children] as HTMLElement[]
-      const vanster = el.getBoundingClientRect().left
-      let basta = 0
-      let minst = Infinity
-      kort.forEach((k, i) => {
-        const d = Math.abs(k.getBoundingClientRect().left - vanster)
-        if (d < minst) {
-          minst = d
-          basta = i
-        }
-      })
-      const slut = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4
-      setAktiv(slut && el.scrollLeft > 4 ? kort.length - 1 : basta)
-      setKanVanster(el.scrollLeft > 4)
-      setKanHoger(!slut)
-    }
-    uppdatera()
-    el.addEventListener('scroll', uppdatera, { passive: true })
-    window.addEventListener('resize', uppdatera)
-    return () => {
-      el.removeEventListener('scroll', uppdatera)
-      window.removeEventListener('resize', uppdatera)
-    }
+    const io = new IntersectionObserver((e) => setIBild(e[0].isIntersecting), { threshold: 0.35 })
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
-  const tillKort = (i: number) => {
-    const el = spar.current
-    if (!el) return
-    const k = el.children[Math.max(0, Math.min(GLASKORT.length - 1, i))] as HTMLElement | undefined
-    if (!k) return
-    el.scrollTo({ left: k.offsetLeft - el.offsetLeft, behavior: lugn() ? 'auto' : 'smooth' })
+  const valj = (i: number) => {
+    setAktiv(i)
+    setPausad(true)
+    setOmgang((n) => n + 1)
+  }
+  const nasta = () => {
+    setAktiv((a) => (a + 1) % GLASKORT.length)
+    setOmgang((n) => n + 1)
+  }
+  const onTabKey = (e: React.KeyboardEvent) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+    e.preventDefault()
+    const i = (aktiv + (e.key === 'ArrowRight' ? 1 : GLASKORT.length - 1)) % GLASKORT.length
+    valj(i)
+    document.getElementById(`vad-flik-${i}`)?.focus()
   }
 
   return (
@@ -337,7 +331,16 @@ function VadArUgl() {
             }}
           />
 
-          <div ref={kortRef} className="relative p-6 sm:p-8 md:p-12">
+          <div
+            ref={(el) => {
+              kortRef.current = el
+              panelEl.current = el
+            }}
+            className="relative p-6 sm:p-8 md:p-12"
+            onMouseEnter={() => setHovrar(true)}
+            onMouseLeave={() => setHovrar(false)}
+          >
+            <style>{'@keyframes uglFyll{from{width:0}to{width:100%}}'}</style>
             <div className="flex items-end justify-between gap-6">
               <div className={in_(kortSyns)}>
                 <p className="text-[#F6E4CF]/70 text-xs uppercase tracking-[0.25em] font-medium mb-4">
@@ -350,100 +353,136 @@ function VadArUgl() {
                   </em>
                 </p>
               </div>
-              <div className="hidden sm:flex gap-2 shrink-0">
-                {[
-                  { riktning: -1, etikett: 'Föregående', aktiv: kanVanster, d: 'M10 3L5 8l5 5' },
-                  { riktning: 1, etikett: 'Nästa', aktiv: kanHoger, d: 'M6 3l5 5-5 5' },
-                ].map((p) => (
-                  <button
-                    key={p.etikett}
-                    type="button"
-                    aria-label={p.etikett}
-                    disabled={!p.aktiv}
-                    onClick={() => tillKort(aktiv + p.riktning)}
-                    className="w-11 h-11 rounded-full border border-[#F6E4CF]/30 bg-white/5 backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:bg-[#F6E4CF] hover:text-[#2B2724] disabled:opacity-30 disabled:hover:bg-white/5 disabled:hover:text-[#FFF9F2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F6E4CF]"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
-                      <path d={p.d} />
+              {autoplay && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPausad((p) => !p)
+                    setOmgang((n) => n + 1)
+                  }}
+                  aria-label={pausad ? 'Spela upp automatiskt' : 'Pausa automatisk visning'}
+                  className="shrink-0 w-11 h-11 rounded-full border border-[#F6E4CF]/30 bg-white/5 backdrop-blur-md flex items-center justify-center transition-colors duration-300 hover:bg-[#F6E4CF] hover:text-[#2B2724] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F6E4CF]"
+                >
+                  {pausad ? (
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                      <path d="M3 1.5v11l9-5.5z" />
                     </svg>
-                  </button>
-                ))}
-              </div>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                      <rect x="2.5" y="1.5" width="3" height="11" rx="0.8" />
+                      <rect x="8.5" y="1.5" width="3" height="11" rx="0.8" />
+                    </svg>
+                  )}
+                </button>
+              )}
             </div>
 
-            {/* Kortspår, dra i sidled eller använd pilarna */}
+            {/* Sifferflikar */}
             <div
-              ref={spar}
-              role="region"
+              role="tablist"
               aria-label="Veckan i fyra siffror"
-              tabIndex={0}
-              className="mt-8 md:mt-10 -mx-6 sm:-mx-8 md:-mx-12 px-6 sm:px-8 md:px-12 flex gap-4 md:gap-5 overflow-x-auto snap-x snap-mandatory scroll-px-6 sm:scroll-px-8 md:scroll-px-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-none"
+              className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-4 gap-3"
             >
-              {GLASKORT.map((k, i) => (
-                <article
-                  key={k.titel}
-                  style={{
-                    transitionDelay: kortSyns ? `${200 + i * 120}ms` : '0ms',
-                  }}
-                  className={`snap-start shrink-0 w-[86%] sm:w-[62%] lg:w-[44%] rounded-2xl border border-[#F6E4CF]/20 bg-white/[0.07] backdrop-blur-md p-6 md:p-7 flex flex-col transition-all duration-700 ease-out hover:bg-white/[0.11] hover:border-[#F6E4CF]/35 ${
-                    kortSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="text-[#F6E4CF]/70 text-[11px] uppercase tracking-[0.2em] font-medium pt-2">
+              {GLASKORT.map((k, i) => {
+                const pa = aktiv === i
+                return (
+                  <button
+                    key={k.titel}
+                    id={`vad-flik-${i}`}
+                    role="tab"
+                    type="button"
+                    aria-selected={pa}
+                    aria-controls="vad-panel"
+                    tabIndex={pa ? 0 : -1}
+                    onClick={() => valj(i)}
+                    onKeyDown={onTabKey}
+                    style={{ transitionDelay: kortSyns ? `${150 + i * 100}ms` : '0ms' }}
+                    className={`group relative overflow-hidden text-left rounded-2xl border px-4 pt-4 pb-5 md:px-5 backdrop-blur-md transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F6E4CF] ${
+                      pa
+                        ? 'bg-[#F6E4CF] border-[#F6E4CF] text-[#2B2724]'
+                        : 'bg-white/[0.06] border-[#F6E4CF]/20 text-[#F6E4CF] hover:bg-white/[0.12] hover:border-[#F6E4CF]/40'
+                    } ${kortSyns ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  >
+                    <span
+                      className={`block text-[10px] uppercase tracking-[0.2em] font-medium ${pa ? 'text-[#2B2724]/60' : 'text-[#F6E4CF]/60'}`}
+                    >
                       {k.etikett}
                     </span>
-                    <span className="text-right">
-                      <span
-                        className="block text-[#F6E4CF] text-5xl md:text-6xl leading-none tracking-tight tabular-nums"
-                        style={EM}
-                      >
-                        <Rakna fran={k.fran} till={k.till} visa={k.visa} igang={kortSyns} />
-                      </span>
-                      <span className="block mt-1 text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.2em]">
-                        {k.enhet}
-                      </span>
+                    <span
+                      className="mt-2 block text-4xl md:text-5xl leading-none tracking-tight tabular-nums"
+                      style={EM}
+                    >
+                      <Rakna fran={k.fran} till={k.till} visa={k.visa} igang={kortSyns} />
                     </span>
-                  </div>
-                  <h3 className="mt-6 text-[#FFF9F2] text-xl md:text-2xl leading-tight tracking-tight font-medium">
-                    {k.titel}
-                  </h3>
-                  <p className="mt-3 text-[#F6E4CF]/80 text-[15px] leading-[1.55]">{k.text}</p>
-                  <div className="mt-auto pt-6">
-                    <div className="rounded-xl border border-[#F6E4CF]/15 bg-black/10 px-4 py-3.5">
+                    <span
+                      className={`mt-1.5 block text-[11px] uppercase tracking-[0.2em] ${pa ? 'text-[#2B2724]/70' : 'text-[#F6E4CF]/60'}`}
+                    >
+                      {k.enhet}
+                    </span>
+                    {/* Framstegslinje: när den är full byts kortet */}
+                    <span
+                      aria-hidden="true"
+                      className={`absolute left-4 right-4 md:left-5 md:right-5 bottom-2 h-[2px] rounded-full overflow-hidden ${pa ? 'bg-[#2B2724]/15' : 'bg-transparent'}`}
+                    >
+                      {pa && (
+                        <span
+                          key={`${aktiv}-${omgang}`}
+                          className="block h-full rounded-full bg-[#2B2724]"
+                          onAnimationEnd={nasta}
+                          style={
+                            autoplay && !pausad
+                              ? {
+                                  width: 0,
+                                  animation: `uglFyll ${INTERVALL_VAD}ms linear forwards`,
+                                  animationPlayState: spelar ? 'running' : 'paused',
+                                }
+                              : { width: '100%' }
+                          }
+                        />
+                      )}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Det valda kortet. Alla ligger i samma ruta så höjden inte hoppar. */}
+            <div
+              id="vad-panel"
+              role="tabpanel"
+              aria-labelledby={`vad-flik-${aktiv}`}
+              className={`mt-4 grid ${in_(kortSyns, 'delay-500')}`}
+            >
+              {GLASKORT.map((k, i) => {
+                const pa = aktiv === i
+                return (
+                  <article
+                    key={k.titel}
+                    aria-hidden={!pa}
+                    className={`[grid-area:1/1] rounded-2xl border border-[#F6E4CF]/20 bg-white/[0.07] backdrop-blur-md p-6 md:p-9 grid md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-6 md:gap-10 items-end transition-all duration-700 ease-out ${
+                      pa ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3 pointer-events-none'
+                    }`}
+                  >
+                    <div>
+                      <p className="text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.2em] font-medium">
+                        {String(i + 1).padStart(2, '0')} / {String(GLASKORT.length).padStart(2, '0')}
+                      </p>
+                      <h3 className="mt-4 text-[#FFF9F2] text-2xl md:text-[32px] leading-[1.1] tracking-tight font-medium">
+                        {k.titel}
+                      </h3>
+                      <p className="mt-4 text-[#F6E4CF]/85 text-base md:text-[17px] leading-[1.55] max-w-[46ch]">
+                        {k.text}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-[#F6E4CF]/15 bg-black/15 px-5 py-4">
                       <p className="text-[#F6E4CF]/60 text-[10px] uppercase tracking-[0.2em] font-medium">
                         Det betyder för dig
                       </p>
-                      <p className="mt-1.5 text-[#FFF9F2]/90 text-sm leading-[1.5]">{k.betyder}</p>
+                      <p className="mt-2 text-[#FFF9F2] text-[15px] md:text-base leading-[1.5]">{k.betyder}</p>
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            {/* Stegindikator */}
-            <div className="mt-8 flex items-center justify-between gap-6">
-              <div className="flex items-center gap-2">
-                {GLASKORT.map((k, i) => (
-                  <button
-                    key={k.titel}
-                    type="button"
-                    aria-label={`Visa ${k.titel}`}
-                    aria-current={aktiv === i}
-                    onClick={() => tillKort(i)}
-                    className="py-2"
-                  >
-                    <span
-                      className={`block h-[3px] rounded-full transition-all duration-500 ${
-                        aktiv === i ? 'w-10 bg-[#F6E4CF]' : 'w-5 bg-[#F6E4CF]/30 hover:bg-[#F6E4CF]/60'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-              <p className="text-[#F6E4CF]/60 text-[11px] uppercase tracking-[0.2em] whitespace-nowrap">
-                Dra för att bläddra
-              </p>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </div>
